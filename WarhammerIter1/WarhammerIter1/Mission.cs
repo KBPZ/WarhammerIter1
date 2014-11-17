@@ -14,32 +14,49 @@ public interface intMission
     void End();
     void ShowScore();
     void ShowName();
+    void Death();
 }
 
 class Mission
 {
 }
 
-public  class EturnalWar2 : intMission
+public class EturnalWar1 : intMission
 {
-    public void Begin(Map m)
-    {
-
-    }
-    public void EndTurn(int p, Player pl)
-    {
-
-    }
-    public void End()
-    {
-
-    }
+    public void Begin(Map m) { }
+    public void EndTurn(int p, Player pl) { }
+    public void End() { }
+    public void ShowScore() { }
     public void ShowName()
     {
-
+        MessageBox.Show("EtWar 1");
     }
-    public void ShowScore()
+    public void Death()
+    { }
+}
+public class EturnalWar2 : intMission
+{
+    public void Begin(Map m) { }
+    public void EndTurn(int p, Player pl) { }
+    public void End() { }
+    public void ShowScore() { }
+    public void ShowName()
     {
-
+        MessageBox.Show("EtWar 2");
     }
+    public void Death()
+    { }
+}
+public class EturnalWar3 : intMission
+{
+    public void Begin(Map m) { }
+    public void EndTurn(int p, Player pl) { }
+    public void End() { }
+    public void ShowScore() { }
+    public void ShowName()
+    {
+        MessageBox.Show("EtWar 2");
+    }
+    public void Death()
+    { }
 }

@@ -17,9 +17,42 @@ public enum Pfase
     End
 }
 
+public interface IPfaseBehav
+{
+    void ClickMap(int x,int y);
+    void ClickActiveButton();
+}
+
+public class PfaseMoveBehav : IPfaseBehav
+{
+    void ClickMap(int x, int y)
+    { }
+    void ClickActiveButton()
+    { }
+}
+
+public class PfaseShootBehav : IPfaseBehav
+{
+    void ClickMap(int x, int y)
+    { }
+    void ClickActiveButton()
+    { }
+}
+
+public class PfaseChargeBehav : IPfaseBehav
+{
+    void ClickMap(int x, int y)
+    { }
+    void ClickActiveButton()
+    { }
+}
+
 public class Game 
 {
-
+    PfaseMoveBehav MoveBehav;
+    PfaseShootBehav ShootBehav;
+    PfaseChargeBehav ChargeBehav;
+    IPfaseBehav PfaseNow;
 	private int NowPlayer;
     private Pfase NowPhase;
 	private Player[] Players;
