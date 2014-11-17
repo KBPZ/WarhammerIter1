@@ -25,25 +25,25 @@ public interface IPfaseBehav
 
 public class PfaseMoveBehav : IPfaseBehav
 {
-    private void ClickMap(int x, int y)
+    public void ClickMap(int x, int y)
     { }
-    private void ClickActiveButton()
+    public void ClickActiveButton()
     { }
 }
 
 public class PfaseShootBehav : IPfaseBehav
 {
-    private void ClickMap(int x, int y)
+    public void ClickMap(int x, int y)
     { }
-    private void ClickActiveButton()
+    public void ClickActiveButton()
     { }
 }
 
 public class PfaseChargeBehav : IPfaseBehav
 {
-    private void ClickMap(int x, int y)
+    public void ClickMap(int x, int y)
     { }
-    private void ClickActiveButton()
+    public void ClickActiveButton()
     { }
 }
 
