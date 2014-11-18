@@ -49,5 +49,10 @@ namespace WarhammerIter1
             IsGame.NextPfase();
             tableLayoutPanel1.Invalidate();
         }
+
+        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            IsGame.MouseClick(e.X,e.Y);
+        }
     }
 }
