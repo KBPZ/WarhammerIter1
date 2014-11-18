@@ -17,42 +17,8 @@ public enum Pfase
     End
 }
 
-public interface IPfaseBehav
-{
-    void ClickMap(int x,int y);
-    void ClickActiveButton();
-}
-
-public class PfaseMoveBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
-public class PfaseShootBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
-public class PfaseChargeBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
 public class Game 
 {
-    PfaseMoveBehav MoveBehav;
-    PfaseShootBehav ShootBehav;
-    PfaseChargeBehav ChargeBehav;
-    IPfaseBehav PfaseNow;
 	private int NowPlayer;
     private Pfase NowPhase;
 	private Player[] Players;
@@ -62,6 +28,7 @@ public class Game
 	private int Turn;
     public Unit Target;
     public Unit Sourse;
+    public intMission NowMission;
     private DiceGenerator DiceGen;
 
     public  bool IsNowPfase(Pfase p)
@@ -169,9 +136,24 @@ public class Game
         return Players[NowPlayer];
     }
 
+    public void ClickActionButton()
+    {
+        switch(NowPhase)
+        {
+            case Pfase.Move:
+                break;
+            case Pfase.Shoot:
+                Shooting(Target, 0, Sourse);
+                break;
+            case Pfase.Charge:
+                break;
+        }
+    }
+
 	public Game()
     {
         List<Unit> LUnit = new List<Unit> {};
+        NowMission = new EturnalWar1();
         DiceGen = new DiceGenerator();
         Players = new Player[2];
         Players[0] = new Player();
@@ -194,11 +176,6 @@ public class Game
     {
 
 	}
-
-	/// 
-	/// <param name="Target"></param>
-	/// <param name="WeaponTyper"></param>
-	/// <param name="Sourse"></param>
 	public int Shooting(Unit Target, int WeaponTyper, Unit Sourse)
     {
         int Cover = 7;

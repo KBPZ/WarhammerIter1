@@ -6,15 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public interface intMission
+public abstract class intMission
 {
-    //private int []Score=new int[2]; 
-    void Begin(Map m);
-    void EndTurn(int p, Player pl);
-    void End();
-    void ShowScore();
-    void ShowName();
-    void Death();
+    private int []Score=new int[2];
+    public intMission()
+    {
+    }
+    public void Begin() { }
+    public void EndTurn(int p, Player pl) { }
+    public void End() { }
+    public void ShowScore() { }
+    public void ShowName() { }
+    public void Death() { }
 }
 
 class Mission
@@ -23,6 +26,7 @@ class Mission
 
 public class EturnalWar1 : intMission
 {
+    public EturnalWar1() { }
     public void Begin(Map m) { }
     public void EndTurn(int p, Player pl) { }
     public void End() { }

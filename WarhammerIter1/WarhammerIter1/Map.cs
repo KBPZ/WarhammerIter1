@@ -11,7 +11,8 @@ using System.Windows.Forms;
 using System;
 
 
-public class Map {
+public class Map 
+{
 
 	private List<Unit> AllUnits;
 	private Point Coord;
@@ -26,9 +27,6 @@ public class Map {
 
 	}
 
-	public virtual void Dispose(){
-
-	}
 
 	/// 
 	/// <param name="Click"></param>
