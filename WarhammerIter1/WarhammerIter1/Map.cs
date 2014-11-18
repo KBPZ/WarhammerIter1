@@ -26,6 +26,11 @@ public class Map {
 
 	}
 
+    public void nothing()
+    {
+
+    }
+
 	public virtual void Dispose(){
 
 	}
