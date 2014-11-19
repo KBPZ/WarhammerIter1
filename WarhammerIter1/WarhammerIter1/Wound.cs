@@ -11,7 +11,8 @@ using System.Collections.Generic;
 
 public class Wound 
 {
-
+    public int dShoot { get;set; }
+    public int dWound { get; set; }
 	public int ap   
     {
         get;

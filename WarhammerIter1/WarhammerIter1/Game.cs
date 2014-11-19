@@ -216,6 +216,7 @@ public class Game
         Sourse = Players[0].PlayersUnit[0];
         Sourse.Models[0].x += 300;
         Sourse.Models[1].x += 300;
+        Sourse.Models[2].x += 300;
         Target = Players[1].PlayersUnit[0];
         foreach(Player p in Players)
         {

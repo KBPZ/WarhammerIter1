@@ -58,13 +58,16 @@ public class Unit
 
 	public Unit()
     {
-        Models = new BasicModel[2];
+        Models = new BasicModel[3];
         Models[0] = new Infantry();
         Models[1] = new Infantry();
+        Models[2] = new Infantry();
         Models[0].x = 200;
         Models[0].y = 200;
         Models[1].x = 100;
         Models[1].y = 100;
+        Models[1].x = 300;
+        Models[1].y = 300;
         m_BasicModel = Models[1];
         foreach(BasicModel w in Models)
         {
