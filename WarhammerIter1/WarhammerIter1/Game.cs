@@ -9,6 +9,45 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+public interface PfaseSr
+{
+    void MousClick(int x, int y,Game _g);
+    void ActButtonClick(Game _g);
+}
+
+
+public class PfaseNofing:PfaseSr
+{
+    public void MousClick(int x, int y, Game _g) 
+    {
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+        
+    }
+}
+
+
+public class PfaseShoot : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        Unit un=_g.IsMap.FindUnit(x, y);
+        if(un !=null)
+        {
+            if (un.w_Player == _g.PlayerNow())
+                _g.Sourse = un;
+            else
+                _g.Target = un;
+        }
+    }
+    public void ActButtonClick(Game _g)
+    {
+        _g.Shooting();
+    }
+}
+
 public enum Pfase
 {
     Move,
@@ -17,42 +56,11 @@ public enum Pfase
     End
 }
 
-public interface IPfaseBehav
-{
-    void ClickMap(int x,int y);
-    void ClickActiveButton();
-}
-
-public class PfaseMoveBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
-public class PfaseShootBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
-public class PfaseChargeBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
 public class Game 
 {
-    PfaseMoveBehav MoveBehav;
-    PfaseShootBehav ShootBehav;
-    PfaseChargeBehav ChargeBehav;
-    IPfaseBehav PfaseNow;
+    public PfaseSr NowPfaseStr;
+    public PfaseSr NofingPf = new PfaseNofing();
+    public PfaseSr ShootPf = new PfaseShoot();
 	private int NowPlayer;
     private Pfase NowPhase;
 	private Player[] Players;
@@ -60,8 +68,9 @@ public class Game
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
 	private int Turn;
-    public Unit Target;
-    public Unit Sourse;
+    public Unit Target {get;set;}
+    public Unit Sourse {get;set;}
+    public intMission NowMission;
     private DiceGenerator DiceGen;
 
     public  bool IsNowPfase(Pfase p)
@@ -105,12 +114,15 @@ public class Game
         {
             case Pfase.Move:
                 MessageBox.Show("Фаза движения");
+                NowPfaseStr = NofingPf;
                 break;
             case Pfase.Shoot:
                 MessageBox.Show("Фаза стрельбы");
+                NowPfaseStr = ShootPf;
                 break;
             case Pfase.Charge:
                 MessageBox.Show("Фаза атаки");
+                NowPfaseStr = NofingPf;
                 break;
         }
     }
@@ -169,9 +181,31 @@ public class Game
         return Players[NowPlayer];
     }
 
+    public void MouseClick(int x,int y)
+    {
+        NowPfaseStr.MousClick(x, y,this);
+    }
+
+    public void ClickActionButton()
+    {
+       /* switch(NowPhase)
+        {
+            case Pfase.Move:
+                break;
+            case Pfase.Shoot:
+                Shooting(Target, 0, Sourse);
+                break;
+            case Pfase.Charge:
+                break;
+        }*/
+        NowPfaseStr.ActButtonClick(this);
+    }
+
 	public Game()
     {
+        NowPfaseStr = ShootPf;
         List<Unit> LUnit = new List<Unit> {};
+        NowMission = new EturnalWar1();
         DiceGen = new DiceGenerator();
         Players = new Player[2];
         Players[0] = new Player();
@@ -182,6 +216,7 @@ public class Game
         Sourse = Players[0].PlayersUnit[0];
         Sourse.Models[0].x += 300;
         Sourse.Models[1].x += 300;
+        Sourse.Models[2].x += 300;
         Target = Players[1].PlayersUnit[0];
         foreach(Player p in Players)
         {
@@ -194,11 +229,6 @@ public class Game
     {
 
 	}
-
-	/// 
-	/// <param name="Target"></param>
-	/// <param name="WeaponTyper"></param>
-	/// <param name="Sourse"></param>
 	public int Shooting(Unit Target, int WeaponTyper, Unit Sourse)
     {
         int Cover = 7;
@@ -213,10 +243,20 @@ public class Game
 		return 0;
 	}
 
-	/// 
-	/// <param name="Target"></param>
-	/// <param name="Shots"></param>
-	/// <param name="HowManyShot"></param>
+    public int Shooting()
+    {
+        int Cover = 7;
+        List<Wound> L = new List<Wound> { };
+        L = Sourse.Shoot(Target, 0, DiceGen);
+        if (L == null || L.Count==0)
+            return 0;
+        L = Target.Wonding(Sourse, L, DiceGen);
+        if (L == null || L.Count == 0)
+            return 0;
+        Target.Save(Cover, Sourse, L, DiceGen);
+        return 0;
+    }
+
 	public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)
     {
 

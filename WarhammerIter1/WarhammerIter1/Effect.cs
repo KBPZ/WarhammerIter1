@@ -6,23 +6,41 @@
 //  Original author: Samurai
 ///////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System;
 
 
+public abstract class Effect 
+{
+    public abstract string Name();
 
-public class Effect {
-
-	private int Type;
-
-	public Effect(){
-
-	}
-
-	~Effect(){
-
-	}
-
-	public virtual void Dispose(){
-
-	}
-
+	//~Effect(){}
 }//end Effect
+
+public abstract class EffectsUnit : Effect
+{
+    public virtual void Leader(Unit u) { }
+}
+public abstract class EffectsWeapons : Effect
+{
+    public virtual List<Wound> OnShoot(List<Wound> l)
+    {
+        return l;
+    }
+    public virtual List<Wound> OnWound(List<Wound> l)
+    {
+        return l;
+    }
+}
+public abstract class EffectsModel : Effect
+{
+    public virtual void EndTurn(BasicModel m)
+    {
+
+    }
+    public virtual void EndEnemyTurn(BasicModel m)
+    {
+
+    }
+}

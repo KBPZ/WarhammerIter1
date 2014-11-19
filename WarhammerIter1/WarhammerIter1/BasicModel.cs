@@ -11,7 +11,8 @@ using System.Windows.Forms;
 using System;
 using System.Drawing;
 
-public abstract class BasicModel {
+public abstract class BasicModel 
+{
 
 	protected int Alive = 0;
 	protected int BalisticSkill;
@@ -27,6 +28,16 @@ public abstract class BasicModel {
 	protected int WeaponSkill;
 	protected int Wound;
     public int x, y;
+
+    public virtual int MoveRange()
+    {
+        return 6;
+    }
+
+    public virtual int DificltMoveRange(DiceGenerator d)
+    {
+        return Math.Max(d.D6(), d.D6());
+    }
 
     public void BeginPfase(Pfase NowPfase, Player NowPlayer)
     {
