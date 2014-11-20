@@ -62,7 +62,7 @@ public class Game
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
 	private int NowPlayer;
-    private Pfase NowPhase;
+    public Pfase NowPhase { get; private set; }
 	private Player[] Players;
     public Map IsMap;
     public MapInterfeise IsMapInter = new MapInterfeise();
@@ -71,7 +71,7 @@ public class Game
     public Unit Target {get;set;}
     public Unit Sourse {get;set;}
     public intMission NowMission;
-    private DiceGenerator DiceGen;
+    public DiceInt DiceGen { get; private set; }
 
     public  bool IsNowPfase(Pfase p)
     {
@@ -86,7 +86,7 @@ public class Game
         {
             foreach (Unit U in p.PlayersUnit)
             {
-                U.EndPfase(NowPhase, Players[NowPlayer]);
+                U.EndPfase(this);
             }
         }
         switch(NowPhase)
@@ -96,7 +96,6 @@ public class Game
             case Pfase.Shoot:
                 break;
             case Pfase.Charge:
-
                 break;
         }
     }
@@ -107,7 +106,7 @@ public class Game
         {
             foreach (Unit U in p.PlayersUnit)
             {
-                U.EndPfase(NowPhase, Players[NowPlayer]);
+                U.EndPfase(this);
             }
         }
         switch (NowPhase)
@@ -201,12 +200,12 @@ public class Game
         NowPfaseStr.ActButtonClick(this);
     }
 
-	public Game()
+	public Game(DiceInt DiceG)
     {
         NowPfaseStr = ShootPf;
         List<Unit> LUnit = new List<Unit> {};
         NowMission = new EturnalWar1();
-        DiceGen = new DiceGenerator();
+        DiceGen = DiceG;
         Players = new Player[2];
         Players[0] = new Player();
         Players[1] = new Player();

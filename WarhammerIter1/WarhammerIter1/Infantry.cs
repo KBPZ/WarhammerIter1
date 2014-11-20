@@ -14,20 +14,33 @@ public class Infantry : BasicModel
 {
 
 	private int ArmorSave = 7;
-	private int Leadership;
+	private int _Leadership;
 	private int Toughnes;
+
+    public override int GetToughnes(Unit Surce)
+    {
+        return Toughnes;
+    }
+
+
+    public override int Leadership()
+    {
+        return _Leadership;
+    }
 
 	public Infantry()
     {
         x = y = 100;
+        _Leadership = 8;
         BalisticSkill = 3;
         WeaponSkill = 3;
         Strength = 3;
-        Toughnes = 3;
+        Toughnes = 4;
         ArmorSave = 5;
         Weapons = new Weapon[1];
         Weapons[0] = new Weapon();
         m_Weapons = Weapons[0];
+        Effects = new List<EffectsModel> { };
         foreach(Weapon w in Weapons)
         {
             w.w_BasicModel = this;
@@ -46,8 +59,8 @@ public class Infantry : BasicModel
         }
         if (Wound <= 0)
         {
-            Alive = 1;
-            return 1;
+            Alive = 2;
+            return 2;
         }
         return 0;
     }

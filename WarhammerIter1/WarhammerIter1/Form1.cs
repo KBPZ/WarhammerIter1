@@ -12,7 +12,7 @@ namespace WarhammerIter1
 {
     public partial class Form1 : Form
     {
-        Game IsGame = new Game();
+        Game IsGame = new Game(new DiceGenerator());
 
         public Form1()
         {

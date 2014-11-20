@@ -20,15 +20,17 @@ public abstract class Effect
 
 public abstract class EffectsUnit : Effect
 {
-    public virtual void Leader(Unit u) { }
+    public virtual void Leader(Unit u,int res,int leadership,Game _g)
+    { 
+    }
 }
 public abstract class EffectsWeapons : Effect
 {
-    public virtual List<Wound> OnShoot(List<Wound> l)
+    public virtual List<Wound> OnShoot(Wound w,List<Wound> l,Game _g)
     {
         return l;
     }
-    public virtual List<Wound> OnWound(List<Wound> l)
+    public virtual List<Wound> OnWound(Wound w, List<Wound> l, Game _g)
     {
         return l;
     }

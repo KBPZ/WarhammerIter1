@@ -13,20 +13,28 @@ using System;
 public class Unit 
 {
 	private int Alive = 0;
-	private Effect[] Effects;
-	public BasicModel[] Models;
+	private List<EffectsUnit> Effects;
+	public List<BasicModel> Models;
     private int IsShoot=0;
+    public int FallBack=0;
 	public BasicModel m_BasicModel;
 	public Effect m_Effect;
     public Player w_Player;
 
-    public void BeginPfase(Pfase NowPfase, Player NowPlayer)
+    public int isFallBack()
     {
+        return FallBack;
+    }
+
+    public void BeginPfase(Game _g)
+    {
+        if (Alive < 1)
+            Alive = 1;
         foreach (BasicModel b in Models)
         {
-            b.EndPfase(NowPfase, NowPlayer);
+            b.BeginPfase(_g);
         }
-        switch (NowPfase)
+        switch (_g.NowPhase)
         {
             case Pfase.Move:
                 break;
@@ -37,31 +45,54 @@ public class Unit
         }
     }
 
-    public void EndPfase(Pfase NowPfase, Player NowPlayer)
+    public void EndPfase(Game _g)
     {
 
-        foreach (BasicModel b in Models)
-        {
-            b.EndPfase(NowPfase, NowPlayer);
-        }
-        switch (NowPfase)
+        switch (_g.NowPhase)
         {
             case Pfase.Move:
                 break;
             case Pfase.Shoot:
+                double a=0,d=0;
+                foreach (BasicModel b in Models)
+                {
+                    if (b.IsAlive() == 2)
+                        d++;
+                    if (b.IsAlive() == 0)
+                        a++;
+                }
+                if(0.25<d/(a+d))
+                {
+                    if(!LeadershipTest(_g))
+                    {
+                        FallBack = 1;
+                        MessageBox.Show("FallBack!");
+                    }
+                }
                 break;
             case Pfase.Charge:
                 IsShoot = 0;
                 break;
+                foreach (BasicModel b in Models)
+                {
+                    b.EndPfase(_g);
+                }
         }
+        foreach (BasicModel b in Models)
+        {
+            if(b.IsAlive()!=1)
+                b.EndPfase(_g);
+        }
+
     }
 
 	public Unit()
     {
-        Models = new BasicModel[3];
-        Models[0] = new Infantry();
-        Models[1] = new Infantry();
-        Models[2] = new Infantry();
+        Models = new List<BasicModel> { };
+        Effects = new List<EffectsUnit> { };
+        Models.Add(new Infantry());
+        Models.Add(new Infantry());
+        Models.Add(new Infantry());
         Models[0].x = 200;
         Models[0].y = 200;
         Models[1].x = 100;
@@ -83,7 +114,7 @@ public class Unit
         }
     }
 
-    public List<Wound> Shoot(Unit Target, int type, DiceGenerator d)
+    public List<Wound> Shoot(Unit Target, int type, DiceInt d)
     {
         List<Wound> L=new List<Wound>{},Lp;
         if (IsShoot == 0)
@@ -125,7 +156,8 @@ public class Unit
         }
         return L;
     }
-    public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, DiceGenerator DiceGen)
+
+    public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, DiceInt DiceGen)
     {
         int n = Wounds.Count;
         int t=0,Majority=0;
@@ -161,6 +193,25 @@ public class Unit
         return Wounds;
     }
 
+    public bool LeadershipTest(Game _g)
+    {
+        int leader = 0,DiceLeader=_g.DiceGen.D6plD6();
+        String s = "LeaderTest ";
+        s += DiceLeader.ToString();
+        MessageBox.Show(s);
+        foreach(BasicModel bm in Models)
+        {
+            leader=Math.Max(bm.Leadership(),leader);
+        }
+        foreach (EffectsUnit EfU in Effects)
+        {
+            EfU.Leader(this,DiceLeader,leader,_g);
+        }
+        if(leader==13||leader>=DiceLeader)
+            return true;
+        return false;
+    }
+
     public BasicModel Furst(Unit Sourse)
     {
         foreach (BasicModel m in Models)
@@ -171,7 +222,7 @@ public class Unit
         return null;
     }
 
-    public void Save(int Cover, Unit Sourse, List<Wound> Wounds, DiceGenerator DiceGen)
+    public void Save(int Cover, Unit Sourse, List<Wound> Wounds, DiceInt DiceGen)
     {
         int n = Wounds.Count;
         List<int> dices = DiceGen.manyD6(n);
