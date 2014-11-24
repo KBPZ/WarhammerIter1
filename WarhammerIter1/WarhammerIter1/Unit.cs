@@ -177,16 +177,21 @@ public class Unit
             TextDices += " ";
         }
         MessageBox.Show(TextDices);
-
+        int rer = 0;
         Majority = Majority / t;
         for (int i = 0; i < n;i++)
         {
+            Wounds[i].dWound = dices[i];
             if((Wounds[i].Strenght - Majority + 4)>dices[i])
                 Wounds[i].fail();
             if((Wounds[i].Strenght- Majority +4 ) == 7 && dices[i]==6)
                 Wounds[i].win();
             if (dices[i] == 1)
                 Wounds[i].fail();
+            foreach(EffectsWeapons ew in Wounds[i].Effects)
+            {
+                ew.OnWound(ref Wounds[i], ref Wounds, ref rer,_g);
+            }
         }
         if (Wounds.Count != 0)
             Wounds[0].deleteFail(Wounds);

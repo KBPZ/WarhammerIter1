@@ -13,10 +13,10 @@ public class Wound
 {
     public int dShoot { get;set; }
     public int dWound { get; set; }
-	public int ap   
+	public int ap 
     {
         get;
-        private set;
+        set;
     }
 	public Effect[] Effects
     {
