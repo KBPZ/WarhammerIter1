@@ -87,7 +87,6 @@ public class Game
             case Pfase.Shoot:
                 break;
             case Pfase.Charge:
-
                 break;
         }
     }
