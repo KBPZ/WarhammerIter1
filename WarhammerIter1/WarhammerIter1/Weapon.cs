@@ -45,6 +45,7 @@ public class Weapon
         Strenght = 4;
         Type = TypeWeapon.Assault;
         Shoots = 2;
+        Effects = new List<EffectsWeapons> { };
 	}
 
     public virtual List<Wound> Shoot(int moved,int bs)
@@ -52,7 +53,7 @@ public class Weapon
         List<Wound> L = new List<Wound> { };
         for (int i=0; i<Shoots;i++ )
         {
-            L.Add(new Wound(Strenght, ArmorPenetretion, new Effect[0],bs,w_BasicModel));
+            L.Add(new Wound(Strenght, ArmorPenetretion, Effects.ToArray() ,bs,w_BasicModel));
         }
         return L;
     }

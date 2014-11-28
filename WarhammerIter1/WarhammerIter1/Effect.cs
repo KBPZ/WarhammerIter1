@@ -46,7 +46,7 @@ public abstract class EffectsModel : Effect
 }
 public class baldestorm : EffectsWeapons
 {
-    public override void OnShoot(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public override void OnWound(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
     {
         if(w.dWound==6)
         {

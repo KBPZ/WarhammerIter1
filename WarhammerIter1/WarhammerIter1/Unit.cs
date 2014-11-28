@@ -188,9 +188,9 @@ public class Unit
         for (int i = 0; i < n;i++)
         {
             Wounds[i].dWound = dices[i];
-            if((Wounds[i].Strenght - Majority + 4)>dices[i])
+            if(( Majority-Wounds[i].Strenght + 4)>dices[i])
                 Wounds[i].fail();
-            if((Wounds[i].Strenght- Majority +4 ) == 7 && dices[i]==6)
+            if((Majority- Wounds[i].Strenght +4 ) == 7 && dices[i]==6)
                 Wounds[i].win();
             if (dices[i] == 1)
                 Wounds[i].fail();

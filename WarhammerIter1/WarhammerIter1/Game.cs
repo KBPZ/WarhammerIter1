@@ -63,7 +63,7 @@ public class Game
     public PfaseSr ShootPf = new PfaseShoot();
 	private int NowPlayer;
     public Pfase NowPhase { get; private set; }
-	private Player[] Players;
+    public Player[] Players { get; private set; }
     public Map IsMap;
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
@@ -206,6 +206,7 @@ public class Game
         Players[0] = P1;
         Players[1] = P2;
         DiceGen = DiceG;
+        NowPhase = Pfase.Move;
     }
 
 	public Game(DiceInt DiceG)
