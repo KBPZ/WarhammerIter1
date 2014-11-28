@@ -11,11 +11,12 @@ using System.Collections.Generic;
 
 public class Wound 
 {
-
-	public int ap   
+    public int dShoot { get;set; }
+    public int dWound { get; set; }
+	public int ap 
     {
         get;
-        private set;
+        set;
     }
 	public Effect[] Effects
     {

@@ -9,6 +9,45 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+public interface PfaseSr
+{
+    void MousClick(int x, int y,Game _g);
+    void ActButtonClick(Game _g);
+}
+
+
+public class PfaseNofing:PfaseSr
+{
+    public void MousClick(int x, int y, Game _g) 
+    {
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+        
+    }
+}
+
+
+public class PfaseShoot : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        Unit un=_g.IsMap.FindUnit(x, y);
+        if(un !=null)
+        {
+            if (un.w_Player == _g.PlayerNow())
+                _g.Sourse = un;
+            else
+                _g.Target = un;
+        }
+    }
+    public void ActButtonClick(Game _g)
+    {
+        _g.Shooting();
+    }
+}
+
 public enum Pfase
 {
     Move,
@@ -17,52 +56,22 @@ public enum Pfase
     End
 }
 
-public interface IPfaseBehav
-{
-    void ClickMap(int x,int y);
-    void ClickActiveButton();
-}
-
-public class PfaseMoveBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
-public class PfaseShootBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
-public class PfaseChargeBehav : IPfaseBehav
-{
-    public void ClickMap(int x, int y)
-    { }
-    public void ClickActiveButton()
-    { }
-}
-
 public class Game 
 {
-    PfaseMoveBehav MoveBehav;
-    PfaseShootBehav ShootBehav;
-    PfaseChargeBehav ChargeBehav;
-    IPfaseBehav PfaseNow;
+    public PfaseSr NowPfaseStr;
+    public PfaseSr NofingPf = new PfaseNofing();
+    public PfaseSr ShootPf = new PfaseShoot();
 	private int NowPlayer;
-    private Pfase NowPhase;
+    public Pfase NowPhase { get; private set; }
 	private Player[] Players;
     public Map IsMap;
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
 	private int Turn;
-    public Unit Target;
-    public Unit Sourse;
-    private DiceGenerator DiceGen;
+    public Unit Target {get;set;}
+    public Unit Sourse {get;set;}
+    public intMission NowMission;
+    public DiceInt DiceGen { get; private set; }
 
     public  bool IsNowPfase(Pfase p)
     {
@@ -77,7 +86,7 @@ public class Game
         {
             foreach (Unit U in p.PlayersUnit)
             {
-                U.EndPfase(NowPhase, Players[NowPlayer]);
+                U.EndPfase(this);
             }
         }
         switch(NowPhase)
@@ -97,19 +106,22 @@ public class Game
         {
             foreach (Unit U in p.PlayersUnit)
             {
-                U.EndPfase(NowPhase, Players[NowPlayer]);
+                U.EndPfase(this);
             }
         }
         switch (NowPhase)
         {
             case Pfase.Move:
                 MessageBox.Show("Фаза движения");
+                NowPfaseStr = NofingPf;
                 break;
             case Pfase.Shoot:
                 MessageBox.Show("Фаза стрельбы");
+                NowPfaseStr = ShootPf;
                 break;
             case Pfase.Charge:
                 MessageBox.Show("Фаза атаки");
+                NowPfaseStr = NofingPf;
                 break;
         }
     }
@@ -168,10 +180,40 @@ public class Game
         return Players[NowPlayer];
     }
 
-	public Game()
+    public void MouseClick(int x,int y)
     {
+        NowPfaseStr.MousClick(x, y,this);
+    }
+
+    public void ClickActionButton()
+    {
+       /* switch(NowPhase)
+        {
+            case Pfase.Move:
+                break;
+            case Pfase.Shoot:
+                Shooting(Target, 0, Sourse);
+                break;
+            case Pfase.Charge:
+                break;
+        }*/
+        NowPfaseStr.ActButtonClick(this);
+    }
+
+    public Game(Player P1, Player P2, DiceInt DiceG)
+    {
+        Players = new Player[2];
+        Players[0] = P1;
+        Players[1] = P2;
+        DiceGen = DiceG;
+    }
+
+	public Game(DiceInt DiceG)
+    {
+        NowPfaseStr = ShootPf;
         List<Unit> LUnit = new List<Unit> {};
-        DiceGen = new DiceGenerator();
+        NowMission = new EturnalWar1();
+        DiceGen = DiceG;
         Players = new Player[2];
         Players[0] = new Player();
         Players[1] = new Player();
@@ -181,6 +223,7 @@ public class Game
         Sourse = Players[0].PlayersUnit[0];
         Sourse.Models[0].x += 300;
         Sourse.Models[1].x += 300;
+        Sourse.Models[2].x += 300;
         Target = Players[1].PlayersUnit[0];
         foreach(Player p in Players)
         {
@@ -193,11 +236,6 @@ public class Game
     {
 
 	}
-
-	/// 
-	/// <param name="Target"></param>
-	/// <param name="WeaponTyper"></param>
-	/// <param name="Sourse"></param>
 	public int Shooting(Unit Target, int WeaponTyper, Unit Sourse)
     {
         int Cover = 7;
@@ -205,17 +243,27 @@ public class Game
         L = Sourse.Shoot(Target,0,DiceGen);
         if (L == null)
             return 0;
-        L = Target.Wonding(Sourse, L, DiceGen);
+        L = Target.Wonding(Sourse, L, this);
         if (L == null)
             return 0;
         Target.Save(Cover, Sourse,L, DiceGen);
 		return 0;
 	}
 
-	/// 
-	/// <param name="Target"></param>
-	/// <param name="Shots"></param>
-	/// <param name="HowManyShot"></param>
+    public int Shooting()
+    {
+        int Cover = 7;
+        List<Wound> L = new List<Wound> { };
+        L = Sourse.Shoot(Target, 0, DiceGen);
+        if (L == null || L.Count==0)
+            return 0;
+        L = Target.Wonding(Sourse, L,this);
+        if (L == null || L.Count == 0)
+            return 0;
+        Target.Save(Cover, Sourse, L, DiceGen);
+        return 0;
+    }
+
 	public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)
     {
 

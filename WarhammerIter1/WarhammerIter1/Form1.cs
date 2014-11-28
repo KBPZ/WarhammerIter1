@@ -12,7 +12,7 @@ namespace WarhammerIter1
 {
     public partial class Form1 : Form
     {
-        Game IsGame = new Game();
+        Game IsGame = new Game(new DiceGenerator());
 
         public Form1()
         {
@@ -32,8 +32,10 @@ namespace WarhammerIter1
 
         private void tableLayoutPanel7_Click(object sender, EventArgs e)
         {
+            /*
             if(IsGame.IsNowPfase(Pfase.Shoot))
-                IsGame.Shooting(IsGame.Target, 0, IsGame.Sourse);
+                IsGame.Shooting(IsGame.Target, 0, IsGame.Sourse);*/
+            IsGame.ClickActionButton();
             tableLayoutPanel1.Invalidate();
         }
 
@@ -46,6 +48,11 @@ namespace WarhammerIter1
         {
             IsGame.NextPfase();
             tableLayoutPanel1.Invalidate();
+        }
+
+        private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            IsGame.MouseClick(e.X,e.Y);
         }
     }
 }

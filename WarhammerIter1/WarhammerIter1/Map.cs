@@ -11,11 +11,17 @@ using System.Windows.Forms;
 using System;
 
 
-public class Map {
+public class Map 
+{
 
 	private List<Unit> AllUnits;
 	private Point Coord;
 	private List<Object> MapObjects;
+
+    public Unit FindUnit(int x,int y)
+    {
+        return null;
+    }
 
 	public Map(List<Unit> Units)
     {
