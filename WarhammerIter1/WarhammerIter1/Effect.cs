@@ -20,16 +20,16 @@ public abstract class Effect
 
 public abstract class EffectsUnit : Effect
 {
-    public virtual void Leader(ref Unit u,ref int res,ref int leadership,ref int ReRoll,Game _g)
+    public virtual void Leader(Unit u,ref int res,ref int leadership,ref int ReRoll,Game _g)
     { 
     }
 }
 public abstract class EffectsWeapons : Effect
 {
-    public virtual void OnShoot(ref Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public virtual void OnShoot(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
     {
     }
-    public virtual void OnWound(ref Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public virtual void OnWound(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
     {
     }
 }
@@ -44,16 +44,29 @@ public abstract class EffectsModel : Effect
 
     }
 }
-/// <summary>
-/// hfgpihbtpihrt/h
-/// </summary>
 public class baldestorm : EffectsWeapons
 {
-    public override void OnShoot(ref Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public override void OnShoot(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
     {
         if(w.dWound==6)
         {
             w.ap = 2;
         }
+    }
+    public override string Name()
+    {
+        return "Bladestorm";
+    }
+}
+public class Fearless : EffectsUnit
+{
+    public override void Leader(Unit u, ref int res, ref int leadership, ref int ReRoll, Game _g)
+    {
+        res = 2;
+        leadership = 13;
+    }
+    public override string Name()
+    {
+        return "Fearless";
     }
 }

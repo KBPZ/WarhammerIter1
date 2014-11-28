@@ -86,6 +86,12 @@ public class Unit
 
     }
 
+    public Unit(List<BasicModel> ML,List<EffectsUnit> ef)
+    {
+        Models = ML;
+        Effects = ef;
+    }
+
 	public Unit()
     {
         Models = new List<BasicModel> { };
@@ -157,11 +163,11 @@ public class Unit
         return L;
     }
 
-    public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, DiceInt DiceGen)
+    public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, Game _g)
     {
         int n = Wounds.Count;
         int t=0,Majority=0;
-        List<int> dices = DiceGen.manyD6(n);
+        List<int> dices = _g.DiceGen.manyD6(n);
         foreach(BasicModel m in Models)
         {
             t++;
@@ -190,7 +196,7 @@ public class Unit
                 Wounds[i].fail();
             foreach(EffectsWeapons ew in Wounds[i].Effects)
             {
-                ew.OnWound(ref Wounds[i], ref Wounds, ref rer,_g);
+                ew.OnWound(Wounds[i], ref Wounds, ref rer,_g);
             }
         }
         if (Wounds.Count != 0)
@@ -200,7 +206,7 @@ public class Unit
 
     public bool LeadershipTest(Game _g)
     {
-        int leader = 0,DiceLeader=_g.DiceGen.D6plD6();
+        int leader = 0,DiceLeader=_g.DiceGen.D6plD6(),rer=0;
         String s = "LeaderTest ";
         s += DiceLeader.ToString();
         MessageBox.Show(s);
@@ -210,7 +216,7 @@ public class Unit
         }
         foreach (EffectsUnit EfU in Effects)
         {
-            EfU.Leader(this,DiceLeader,leader,_g);
+            EfU.Leader(this,ref DiceLeader,ref leader,ref rer,_g);
         }
         if(leader==13||leader>=DiceLeader)
             return true;

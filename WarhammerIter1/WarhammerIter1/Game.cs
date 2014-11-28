@@ -200,6 +200,14 @@ public class Game
         NowPfaseStr.ActButtonClick(this);
     }
 
+    public Game(Player P1, Player P2, DiceInt DiceG)
+    {
+        Players = new Player[2];
+        Players[0] = P1;
+        Players[1] = P2;
+        DiceGen = DiceG;
+    }
+
 	public Game(DiceInt DiceG)
     {
         NowPfaseStr = ShootPf;
@@ -235,7 +243,7 @@ public class Game
         L = Sourse.Shoot(Target,0,DiceGen);
         if (L == null)
             return 0;
-        L = Target.Wonding(Sourse, L, DiceGen);
+        L = Target.Wonding(Sourse, L, this);
         if (L == null)
             return 0;
         Target.Save(Cover, Sourse,L, DiceGen);
@@ -249,7 +257,7 @@ public class Game
         L = Sourse.Shoot(Target, 0, DiceGen);
         if (L == null || L.Count==0)
             return 0;
-        L = Target.Wonding(Sourse, L, DiceGen);
+        L = Target.Wonding(Sourse, L,this);
         if (L == null || L.Count == 0)
             return 0;
         Target.Save(Cover, Sourse, L, DiceGen);

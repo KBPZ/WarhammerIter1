@@ -22,7 +22,7 @@ public abstract class BasicModel
 	protected int Stilness = 0;
 	protected int Strength;
     protected int Moved=0;
-	protected Weapon[] Weapons;
+	protected List<Weapon> Weapons;
     protected Weapon m_Weapons;
     protected List<EffectsModel> Effects; 
     public Unit w_Unit;

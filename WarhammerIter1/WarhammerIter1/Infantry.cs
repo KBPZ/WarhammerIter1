@@ -28,6 +28,25 @@ public class Infantry : BasicModel
         return _Leadership;
     }
 
+    public Infantry(int xin, int yin, int bs, int ws, int s, int t, int l, int ArSv, List<Weapon> wea, List<EffectsModel> Ef)
+    {
+        x = xin;
+        y = yin;
+        _Leadership = l;
+        BalisticSkill = bs;
+        WeaponSkill = ws;
+        Strength = s;
+        Toughnes = t;
+        ArmorSave = ArSv;
+        Weapons = wea;
+        m_Weapons = Weapons[0];
+        Effects = Ef;
+        foreach (Weapon w in Weapons)
+        {
+            w.w_BasicModel = this;
+        }
+    }
+
 	public Infantry()
     {
         x = y = 100;
@@ -37,8 +56,7 @@ public class Infantry : BasicModel
         Strength = 3;
         Toughnes = 4;
         ArmorSave = 5;
-        Weapons = new Weapon[1];
-        Weapons[0] = new Weapon();
+        Weapons = new List<Weapon> {new Weapon()};
         m_Weapons = Weapons[0];
         Effects = new List<EffectsModel> { };
         foreach(Weapon w in Weapons)
@@ -78,7 +96,7 @@ public class Infantry : BasicModel
         else
             B = new SolidBrush(Color.DarkRed);
         if(Alive==0)
-            e.Graphics.FillEllipse(B, x-50, y-50, 100, 100);
+            e.Graphics.FillEllipse(B, x-50, y-50, 50, 50);
 	}
 
 }//end Infantry
