@@ -200,7 +200,7 @@ public class Unit
                 Wounds[i].fail();
             foreach(EffectsWeapons ew in Wounds[i].Effects)
             {
-                ew.OnWound(Wounds[i], ref Wounds, ref rer,_g);
+                ew.OnWound(Wounds[i], Wounds, ref rer,_g);
             }
         }
         if (Wounds.Count != 0)

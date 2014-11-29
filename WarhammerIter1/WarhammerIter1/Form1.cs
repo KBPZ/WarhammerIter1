@@ -20,9 +20,17 @@ namespace WarhammerIter1
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
                     new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(160, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })
-                    ,new Infantry(100, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
-                    new List<EffectsUnit>{new Fearless()})};
+                    new Infantry(160, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(100, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(100, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
+                    new List<EffectsUnit>{new Fearless()}),
+                    new Unit(
+                    new List<BasicModel>{new Infantry(500, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(560, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(500, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(500, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(560, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),},new List<EffectsUnit>{new Fearless()})};
             Player F = new Player(DireAvengersUnits);
             List<Unit> TerminatorsUnits = new List<Unit>{
                 new Unit(
@@ -76,6 +84,13 @@ namespace WarhammerIter1
         private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             IsGame.MouseClick(e.X,e.Y);
+            tableLayoutPanel1.Invalidate();
+        }
+
+        private void IndependentCharecterButton_Click(object sender, EventArgs e)
+        {
+            IsGame.IndependentCharecterButtonClick();
+            tableLayoutPanel1.Invalidate();
         }
 
 

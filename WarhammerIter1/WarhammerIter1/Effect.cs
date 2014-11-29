@@ -26,10 +26,10 @@ public abstract class EffectsUnit : Effect
 }
 public abstract class EffectsWeapons : Effect
 {
-    public virtual void OnShoot(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public virtual void OnShoot(Wound w, List<Wound> l, ref int ReRoll, Game _g)
     {
     }
-    public virtual void OnWound(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public virtual void OnWound(Wound w, List<Wound> l, ref int ReRoll, Game _g)
     {
     }
 }
@@ -46,11 +46,12 @@ public abstract class EffectsModel : Effect
 }
 public class baldestorm : EffectsWeapons
 {
-    public override void OnWound(Wound w, ref List<Wound> l, ref int ReRoll, Game _g)
+    public override void OnWound(Wound w, List<Wound> l, ref int ReRoll, Game _g)
     {
         if(w.dWound==6)
         {
             w.ap = 2;
+            w.win();
         }
     }
     public override string Name()

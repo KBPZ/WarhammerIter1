@@ -13,6 +13,7 @@ public interface PfaseSr
 {
     void MousClick(int x, int y,Game _g);
     void ActButtonClick(Game _g);
+    void IndependentCharecterButtonClick(Game _g);
 }
 
 
@@ -25,6 +26,10 @@ public class PfaseNofing:PfaseSr
     public void ActButtonClick(Game _g)
     {
         
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
     }
 }
 
@@ -45,6 +50,10 @@ public class PfaseShoot : PfaseSr
     public void ActButtonClick(Game _g)
     {
         _g.Shooting();
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
     }
 }
 
@@ -199,6 +208,10 @@ public class Game
         }*/
         NowPfaseStr.ActButtonClick(this);
     }
+    public void IndependentCharecterButtonClick()
+    {
+        NowPfaseStr.IndependentCharecterButtonClick(this);
+    }
 
     public Game(Player P1, Player P2, DiceInt DiceG)
     {
@@ -208,6 +221,7 @@ public class Game
         DiceGen = DiceG;
         NowMission = new EturnalWar1();
         NowPhase = Pfase.Move;
+        NowPfaseStr = NofingPf;
         Sourse = Players[0].PlayersUnit[0];
         Target = Players[1].PlayersUnit[0];
         Turn = 1;
