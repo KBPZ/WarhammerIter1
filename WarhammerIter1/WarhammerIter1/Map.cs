@@ -38,7 +38,7 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 10000)
+                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 2500)
                 {
                     return model;
                 }

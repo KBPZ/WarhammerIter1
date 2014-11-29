@@ -76,6 +76,7 @@ namespace WarhammerIter1
         private void tableLayoutPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             IsGame.MouseClick(e.X,e.Y);
+            tableLayoutPanel1.Invalidate();
         }
 
 

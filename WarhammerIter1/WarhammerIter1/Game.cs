@@ -54,15 +54,22 @@ public class PfaseChose : PfaseSr
     {
         //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
         _g.cur_model = _g.IsMap.FindModel(x, y);
-        _g.cur_unit = _g.cur_model.w_Unit;
+        if (_g.cur_model == null)
+            _g.cur_unit = null;
+        else
+            _g.cur_unit = _g.cur_model.w_Unit;
 
     }
     public void ActButtonClick(Game _g)
     {
-        if (_g.cur_unit.Moved != 0)
+        if(_g.cur_unit.w_Player!=_g.PlayerNow())
+        {
+            MessageBox.Show("Этот отряд не пренадлежит вам.");
+        }
+        else if (_g.cur_unit.Moved != 0)
         {
             MessageBox.Show("Вы уже перемещали этот отряд.");
-        }
+        }        
         else
             _g.NowPfaseStr = _g.MovePf;
     }
@@ -72,20 +79,99 @@ public class PfaseMove : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
-        //if()
-        if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+        BasicModel model=_g.IsMap.FindModel(x, y);
+        if (model!=null)
         {
-            _g.cur_model.x = x;
-            _g.cur_model.y = y;
+            if(model.w_Unit!=_g.cur_unit)
+            {
+                MessageBox.Show("Вы не можете перемещать данную модель.");
+            }
+            else
+            {
+                _g.cur_model = model;
+            }
         }
         else
         {
-            MessageBox.Show("Расстояние перемещения слишком велико.");
+            if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+            {
+                _g.cur_model.x = x;
+                _g.cur_model.y = y;
+            }
+            else
+            {
+                MessageBox.Show("Расстояние перемещения слишком велико.");
+            }
         }
+
     }
     public void ActButtonClick(Game _g)
     {
-        _g.cur_model.w_Unit.Moved = 1;
+                int i, j, k;
+        int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            for (j = 0; j < _g.cur_unit.Models.Count; j++)
+            {
+                m[i, j] = 0;
+            }
+        }
+        i=0;
+        foreach (BasicModel model in _g.cur_unit.Models)
+        {
+            j=0;
+            foreach (BasicModel temp_m in _g.cur_unit.Models)
+            {
+                if (temp_m != model)
+                {
+                    if ((model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                    {
+                        m[i, j] = 1;
+                        m[j, i] = 1;
+                        for(k=0; k<_g.cur_unit.Models.Count; k++)
+                        {
+                            if (m[j, k] == 1)
+                                m[i, k] = 1;
+                            if (m[i, k] == 1)
+                                m[j, k] = 1;
+                        }
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+        int cor = 0, t;
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            t = 1;
+            for (j = 0; j < _g.cur_unit.Models.Count; j++)
+            {
+                if(m[i, j]==0)
+                {
+                    t = 0;
+                }
+            }
+            if(t==1)
+            {
+                cor = 1;
+                break;
+            }
+        }
+        if(cor==0)
+        {
+            MessageBox.Show("Дистанция между моделями некорректна.");
+        }
+        else
+        {
+            foreach (BasicModel model in _g.cur_unit.Models)
+            {
+                model.start_x = model.x;
+                model.start_y = model.y;
+            }
+            _g.cur_model.w_Unit.Moved = 1;
+            _g.NowPfaseStr = _g.ChosePf;
+        }
     }
 }
 
@@ -114,10 +200,10 @@ public class Game
     public Unit Target {get;set;}
     public Unit Sourse {get;set;}
     public intMission NowMission;
-    private DiceGenerator DiceGen;
     public BasicModel cur_model;
     public Unit cur_unit;
     public int length = 600;
+    public int distance = 200;
     public DiceInt DiceGen { get; private set; }
 
     public  bool IsNowPfase(Pfase p)
@@ -258,6 +344,7 @@ public class Game
         Target = Players[1].PlayersUnit[0];
         Turn = 1;
         NowPlayer = 0;
+        NowPfaseStr = ChosePf;
         List<Unit> LUnit = new List<Unit> { };
         foreach (Player p in Players)
         {
