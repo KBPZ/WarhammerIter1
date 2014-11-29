@@ -105,8 +105,8 @@ public class Game
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
 	private int NowPlayer;
-    private Pfase NowPhase;
-	private Player[] Players;
+    public Pfase NowPhase { get; private set; }
+    public Player[] Players { get; private set; }
     public Map IsMap;
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
@@ -118,6 +118,7 @@ public class Game
     public BasicModel cur_model;
     public Unit cur_unit;
     public int length = 600;
+    public DiceInt DiceGen { get; private set; }
 
     public  bool IsNowPfase(Pfase p)
     {
@@ -132,7 +133,7 @@ public class Game
         {
             foreach (Unit U in p.PlayersUnit)
             {
-                U.EndPfase(NowPhase, Players[NowPlayer]);
+                U.EndPfase(this);
             }
         }
         switch(NowPhase)
@@ -142,7 +143,6 @@ public class Game
             case Pfase.Shoot:
                 break;
             case Pfase.Charge:
-
                 break;
         }
     }
@@ -153,7 +153,7 @@ public class Game
         {
             foreach (Unit U in p.PlayersUnit)
             {
-                U.EndPfase(NowPhase, Players[NowPlayer]);
+                U.EndPfase(this);
             }
         }
         switch (NowPhase)
@@ -246,12 +246,32 @@ public class Game
         NowPfaseStr.ActButtonClick(this);
     }
 
-	public Game()
+    public Game(Player P1, Player P2, DiceInt DiceG)
+    {
+        Players = new Player[2];
+        Players[0] = P1;
+        Players[1] = P2;
+        DiceGen = DiceG;
+        NowMission = new EturnalWar1();
+        NowPhase = Pfase.Move;
+        Sourse = Players[0].PlayersUnit[0];
+        Target = Players[1].PlayersUnit[0];
+        Turn = 1;
+        NowPlayer = 0;
+        List<Unit> LUnit = new List<Unit> { };
+        foreach (Player p in Players)
+        {
+            LUnit.AddRange(p.GetUnits());
+        }
+        IsMap = new Map(LUnit);
+    }
+
+	public Game(DiceInt DiceG)
     {
         NowPfaseStr = ShootPf;
         List<Unit> LUnit = new List<Unit> {};
         NowMission = new EturnalWar1();
-        DiceGen = new DiceGenerator();
+        DiceGen = DiceG;
         Players = new Player[2];
         Players[0] = new Player();
         Players[1] = new Player();
@@ -281,7 +301,7 @@ public class Game
         L = Sourse.Shoot(Target,0,DiceGen);
         if (L == null)
             return 0;
-        L = Target.Wonding(Sourse, L, DiceGen);
+        L = Target.Wonding(Sourse, L, this);
         if (L == null)
             return 0;
         Target.Save(Cover, Sourse,L, DiceGen);
@@ -295,7 +315,7 @@ public class Game
         L = Sourse.Shoot(Target, 0, DiceGen);
         if (L == null || L.Count==0)
             return 0;
-        L = Target.Wonding(Sourse, L, DiceGen);
+        L = Target.Wonding(Sourse, L,this);
         if (L == null || L.Count == 0)
             return 0;
         Target.Save(Cover, Sourse, L, DiceGen);

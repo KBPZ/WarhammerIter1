@@ -11,23 +11,27 @@ using System.Collections.Generic;
 
 public class Player {
 
-	public Unit[] PlayersUnit;
+	public List<Unit> PlayersUnit;
     int m_PlayersUnit;
 
     public List<Unit> GetUnits()
     {
-        List<Unit> L = new List<Unit> { };
-        foreach(Unit u in PlayersUnit)
+        return PlayersUnit;
+    }
+
+    public Player(List<Unit> L)
+    {
+        PlayersUnit = L;
+        foreach(Unit U in L)
         {
-            L.Add(u);
+            U.w_Player = this;
         }
-        return L;
     }
 
 	public Player()
     {
-        PlayersUnit = new Unit[1];
-        PlayersUnit[0] = new Unit();
+        PlayersUnit = new List<Unit>{};
+        PlayersUnit.Add(new Unit());
         m_PlayersUnit = 1;
         foreach(Unit w in PlayersUnit)
         {

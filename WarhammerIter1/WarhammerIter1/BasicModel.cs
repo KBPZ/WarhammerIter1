@@ -21,27 +21,36 @@ public abstract class BasicModel
 	protected int Move = 6;
 	protected int Stilness = 0;
 	protected int Strength;
-    public int Moved=0;
-	protected Weapon[] Weapons;
+    protected int Moved=0;
+	protected List<Weapon> Weapons;
     protected Weapon m_Weapons;
+    protected List<EffectsModel> Effects; 
     public Unit w_Unit;
 	protected int WeaponSkill;
 	protected int Wound;
     public int x, y;
+
+    public virtual int Leadership()
+    {
+        return 13;
+    }
+
     public int start_x, start_y;
     public virtual int MoveRange()
     {
         return 6;
     }
 
-    public virtual int DificltMoveRange(DiceGenerator d)
+    public virtual int DificltMoveRange(DiceInt d)
     {
         return Math.Max(d.D6(), d.D6());
     }
 
-    public void BeginPfase(Pfase NowPfase, Player NowPlayer)
+    public void BeginPfase(Game _g)
     {
-        switch (NowPfase)
+        if (Alive < 1)
+            Alive = 1;
+        switch (_g.NowPhase)
         {
             case Pfase.Move:
                 break;
@@ -52,9 +61,11 @@ public abstract class BasicModel
         }
     }
 
-    public void EndPfase(Pfase NowPfase,Player NowPlayer)
+    public void EndPfase(Game _g)
     {
-        switch (NowPfase)
+        if (Alive > 1)
+            Alive = 1;
+        switch (_g.NowPhase)
         {
             case Pfase.Move:
                 break;
@@ -75,7 +86,6 @@ public abstract class BasicModel
         return Alive;
     }
 
-
     public virtual int  GetToughnes(Unit Surce)
     {
         return 4;
@@ -86,7 +96,7 @@ public abstract class BasicModel
         Wound = 1;
 	}
 
-    public virtual List<Wound> Shoot(int t,DiceGenerator DiceGen)
+    public virtual List<Wound> Shoot(int t,DiceInt DiceGen)
     {
         if (Alive == 0)
         {

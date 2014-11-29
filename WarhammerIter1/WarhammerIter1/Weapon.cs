@@ -10,28 +10,42 @@
 
 using System.Collections.Generic;
 
-enum TypeWeapon
+public enum TypeWeapon
 {
     Heavy,
     Assault
 }
 
 
-public class Weapon {
+public class Weapon 
+{
 
 	private int ArmorPenetretion = 7;
 	private int Strenght;
     private TypeWeapon Type;
+    public List<EffectsWeapons> Effects;
     private int Shoots;
 	private int StrenghtModificationMute;
 	private int StrenghtModificationPlus;
 	public BasicModel w_BasicModel;
+
+    public Weapon(int s,TypeWeapon t,int shoots,int strmP,int strmM,int ap,List<EffectsWeapons> Eff)
+    {
+        ArmorPenetretion = ap;
+        Shoots = shoots;
+        Type = t;
+        Strenght = s;
+        StrenghtModificationMute = strmM;
+        StrenghtModificationPlus = strmP;
+        Effects = Eff;
+    }
 
 	public Weapon()
     {
         Strenght = 4;
         Type = TypeWeapon.Assault;
         Shoots = 2;
+        Effects = new List<EffectsWeapons> { };
 	}
 
     public virtual List<Wound> Shoot(int moved,int bs)
@@ -39,7 +53,7 @@ public class Weapon {
         List<Wound> L = new List<Wound> { };
         for (int i=0; i<Shoots;i++ )
         {
-            L.Add(new Wound(Strenght, ArmorPenetretion, new Effect[0],bs,w_BasicModel));
+            L.Add(new Wound(Strenght, ArmorPenetretion, Effects.ToArray() ,bs,w_BasicModel));
         }
         return L;
     }
