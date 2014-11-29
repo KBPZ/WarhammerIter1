@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
 
-
 public class Map 
 {
 
@@ -18,8 +17,33 @@ public class Map
 	private Point Coord;
 	private List<Object> MapObjects;
 
-    public Unit FindUnit(int x,int y)
+    public Unit FindUnit(int x, int y)
     {
+        foreach(Unit unit in AllUnits)
+        {
+            foreach(BasicModel model in unit.Models)
+            {
+                if((x-model.x)*(x-model.x)+(y-model.y)*(y-model.y)<=10000)
+                {
+                    return unit;
+                }
+            }
+        }
+        return null;
+    }
+
+    public BasicModel FindModel(int x, int y)
+    {
+        foreach (Unit unit in AllUnits)
+        {
+            foreach (BasicModel model in unit.Models)
+            {
+                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 2500)
+                {
+                    return model;
+                }
+            }
+        }
         return null;
     }
 
@@ -43,11 +67,11 @@ public class Map
 		return null;
 	}
 
-	public void Paint(PaintEventArgs e,Player now)
+	public void Paint(PaintEventArgs e,Game _g)
     {
         foreach(Unit U in AllUnits)
         {
-            U.Paint(e,now);
+            U.Paint(e,_g);
         }
 	}
 

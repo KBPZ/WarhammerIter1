@@ -21,7 +21,7 @@ public abstract class BasicModel
 	protected int Move = 6;
 	protected int Stilness = 0;
 	protected int Strength;
-    protected int Moved=0;
+    public int Moved=0;
 	protected List<Weapon> Weapons;
     protected Weapon m_Weapons;
     protected List<EffectsModel> Effects; 
@@ -35,6 +35,7 @@ public abstract class BasicModel
         return 13;
     }
 
+    public int start_x, start_y;
     public virtual int MoveRange()
     {
         return 6;
@@ -112,6 +113,6 @@ public abstract class BasicModel
 
 	}
 
-    public abstract void Paint(PaintEventArgs e,Player now);
+    public abstract void Paint(PaintEventArgs e,Game _g);
 
 }//end BasicModel

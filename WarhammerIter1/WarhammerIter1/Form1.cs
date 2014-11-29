@@ -57,7 +57,7 @@ namespace WarhammerIter1
             if (IsGame != null)
             {
                 e.Graphics.Clear(Color.Green);
-                IsGame.IsMap.Paint(e, IsGame.PlayerNow());
+                IsGame.IsMap.Paint(e, IsGame);
             }
         }
 

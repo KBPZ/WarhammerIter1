@@ -20,6 +20,7 @@ public class Unit
 	public BasicModel m_BasicModel;
 	public Effect m_Effect;
     public Player w_Player;
+    public int Moved=0;
 
     public int isFallBack()
     {
@@ -116,11 +117,11 @@ public class Unit
         }
 	}
 
-    public void Paint(PaintEventArgs e,Player now)
+    public void Paint(PaintEventArgs e,Game _g)
     {
         foreach(BasicModel B in Models)
         {
-            B.Paint(e,now);
+            B.Paint(e,_g);
         }
     }
 

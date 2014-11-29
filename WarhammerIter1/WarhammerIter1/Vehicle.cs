@@ -24,7 +24,7 @@ public class Vehicle : BasicModel {
 
 	}
 
-    public override void Paint(PaintEventArgs e,Player now)
+    public override void Paint(PaintEventArgs e,Game _g)
     {
         
     }

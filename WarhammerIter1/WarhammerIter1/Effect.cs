@@ -43,6 +43,10 @@ public abstract class EffectsModel : Effect
     {
 
     }
+    public virtual int IndependetCharecter()
+    {
+        return 0;
+    }
 }
 public class baldestorm : EffectsWeapons
 {
@@ -69,5 +73,16 @@ public class Fearless : EffectsUnit
     public override string Name()
     {
         return "Fearless";
+    }
+}
+public class IndependetCharecter : EffectsModel
+{
+    public override string Name()
+    {
+        return "IndependetCharecter";
+    }
+    public virtual int Independet()
+    {
+        return 1;
     }
 }

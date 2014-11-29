@@ -32,6 +32,8 @@ public class Infantry : BasicModel
     {
         x = xin;
         y = yin;
+        start_x = x;
+        start_y = y;
         _Leadership = l;
         BalisticSkill = bs;
         WeaponSkill = ws;
@@ -50,6 +52,7 @@ public class Infantry : BasicModel
 	public Infantry()
     {
         x = y = 100;
+        start_x = start_y = 100;
         _Leadership = 8;
         BalisticSkill = 3;
         WeaponSkill = 3;
@@ -88,11 +91,17 @@ public class Infantry : BasicModel
 
 	}
 
-	public override void Paint(PaintEventArgs e,Player now)
+	public override void Paint(PaintEventArgs e,Game _g)
     {
         SolidBrush B;
-        if (w_Unit.w_Player == now)
-            B = new SolidBrush(Color.Snow);
+        if (w_Unit.w_Player == _g.PlayerNow())
+            if (w_Unit == _g.cur_unit)
+                if (this == _g.cur_model)
+                    B = new SolidBrush(Color.Blue);
+                else
+                    B = new SolidBrush(Color.BlueViolet);
+            else
+                B = new SolidBrush(Color.Snow);
         else
             B = new SolidBrush(Color.DarkRed);
         if(Alive==0)

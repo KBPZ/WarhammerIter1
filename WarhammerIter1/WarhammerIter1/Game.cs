@@ -57,6 +57,164 @@ public class PfaseShoot : PfaseSr
     }
 }
 
+public class PfaseChose : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
+        _g.cur_model = _g.IsMap.FindModel(x, y);
+        if (_g.cur_model == null)
+            _g.cur_unit = null;
+        else
+            _g.cur_unit = _g.cur_model.w_Unit;
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+        if (_g.cur_unit==null)
+        {
+            MessageBox.Show("Выберите отряд.");
+        }        
+        else if(_g.cur_unit.w_Player!=_g.PlayerNow())
+        {
+            MessageBox.Show("Этот отряд не пренадлежит вам.");
+        }
+        else if (_g.cur_unit.Moved != 0)
+        {
+            MessageBox.Show("Вы уже перемещали этот отряд.");
+        }        
+        else
+            _g.NowPfaseStr = _g.MovePf;
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+}
+
+public class PfaseMove : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        BasicModel model=_g.IsMap.FindModel(x, y);
+        if (model!=null)
+        {
+            if(model.w_Unit!=_g.cur_unit)
+            {
+                MessageBox.Show("Вы не можете перемещать данную модель.");
+            }
+            else
+            {
+                _g.cur_model = model;
+            }
+        }
+        else
+        {
+            int en = 0;
+            foreach (Unit unit in _g.Players[1-_g.NowPlayer].GetUnits())
+            {
+                foreach (BasicModel t_model in unit.Models)
+                {
+                    if((x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
+                    {
+                        MessageBox.Show("Слишком малая дистанция с врагом.");
+                        en = 1;
+                        break;
+                    }
+                }
+                if (en == 1)
+                    break;
+            }
+            if (en == 0)
+            {
+                if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+                {
+                    _g.cur_model.x = x;
+                    _g.cur_model.y = y;
+                    _g.cur_model.Moved = 1;
+                }
+                else
+                {
+                    MessageBox.Show("Расстояние перемещения слишком велико.");
+                }
+            }
+        }
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+                int i, j, k;
+        int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            for (j = 0; j < _g.cur_unit.Models.Count; j++)
+            {
+                m[i, j] = 0;
+            }
+        }
+        i=0;
+        foreach (BasicModel model in _g.cur_unit.Models)
+        {
+            j=0;
+            foreach (BasicModel temp_m in _g.cur_unit.Models)
+            {
+                if (temp_m != model)
+                {
+                    if ((model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                    {
+                        m[i, j] = 1;
+                        m[j, i] = 1;
+                        for(k=0; k<_g.cur_unit.Models.Count; k++)
+                        {
+                            if (m[j, k] == 1)
+                                m[i, k] = 1;
+                            if (m[i, k] == 1)
+                                m[j, k] = 1;
+                        }
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+        int cor = 0, t;
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            t = 1;
+            for (j = 0; j < _g.cur_unit.Models.Count; j++)
+            {
+                if(m[i, j]==0)
+                {
+                    t = 0;
+                }
+            }
+            if(t==1)
+            {
+                cor = 1;
+                break;
+            }
+        }
+        if(cor==0)
+        {
+            MessageBox.Show("Дистанция между моделями некорректна.");
+        }
+        else
+        {
+            foreach (BasicModel model in _g.cur_unit.Models)
+            {
+                model.start_x = model.x;
+                model.start_y = model.y;
+            }
+            _g.cur_model.w_Unit.Moved = 1;
+            _g.NowPfaseStr = _g.ChosePf;
+        }
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+}
+
 public enum Pfase
 {
     Move,
@@ -68,9 +226,11 @@ public enum Pfase
 public class Game 
 {
     public PfaseSr NowPfaseStr;
+    public PfaseSr MovePf = new PfaseMove();
+    public PfaseSr ChosePf = new PfaseChose();
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
-	private int NowPlayer;
+	public int NowPlayer;
     public Pfase NowPhase { get; private set; }
     public Player[] Players { get; private set; }
     public Map IsMap;
@@ -80,6 +240,12 @@ public class Game
     public Unit Target {get;set;}
     public Unit Sourse {get;set;}
     public intMission NowMission;
+    public BasicModel cur_model;
+    public Unit cur_unit;
+    public int length = 600;
+    public int distance = 200;
+    public int enemy_distance = 100;
+    public int friend_distance = 100;
     public DiceInt DiceGen { get; private set; }
 
     public  bool IsNowPfase(Pfase p)
@@ -105,6 +271,14 @@ public class Game
             case Pfase.Shoot:
                 break;
             case Pfase.Charge:
+                foreach (Unit unit in Players[NowPlayer].GetUnits())
+                {
+                    foreach (BasicModel model in unit.Models)
+                    {
+                        model.Moved = 0;
+                    }
+                    unit.Moved = 0;
+                }
                 break;
         }
     }
@@ -122,7 +296,7 @@ public class Game
         {
             case Pfase.Move:
                 MessageBox.Show("Фаза движения");
-                NowPfaseStr = NofingPf;
+                NowPfaseStr = ChosePf;
                 break;
             case Pfase.Shoot:
                 MessageBox.Show("Фаза стрельбы");
@@ -139,7 +313,6 @@ public class Game
     {
         EndPfase();
         NowPhase++;
-
         if(NowPhase==Pfase.End)
         {
             NowPhase = Pfase.Move;
@@ -221,11 +394,11 @@ public class Game
         DiceGen = DiceG;
         NowMission = new EturnalWar1();
         NowPhase = Pfase.Move;
-        NowPfaseStr = NofingPf;
         Sourse = Players[0].PlayersUnit[0];
         Target = Players[1].PlayersUnit[0];
         Turn = 1;
         NowPlayer = 0;
+        NowPfaseStr = ChosePf;
         List<Unit> LUnit = new List<Unit> { };
         foreach (Player p in Players)
         {
