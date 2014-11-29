@@ -22,6 +22,10 @@ public class Player {
     public Player(List<Unit> L)
     {
         PlayersUnit = L;
+        foreach(Unit U in L)
+        {
+            U.w_Player = this;
+        }
     }
 
 	public Player()

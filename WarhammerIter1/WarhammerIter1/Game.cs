@@ -206,7 +206,18 @@ public class Game
         Players[0] = P1;
         Players[1] = P2;
         DiceGen = DiceG;
+        NowMission = new EturnalWar1();
         NowPhase = Pfase.Move;
+        Sourse = Players[0].PlayersUnit[0];
+        Target = Players[1].PlayersUnit[0];
+        Turn = 1;
+        NowPlayer = 0;
+        List<Unit> LUnit = new List<Unit> { };
+        foreach (Player p in Players)
+        {
+            LUnit.AddRange(p.GetUnits());
+        }
+        IsMap = new Map(LUnit);
     }
 
 	public Game(DiceInt DiceG)

@@ -90,6 +90,10 @@ public class Unit
     {
         Models = ML;
         Effects = ef;
+        foreach (BasicModel bm in ML)
+        {
+            bm.w_Unit = this;
+        }
     }
 
 	public Unit()

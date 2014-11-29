@@ -12,22 +12,45 @@ namespace WarhammerIter1
 {
     public partial class Form1 : Form
     {
-        Game IsGame = new Game(new DiceGenerator());
-
+        Game IsGame; //= new Game(new DiceGenerator());
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+           Weapon ShurikenCatapult = new Weapon(4, TypeWeapon.Assault, 2, 0, 1, 7, new List<EffectsWeapons> { new baldestorm() });
+            Weapon StormBolter = new Weapon(3, TypeWeapon.Assault, 2, 0, 1, 5, new List<EffectsWeapons> { });
+            List<Unit> DireAvengersUnits = new List<Unit>{
+                new Unit(
+                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })
+                    ,new Infantry(100, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
+                    new List<EffectsUnit>{new Fearless()})};
+            Player F = new Player(DireAvengersUnits);
+            List<Unit> TerminatorsUnits = new List<Unit>{
+                new Unit(
+                    new List<BasicModel>{new Infantry(300, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
+                    new Infantry(360, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
+                    ,new Infantry(300, 160, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
+                    new List<EffectsUnit>{new Fearless()})};
+            Player S = new Player(TerminatorsUnits);
+            IsGame = new Game(F, S, new DiceGenerator());
+        }
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+ 
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.Clear(Color.Green);
-            IsGame.IsMap.Paint(e,IsGame.PlayerNow());
+            if (IsGame != null)
+            {
+                e.Graphics.Clear(Color.Green);
+                IsGame.IsMap.Paint(e, IsGame.PlayerNow());
+            }
         }
 
         private void tableLayoutPanel7_Click(object sender, EventArgs e)
@@ -54,5 +77,7 @@ namespace WarhammerIter1
         {
             IsGame.MouseClick(e.X,e.Y);
         }
+
+
     }
 }

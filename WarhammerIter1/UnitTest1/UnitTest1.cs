@@ -11,7 +11,7 @@ namespace UnitTest1
         [TestMethod]
         public void TestMethod1()
         {
-            List<int> d = new List<int> {1,2,3,4,5,6,4,4,4,6,5,3,6,6};
+            List<int> d = new List<int> { 1, 2, 3, 4, 5, 6, 4, 4, 4, 6, 5, 3, 6, 6 };
             DiceInt di = new TestDice(d, new List<int> { 2 });
             Game isGame=new Game(di);
             isGame.Shooting();
@@ -23,7 +23,6 @@ namespace UnitTest1
         {
             List<int> d = new List<int> { 1, 2, 2, 4, 5, 6, 4, 6, 4, 6, 5, 6, 6, 6 };
             DiceInt di = new TestDice(d, new List<int> { 2 });
-            List<BasicModel> f, s;
             Weapon ShurikenCatapult = new Weapon(4, TypeWeapon.Assault, 2, 0, 1, 7, new List<EffectsWeapons> {new baldestorm()});
             Weapon StormBolter = new Weapon(3, TypeWeapon.Assault, 2, 0, 1, 5, new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
@@ -35,9 +34,9 @@ namespace UnitTest1
             Player F = new Player(DireAvengersUnits);
             List<Unit> TerminatorsUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
-                    new Infantry(160, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
-                    ,new Infantry(100, 160, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
+                    new List<BasicModel>{new Infantry(200, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
+                    new Infantry(260, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
+                    ,new Infantry(200, 160, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
                     new List<EffectsUnit>{new Fearless()})};
             Player S = new Player(TerminatorsUnits);
             Game IsGame = new Game(F, S, di);

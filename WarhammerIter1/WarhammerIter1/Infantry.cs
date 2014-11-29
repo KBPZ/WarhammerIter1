@@ -96,7 +96,7 @@ public class Infantry : BasicModel
         else
             B = new SolidBrush(Color.DarkRed);
         if(Alive==0)
-            e.Graphics.FillEllipse(B, x-50, y-50, 50, 50);
+            e.Graphics.FillEllipse(B, x-25, y-25, 50, 50);
 	}
 
 }//end Infantry
