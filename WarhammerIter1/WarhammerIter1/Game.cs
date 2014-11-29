@@ -62,7 +62,11 @@ public class PfaseChose : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-        if(_g.cur_unit.w_Player!=_g.PlayerNow())
+        if (_g.cur_unit==null)
+        {
+            MessageBox.Show("¬ыберите отр€д.");
+        }        
+        else if(_g.cur_unit.w_Player!=_g.PlayerNow())
         {
             MessageBox.Show("Ётот отр€д не пренадлежит вам.");
         }
@@ -93,14 +97,33 @@ public class PfaseMove : PfaseSr
         }
         else
         {
-            if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+            int en = 0;
+            foreach (Unit unit in _g.Players[1-_g.NowPlayer].GetUnits())
             {
-                _g.cur_model.x = x;
-                _g.cur_model.y = y;
+                foreach (BasicModel t_model in unit.Models)
+                {
+                    if((x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
+                    {
+                        MessageBox.Show("—лишком мала€ дистанци€ с врагом.");
+                        en = 1;
+                        break;
+                    }
+                }
+                if (en == 1)
+                    break;
             }
-            else
+            if (en == 0)
             {
-                MessageBox.Show("–ассто€ние перемещени€ слишком велико.");
+                if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+                {
+                    _g.cur_model.x = x;
+                    _g.cur_model.y = y;
+                    _g.cur_model.Moved = 1;
+                }
+                else
+                {
+                    MessageBox.Show("–ассто€ние перемещени€ слишком велико.");
+                }
             }
         }
 
@@ -190,7 +213,7 @@ public class Game
     public PfaseSr ChosePf = new PfaseChose();
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
-	private int NowPlayer;
+	public int NowPlayer;
     public Pfase NowPhase { get; private set; }
     public Player[] Players { get; private set; }
     public Map IsMap;
@@ -204,6 +227,8 @@ public class Game
     public Unit cur_unit;
     public int length = 600;
     public int distance = 200;
+    public int enemy_distance = 100;
+    public int friend_distance = 100;
     public DiceInt DiceGen { get; private set; }
 
     public  bool IsNowPfase(Pfase p)
@@ -229,6 +254,14 @@ public class Game
             case Pfase.Shoot:
                 break;
             case Pfase.Charge:
+                foreach (Unit unit in Players[NowPlayer].GetUnits())
+                {
+                    foreach (BasicModel model in unit.Models)
+                    {
+                        model.Moved = 0;
+                    }
+                    unit.Moved = 0;
+                }
                 break;
         }
     }
