@@ -21,14 +21,14 @@ public abstract class BasicModel
 	protected int Move = 6;
 	protected int Stilness = 0;
 	protected int Strength;
-    protected int Moved=0;
+    public int Moved=0;
 	protected Weapon[] Weapons;
     protected Weapon m_Weapons;
     public Unit w_Unit;
 	protected int WeaponSkill;
 	protected int Wound;
     public int x, y;
-
+    public int start_x, start_y;
     public virtual int MoveRange()
     {
         return 6;

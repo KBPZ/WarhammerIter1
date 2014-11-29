@@ -20,6 +20,7 @@ public class Infantry : BasicModel
 	public Infantry()
     {
         x = y = 100;
+        start_x = start_y = 100;
         BalisticSkill = 3;
         WeaponSkill = 3;
         Strength = 3;

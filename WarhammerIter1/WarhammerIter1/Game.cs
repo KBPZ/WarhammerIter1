@@ -48,6 +48,47 @@ public class PfaseShoot : PfaseSr
     }
 }
 
+public class PfaseChose : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
+        _g.cur_model = _g.IsMap.FindModel(x, y);
+        _g.cur_unit = _g.cur_model.w_Unit;
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+        if (_g.cur_unit.Moved != 0)
+        {
+            MessageBox.Show("Вы уже перемещали этот отряд.");
+        }
+        else
+            _g.NowPfaseStr = _g.MovePf;
+    }
+}
+
+public class PfaseMove : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        //if()
+        if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+        {
+            _g.cur_model.x = x;
+            _g.cur_model.y = y;
+        }
+        else
+        {
+            MessageBox.Show("Расстояние перемещения слишком велико.");
+        }
+    }
+    public void ActButtonClick(Game _g)
+    {
+        _g.cur_model.w_Unit.Moved = 1;
+    }
+}
+
 public enum Pfase
 {
     Move,
@@ -59,6 +100,8 @@ public enum Pfase
 public class Game 
 {
     public PfaseSr NowPfaseStr;
+    public PfaseSr MovePf = new PfaseMove();
+    public PfaseSr ChosePf = new PfaseChose();
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
 	private int NowPlayer;
@@ -72,6 +115,9 @@ public class Game
     public Unit Sourse {get;set;}
     public intMission NowMission;
     private DiceGenerator DiceGen;
+    public BasicModel cur_model;
+    public Unit cur_unit;
+    public int length = 600;
 
     public  bool IsNowPfase(Pfase p)
     {
@@ -114,7 +160,7 @@ public class Game
         {
             case Pfase.Move:
                 MessageBox.Show("Фаза движения");
-                NowPfaseStr = NofingPf;
+                NowPfaseStr = ChosePf;
                 break;
             case Pfase.Shoot:
                 MessageBox.Show("Фаза стрельбы");
@@ -131,7 +177,6 @@ public class Game
     {
         EndPfase();
         NowPhase++;
-
         if(NowPhase==Pfase.End)
         {
             NowPhase = Pfase.Move;

@@ -19,6 +19,7 @@ public class Unit
 	public BasicModel m_BasicModel;
 	public Effect m_Effect;
     public Player w_Player;
+    public int Moved=0;
 
     public void BeginPfase(Pfase NowPfase, Player NowPlayer)
     {
