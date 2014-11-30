@@ -113,6 +113,6 @@ public abstract class BasicModel
 
 	}
 
-    public abstract void Paint(PaintEventArgs e,Player now);
+    public abstract void Paint(PaintEventArgs e,Game _g);
 
 }//end BasicModel

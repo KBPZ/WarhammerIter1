@@ -13,6 +13,7 @@ public interface PfaseSr
 {
     void MousClick(int x, int y,Game _g);
     void ActButtonClick(Game _g);
+    void IndependentCharecterButtonClick(Game _g);
 }
 
 
@@ -25,6 +26,10 @@ public class PfaseNofing:PfaseSr
     public void ActButtonClick(Game _g)
     {
         
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
     }
 }
 
@@ -45,6 +50,10 @@ public class PfaseShoot : PfaseSr
     public void ActButtonClick(Game _g)
     {
         _g.Shooting();
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
     }
 }
 
@@ -76,6 +85,10 @@ public class PfaseChose : PfaseSr
         }        
         else
             _g.NowPfaseStr = _g.MovePf;
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
     }
 }
 
@@ -196,6 +209,10 @@ public class PfaseMove : PfaseSr
             _g.cur_model.w_Unit.Moved = 1;
             _g.NowPfaseStr = _g.ChosePf;
         }
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
     }
 }
 
@@ -364,6 +381,10 @@ public class Game
                 break;
         }*/
         NowPfaseStr.ActButtonClick(this);
+    }
+    public void IndependentCharecterButtonClick()
+    {
+        NowPfaseStr.IndependentCharecterButtonClick(this);
     }
 
     public Game(Player P1, Player P2, DiceInt DiceG)

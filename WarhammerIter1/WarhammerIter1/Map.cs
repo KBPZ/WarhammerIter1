@@ -67,11 +67,11 @@ public class Map
 		return null;
 	}
 
-	public void Paint(PaintEventArgs e,Player now)
+	public void Paint(PaintEventArgs e,Game _g)
     {
         foreach(Unit U in AllUnits)
         {
-            U.Paint(e,now);
+            U.Paint(e,_g);
         }
 	}
 

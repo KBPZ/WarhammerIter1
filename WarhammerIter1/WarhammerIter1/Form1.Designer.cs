@@ -35,6 +35,7 @@
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.IndependentCharecterButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -92,6 +93,7 @@
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 385F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 395F));
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.IndependentCharecterButton, 3, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 30);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
@@ -166,6 +168,18 @@
             this.tableLayoutPanel6.Size = new System.Drawing.Size(199, 513);
             this.tableLayoutPanel6.TabIndex = 5;
             // 
+            // IndependentCharecterButton
+            // 
+            this.IndependentCharecterButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.IndependentCharecterButton.Location = new System.Drawing.Point(733, 3);
+            this.IndependentCharecterButton.Name = "IndependentCharecterButton";
+            this.IndependentCharecterButton.Size = new System.Drawing.Size(390, 23);
+            this.IndependentCharecterButton.TabIndex = 1;
+            this.IndependentCharecterButton.Text = "Независимый Персонаж";
+            this.IndependentCharecterButton.UseVisualStyleBackColor = true;
+            this.IndependentCharecterButton.Click += new System.EventHandler(this.IndependentCharecterButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -195,6 +209,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private System.Windows.Forms.Button IndependentCharecterButton;
     }
 }
 
