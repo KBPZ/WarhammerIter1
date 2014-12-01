@@ -265,6 +265,29 @@ public class PfaseChose : PfaseSr
 
 public class PfaseMove : PfaseSr
 {
+    public int area(BasicModel a, BasicModel b, BasicModel c)
+    {
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
+
+    public bool intersect(int a, int b, int c, int d)
+    {
+        int n;
+        if (a > b)
+        {
+            n = a;
+            a = b;
+            b = n;
+        }
+        if (c > d)
+        {
+            n = c;
+            c = d;
+            d = n;
+        }
+        return Math.Max(a, c) <= Math.Min(b, d);
+    }
+
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
@@ -307,18 +330,17 @@ public class PfaseMove : PfaseSr
                         {
                             if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y))-100 <= _g.enemy_distance)
                             {
-                                bool b = Math.Max(Math.Min(_g.cur_model.x, x), Math.Min(c_model.x, t_model.x)) <= Math.Min(Math.Max(_g.cur_model.x, x), Math.Max(c_model.x, t_model.x))
-                                        && Math.Max(Math.Min(_g.cur_model.y, y), Math.Min(c_model.y, t_model.y)) <= Math.Min(Math.Max(_g.cur_model.y, y), Math.Max(c_model.y, t_model.y))
-                                        && ((x - _g.cur_model.x) * (c_model.y - _g.cur_model.y) - (y - _g.cur_model.y) * (c_model.x - _g.cur_model.x)) *
-                                        ((x - _g.cur_model.x) * (t_model.y - _g.cur_model.y) - (y - _g.cur_model.y) * (t_model.x - _g.cur_model.x)) <= 0
-                                        && ((t_model.x - c_model.x) * (_g.cur_model.y - c_model.y) - (t_model.y - c_model.y) * (_g.cur_model.x - c_model.x)) *
-                                        ((t_model.x - c_model.x) * (y - c_model.y) - (t_model.y - c_model.y) * (x - c_model.x)) <= 0;
- 
+                                BasicModel xy = new Infantry();
+                                xy.x=x;
+                                xy.y=y;
+                                bool b = intersect(_g.cur_model.x, x, c_model.x, t_model.x)
+                                        && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
+                                		&& area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
+		                                && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0; 
                                 if (b == true)
                                 {
                                     en = 1;
-                                    MessageBox.Show("¬ы не можете пройти через вражеские модели. " + _g.cur_model.x.ToString() + " " + _g.cur_model.y.ToString() + " " + x.ToString() + " " + y.ToString() + " " +
-                                        c_model.x.ToString() + " " + c_model.y.ToString() + " " + t_model.x.ToString() + " " + t_model.y.ToString());
+                                    MessageBox.Show("¬ы не можете пройти через вражеские модели.");
                                     break;
                                 }
                             }
