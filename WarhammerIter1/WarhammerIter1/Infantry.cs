@@ -22,7 +22,6 @@ public class Infantry : BasicModel
         return Toughnes;
     }
 
-
     public override int Leadership()
     {
         return _Leadership;

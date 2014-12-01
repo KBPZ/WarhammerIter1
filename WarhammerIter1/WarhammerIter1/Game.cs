@@ -80,13 +80,19 @@ public class PfaseShoot : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
-        Unit un=_g.IsMap.FindUnit(x, y);
+        BasicModel un=_g.IsMap.FindModel(x, y);
+
         if(un !=null)
         {
-            if (un.w_Player == _g.PlayerNow())
-                _g.cur_unit = un;
+            if (un.w_Unit.w_Player == _g.PlayerNow())
+            { 
+                _g.cur_model = un;
+                _g.cur_unit = un.w_Unit;
+            }
             else
-                _g.Target = un;
+            {
+                _g.Target = un.w_Unit;
+            }
         }
     }
     public void ActButtonClick(Game _g)
