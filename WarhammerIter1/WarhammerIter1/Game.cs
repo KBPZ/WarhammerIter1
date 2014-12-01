@@ -170,25 +170,22 @@ public class PfaseMove : PfaseSr
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
         BasicModel model1 = _g.IsMap.ModelDistance(x, y);
-        if (model!=null || model1!=null)
+        if (model != null || (model1 != null && model1 != _g.cur_model))
         {
             if (model != null)
             {
                 if (model.w_Unit != _g.cur_unit)
-            {
-                _g.IsShow.ShowMessage("¬ы не можете перемещать данную модель.");
+                {
+                    _g.IsShow.ShowMessage("¬ы не можете перемещать данную модель.");
+                }
+                else
+                {
+                    _g.cur_model = model;
+                }
             }
             else
             {
-                _g.cur_model = model;
-            }
-        }
-            if (model1 != null)
-            {
-                if (model1 != _g.cur_model)
-                {
-                    MessageBox.Show("ћодели не могут пересекатьс€.");
-                }
+                _g.IsShow.ShowMessage("ћодели не могут пересекатьс€.");
             }
         }
         else
@@ -205,31 +202,31 @@ public class PfaseMove : PfaseSr
                         en = 1;
                         break;
                     }
-                    /*
                     foreach (BasicModel c_model in unit.Models)
                     {
                         if (c_model!=t_model)
                         {
                             if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y))-100 <= _g.enemy_distance)
                             {
-                                double y1, y2, k1, k2, b1, b2, x1;
-                                k1 = (y - t_model.y) / (x - t_model.x);
-                                b1 = (y - k1 * x);
-                                k2 = (c_model.y - t_model.y) / (c_model.x - t_model.x);
-                                b2 = (c_model.y - k2 * x);
-                                x1 = (b2 - b1) / (k1 - k2);
-                                y1 = k1 * x1 + b1;
-                                y2 = k2 * x1 + b2;
-                                if(y1==y2)
+                                bool b = Math.Max(Math.Min(_g.cur_model.x, x), Math.Min(c_model.x, t_model.x)) <= Math.Min(Math.Max(_g.cur_model.x, x), Math.Max(c_model.x, t_model.x))
+                                        && Math.Max(Math.Min(_g.cur_model.y, y), Math.Min(c_model.y, t_model.y)) <= Math.Min(Math.Max(_g.cur_model.y, y), Math.Max(c_model.y, t_model.y))
+                                        && ((x - _g.cur_model.x) * (c_model.y - _g.cur_model.y) - (y - _g.cur_model.y) * (c_model.x - _g.cur_model.x)) *
+                                        ((x - _g.cur_model.x) * (t_model.y - _g.cur_model.y) - (y - _g.cur_model.y) * (t_model.x - _g.cur_model.x)) <= 0
+                                        && ((t_model.x - c_model.x) * (_g.cur_model.y - c_model.y) - (t_model.y - c_model.y) * (_g.cur_model.x - c_model.x)) *
+                                        ((t_model.x - c_model.x) * (y - c_model.y) - (t_model.y - c_model.y) * (x - c_model.x)) <= 0;
+ 
+                                if (b == true)
                                 {
                                     en = 1;
-                                    MessageBox.Show("¬ы не можете пройти через вражеские модели.");
+                                    MessageBox.Show("¬ы не можете пройти через вражеские модели. " + _g.cur_model.x.ToString() + " " + _g.cur_model.y.ToString() + " " + x.ToString() + " " + y.ToString() + " " +
+                                        c_model.x.ToString() + " " + c_model.y.ToString() + " " + t_model.x.ToString() + " " + t_model.y.ToString());
                                     break;
                                 }
                             }
                         }
-                    } */
-
+                        if (en == 1)
+                            break;
+                    } 
                 }
                 if (en == 1)
                     break;
