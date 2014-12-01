@@ -15,17 +15,18 @@ namespace WarhammerIter1
         Game IsGame; //= new Game(new DiceGenerator());
         private void Form1_Shown(object sender, EventArgs e)
         {
-            BasicModel Autarh = new Infantry(40, 160, 5, 5, 3, 3, 5, 10, 3, 4, new List<Weapon>{new Weapon(4, TypeWeapon.Assault, 1, 0, 1, 7,
-                new List<EffectsWeapons> { new baldestorm() })}, new List<EffectsModel>() { new Fearless(), new IndependetCharecter() });
-            Weapon ShurikenCatapult = new Weapon(4, TypeWeapon.Assault, 2, 0, 1, 7, new List<EffectsWeapons> { new baldestorm() });
-            Weapon StormBolter = new Weapon(3, TypeWeapon.Assault, 2, 0, 1, 5, new List<EffectsWeapons> { });
+            BasicModel Autarh = new Infantry(40, 160, 5, 5, 3, 3, 5, 10, 3, 4,
+                new List<Weapon>{new Pistol(4,5,new List<EffectsWeapons> { new baldestorm() })},
+                new List<EffectsModel>() { new Fearless(), new IndependetCharecter() });
+            Weapon ShurikenCatapult = new Heavy(4, 5, 2, new List<EffectsWeapons> { new baldestorm() });
+            Weapon StormBolter = new Assault(4, 5, 2, new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
                     new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5,9, 4, 7,new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
                     new Infantry(160, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
                     new Infantry(100, 160, 4, 4, 3, 3, 5,9, 4, 7,new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
                     new Infantry(100, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(160, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { new Heavy(6,5,3,new List<EffectsWeapons>{new baldestorm()}) }, new List<EffectsModel> { }),
                     Autarh},
                     new List<EffectsUnit>{}),
                     new Unit(

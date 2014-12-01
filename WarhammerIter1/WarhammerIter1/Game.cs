@@ -13,6 +13,8 @@ using System;
 public interface Show
 {
     void ShowMessage(string s);
+    void ShowSoots(List<Wound> Lw);
+    void ShowWound(List<Wound> Lw);
 }
 
 public class ShowMessageBox : Show
@@ -20,6 +22,97 @@ public class ShowMessageBox : Show
     public void ShowMessage(string s)
     {
         MessageBox.Show(s);
+    }
+    public void ShowSoots(List<Wound> Lw)
+    {
+        Lw.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.BalisticSkills > y.BalisticSkills)
+                return 1;
+            else if (x.BalisticSkills == y.BalisticSkills)
+                if (x.Strenght > y.Strenght)
+                    return 1;
+                else if (x.Strenght == y.Strenght)
+                    if (x.ap > y.ap)
+                        return 1;
+                    else if (x.ap == y.ap)
+                        return 0;
+                    else
+                        return -1;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        int s=0, bs=0, ap=0;
+        string Show = "";
+        char p = ' ';
+        foreach(Wound w in Lw)
+        {
+            if(s!=w.Strenght||bs!=w.BalisticSkills||ap!=w.ap)
+            {
+                if(Show!="")
+                {
+                    MessageBox.Show(Show,"bs "+ bs.ToString()+" s " + s.ToString() + " ap " + ap.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dShoot); ;
+                Show += p;
+                s = w.Strenght; bs = w.BalisticSkills; ap = w.ap;
+            }
+            else
+            {
+                Show += (char)('0' + w.dShoot);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+        }
+    }
+    public void ShowWound(List<Wound> Lw)
+    {
+        Lw.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Strenght > y.Strenght)
+                return 1;
+            else if (x.Strenght == y.Strenght)
+                if (x.ap > y.ap)
+                    return 1;
+                else if (x.ap == y.ap)
+                    return 0;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        int s = 0, ap = 0;
+        string Show = "";
+        char p = ' ';
+        foreach (Wound w in Lw)
+        {
+            if (s != w.Strenght || ap != w.ap)
+            {
+                if (Show != "")
+                {
+                    MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dWound);
+                Show += p;
+                s = w.Strenght; ap = w.ap;
+            }
+            else
+            {
+                Show += (char)('0' + w.dWound);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+        }
     }
 }
 
@@ -81,13 +174,19 @@ public class PfaseShoot : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
-        Unit un=_g.IsMap.FindUnit(x, y);
+        BasicModel un=_g.IsMap.FindModel(x, y);
+
         if(un !=null)
         {
-            if (un.w_Player == _g.PlayerNow())
-                _g.cur_unit = un;
+            if (un.w_Unit.w_Player == _g.PlayerNow())
+            { 
+                _g.cur_model = un;
+                _g.cur_unit = un.w_Unit;
+            }
             else
-                _g.Target = un;
+            {
+                _g.Target = un.w_Unit;
+            }
         }
     }
     public void ActButtonClick(Game _g)
