@@ -67,7 +67,7 @@ public class Unit
                     if(!LeadershipTest(_g))
                     {
                         FallBack = 1;
-                        MessageBox.Show("FallBack!");
+                        _g.IsShow.ShowMessage("FallBack!");
                     }
                 }
                 break;
@@ -95,9 +95,33 @@ public class Unit
         {
             bm.w_Unit = this;
         }
+        SpreadEffects();
     }
 
-	public Unit()
+    private void SpreadEffects()
+    {
+        String EffUfromModel = null;
+        foreach (BasicModel bm in Models)
+        {
+            foreach (EffectsModel EfM in bm.Effects)
+            {
+                EffUfromModel = EfM.NameSpreadToUnit();
+                if (EffUfromModel != "")
+                {
+                    int i = 0;
+                    for (i = 0; i < Effects.Count; i++)
+                    {
+                        if (Effects[i].Name() == EffUfromModel)
+                            break;
+                    }
+                    if (i < Effects.Count)
+                        Effects.Add(EfM.SpreadToUnit());
+                }
+            }
+        }
+    }
+
+    public Unit()
     {
         Models = new List<BasicModel> { };
         Effects = new List<EffectsUnit> { };
@@ -125,7 +149,7 @@ public class Unit
         }
     }
 
-    public List<Wound> Shoot(Unit Target, int type, DiceInt d)
+    public List<Wound> Shoot(int type, Game _g)
     {
         List<Wound> L=new List<Wound>{},Lp;
         if (IsShoot == 0)
@@ -133,12 +157,12 @@ public class Unit
             IsShoot = 1;
             foreach (BasicModel ShootModel in Models)
             {
-                Lp = ShootModel.Shoot(type, d);
+                Lp = ShootModel.Shoot(type, _g);
                 if(Lp!=null)
                     L.AddRange(Lp);
             }
             int n = L.Count;
-            List<int> dice = d.manyD6(n);
+            List<int> dice = _g.DiceGen.manyD6(n);
             char a = ' ';
             string dices = new string(a, 1);
             foreach (int di in dice)
@@ -148,7 +172,7 @@ public class Unit
                 dices += " ";
             }
             //TextBox Box = new TextBox();
-            MessageBox.Show(dices);
+            _g.IsShow.ShowMessage(dices);
             for (int i = 0; i < n; i++)
             {
                 if (dice[i] < 7 - L[i].BalisticSkills)
@@ -162,7 +186,7 @@ public class Unit
         }
         else
         {
-            MessageBox.Show("Уже стрелял");
+            _g.IsShow.ShowMessage("Уже стрелял");
             return null;
         }
         return L;
@@ -187,7 +211,7 @@ public class Unit
             TextDices += c;
             TextDices += " ";
         }
-        MessageBox.Show(TextDices);
+        _g.IsShow.ShowMessage(TextDices);
         int rer = 0;
         Majority = Majority / t;
         for (int i = 0; i < n;i++)
@@ -214,7 +238,7 @@ public class Unit
         int leader = 0,DiceLeader=_g.DiceGen.D6plD6(),rer=0;
         String s = "LeaderTest ";
         s += DiceLeader.ToString();
-        MessageBox.Show(s);
+        _g.IsShow.ShowMessage(s);
         foreach(BasicModel bm in Models)
         {
             leader=Math.Max(bm.Leadership(),leader);
@@ -238,10 +262,10 @@ public class Unit
         return null;
     }
 
-    public void Save(int Cover, Unit Sourse, List<Wound> Wounds, DiceInt DiceGen)
+    public void Save(int Cover,List<Wound> Wounds,Game _g)
     {
         int n = Wounds.Count;
-        List<int> dices = DiceGen.manyD6(n);
+        List<int> dices = _g.DiceGen.manyD6(n);
         char a = ' ';
         string TextDices = new string(a, 1);
         foreach (int d in dices)
@@ -250,15 +274,15 @@ public class Unit
             TextDices += c;
             TextDices += " ";
         }
-        MessageBox.Show(TextDices);
+        _g.IsShow.ShowMessage(TextDices);
 
 
         for (int i = 0; i < n; i++)
         {
-            BasicModel m = Furst(Sourse);
+            BasicModel m = Furst(_g.cur_unit);
             if (m == null)
             {
-                MessageBox.Show("All dead");
+                _g.IsShow.ShowMessage("All dead");
                 break;
             }
 
@@ -266,13 +290,77 @@ public class Unit
         }
     }
 
-	~Unit()
+    public void LeaveIndepChar(BasicModel IndepChar,Game _g)
     {
+        int k=0;
+        if(this!=IndepChar.w_Unit)
+        {
+            return;
+        }
+        foreach(EffectsModel EfUn in IndepChar.Effects)
+        {
+            k += EfUn.IsIndependetCharecter(_g);
+        }
+        if(k==0)
+        {
+            return;
+        }
+        Models.Remove(IndepChar);
+        List<EffectsUnit> ToDel = new List<EffectsUnit> { };
+        foreach(EffectsModel EfInd in IndepChar.Effects)
+        {
+            foreach (EffectsUnit EfUni in Effects)
+            {
+                if (EfInd.NameSpreadToUnit() == EfUni.Name())
+                {
+                    ToDel.Add(EfUni);
+                }
+            }
+        }
+        foreach(EffectsUnit EfToDel in ToDel)
+        {
+            Effects.Remove(EfToDel);
+        }
+        Unit Indep = new Unit(new List<BasicModel> { IndepChar }, new List<EffectsUnit> { });
+        Indep.w_Player = w_Player;
+        IndepChar.w_Unit = Indep;
+        IndepChar.w_Unit.w_Player.PlayersUnit.Add(Indep);
+        _g.IsMap.AllUnits.Add(Indep);
+    }
 
-	}
+    public void JoinIndepChar(Unit IndepUnit,Game _g)
+    {
+        if(IndepUnit.Models.Count!=1)
+            return;
+        int k = 0;
+        foreach(EffectsModel EfInd in IndepUnit.Models[0].Effects)
+        {
+            k += EfInd.IsIndependetCharecter(_g);
+        }
+        if (k == 0)
+            return;
+        w_Player.PlayersUnit.Remove(IndepUnit);
+        _g.IsMap.AllUnits.Remove(IndepUnit);
 
-	public virtual void Dispose(){
+        Models.Add(IndepUnit.Models[0]);
+        IndepUnit.Models[0].w_Unit = this;
+        SpreadEffects();
+    }
 
-	}
-
+    public List<BasicModel> SearchIndeps(Game _g)
+    {
+        List<BasicModel> Indeps = new List<BasicModel> { };
+        foreach(BasicModel BasMod in Models)
+        {
+            foreach(EffectsModel EffMod in BasMod.Effects)
+            {
+                if(1==EffMod.IsIndependetCharecter(_g))
+                {
+                    Indeps.Add(BasMod);
+                    break;
+                }
+            }
+        }
+        return Indeps;
+    }
 }//end Unit

@@ -16,7 +16,7 @@ public abstract class intMission
     public virtual void EndTurn(int p, Player pl) { }
     public virtual void End() { }
     public virtual void ShowScore() { }
-    public virtual void ShowName() { }
+    public virtual void ShowName(Game _g) { }
     public virtual void Death() { }
 }
 
@@ -31,9 +31,9 @@ public class EturnalWar1 : intMission
     public override void EndTurn(int p, Player pl) { }
     public override void End() { }
     public override void ShowScore() { }
-    public override void ShowName()
+    public override void ShowName(Game _g)
     {
-        MessageBox.Show("EtWar 1");
+        _g.IsShow.ShowMessage("EtWar 1");
     }
     public override void Death()
     { }
@@ -44,9 +44,9 @@ public class EturnalWar2 : intMission
     public override void EndTurn(int p, Player pl) { }
     public override void End() { }
     public override void ShowScore() { }
-    public override void ShowName()
+    public override void ShowName(Game _g)
     {
-        MessageBox.Show("EtWar 2");
+        _g.IsShow.ShowMessage("EtWar 2");
     }
     public override void Death()
     { }
@@ -57,9 +57,9 @@ public class EturnalWar3 : intMission
     public override void EndTurn(int p, Player pl) { }
     public override void End() { }
     public override void ShowScore() { }
-    public override void ShowName()
+    public override void ShowName(Game _g)
     {
-        MessageBox.Show("EtWar 2");
+        _g.IsShow.ShowMessage("EtWar 2");
     }
     public override void Death()
     { }

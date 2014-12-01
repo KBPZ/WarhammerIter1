@@ -13,7 +13,7 @@ using System;
 public class Map 
 {
 
-	private List<Unit> AllUnits;
+	public List<Unit> AllUnits;
 	private Point Coord;
 	private List<Object> MapObjects;
 

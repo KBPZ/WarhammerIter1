@@ -24,7 +24,7 @@ public abstract class BasicModel
     public int Moved=0;
 	protected List<Weapon> Weapons;
     protected Weapon m_Weapons;
-    protected List<EffectsModel> Effects; 
+    public List<EffectsModel> Effects { get; protected set; }
     public Unit w_Unit;
 	protected int WeaponSkill;
 	protected int Wound;
@@ -96,7 +96,7 @@ public abstract class BasicModel
         Wound = 1;
 	}
 
-    public virtual List<Wound> Shoot(int t,DiceInt DiceGen)
+    public virtual List<Wound> Shoot(int t,Game _g)
     {
         if (Alive == 0)
         {

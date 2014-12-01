@@ -27,22 +27,22 @@ namespace UnitTest1
             Weapon StormBolter = new Weapon(3, TypeWeapon.Assault, 2, 0, 1, 5, new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(160, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })
-                    ,new Infantry(100, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
-                    new List<EffectsUnit>{new Fearless()})};
+                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })
+                    ,new Infantry(100, 160, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
+                    new List<EffectsUnit>{new FearlessUnit()})};
             Player F = new Player(DireAvengersUnits);
             List<Unit> TerminatorsUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(200, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
-                    new Infantry(260, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
-                    ,new Infantry(200, 160, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
-                    new List<EffectsUnit>{new Fearless()})};
+                    new List<BasicModel>{new Infantry(200, 100, 4, 4, 4, 4, 5,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
+                    new Infantry(260, 100, 4, 4, 4, 4, 5,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
+                    ,new Infantry(200, 160, 4, 4, 4, 4, 5,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
+                    new List<EffectsUnit>{new FearlessUnit()})};
             Player S = new Player(TerminatorsUnits);
             Game IsGame = new Game(F, S, di);
-            IsGame.Sourse = IsGame.Players[0].PlayersUnit[0];
+            IsGame.cur_unit = IsGame.Players[0].PlayersUnit[0];
             IsGame.Target = IsGame.Players[1].PlayersUnit[0];
-            BasicModel TargetFurst = IsGame.Target.Furst(IsGame.Sourse);
+            BasicModel TargetFurst = IsGame.Target.Furst(IsGame.cur_unit);
             IsGame.NextPfase();
             IsGame.Shooting();
             IsGame.NextPfase();
