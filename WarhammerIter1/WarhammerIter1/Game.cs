@@ -181,6 +181,7 @@ public class PfaseMove : PfaseSr
         }
         else
         {
+
             int en = 0;
             foreach (Unit unit in _g.Players[1-_g.NowPlayer].GetUnits())
             {
