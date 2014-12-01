@@ -272,29 +272,49 @@ public class PfaseChose : PfaseSr
 
 public class PfaseMove : PfaseSr
 {
+    public int area(BasicModel a, BasicModel b, BasicModel c)
+    {
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
+
+    public bool intersect(int a, int b, int c, int d)
+    {
+        int n;
+        if (a > b)
+        {
+            n = a;
+            a = b;
+            b = n;
+        }
+        if (c > d)
+        {
+            n = c;
+            c = d;
+            d = n;
+        }
+        return Math.Max(a, c) <= Math.Min(b, d);
+    }
+
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
         BasicModel model1 = _g.IsMap.ModelDistance(x, y);
-        if (model!=null || model1!=null)
+        if (model != null || (model1 != null && model1 != _g.cur_model))
         {
             if (model != null)
             {
                 if (model.w_Unit != _g.cur_unit)
-            {
-                _g.IsShow.ShowMessage("Вы не можете перемещать данную модель.");
+                {
+                    _g.IsShow.ShowMessage("Вы не можете перемещать данную модель.");
+                }
+                else
+                {
+                    _g.cur_model = model;
+                }
             }
             else
             {
-                _g.cur_model = model;
-            }
-        }
-            if (model1 != null)
-            {
-                if (model1 != _g.cur_model)
-                {
-                    MessageBox.Show("Модели не могут пересекаться.");
-                }
+                _g.IsShow.ShowMessage("Модели не могут пересекаться.");
             }
         }
         else
@@ -311,22 +331,20 @@ public class PfaseMove : PfaseSr
                         en = 1;
                         break;
                     }
-                    /*
                     foreach (BasicModel c_model in unit.Models)
                     {
                         if (c_model!=t_model)
                         {
-                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y))-100 <= _g.enemy_distance)
+                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y)) <= _g.enemy_distance)
                             {
-                                double y1, y2, k1, k2, b1, b2, x1;
-                                k1 = (y - t_model.y) / (x - t_model.x);
-                                b1 = (y - k1 * x);
-                                k2 = (c_model.y - t_model.y) / (c_model.x - t_model.x);
-                                b2 = (c_model.y - k2 * x);
-                                x1 = (b2 - b1) / (k1 - k2);
-                                y1 = k1 * x1 + b1;
-                                y2 = k2 * x1 + b2;
-                                if(y1==y2)
+                                BasicModel xy = new Infantry();
+                                xy.x=x;
+                                xy.y=y;
+                                bool b = intersect(_g.cur_model.x, x, c_model.x, t_model.x)
+                                        && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
+                                		&& area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
+		                                && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0;
+                                if (b == true)
                                 {
                                     en = 1;
                                     MessageBox.Show("Вы не можете пройти через вражеские модели.");
@@ -334,8 +352,9 @@ public class PfaseMove : PfaseSr
                                 }
                             }
                         }
-                    } */
-
+                        if (en == 1)
+                            break;
+                    } 
                 }
                 if (en == 1)
                     break;
@@ -358,58 +377,7 @@ public class PfaseMove : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-                int i, j, k;
-        int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
-        {
-            for (j = 0; j < _g.cur_unit.Models.Count; j++)
-            {
-                m[i, j] = 0;
-            }
-        }
-        i=0;
-        foreach (BasicModel model in _g.cur_unit.Models)
-        {
-            j=0;
-            foreach (BasicModel temp_m in _g.cur_unit.Models)
-            {
-                if (temp_m != model)
-                {
-                    if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
-                    {
-                        m[i, j] = 1;
-                        m[j, i] = 1;
-                        for(k=0; k<_g.cur_unit.Models.Count; k++)
-                        {
-                            if (m[j, k] == 1)
-                                m[i, k] = 1;
-                            if (m[i, k] == 1)
-                                m[j, k] = 1;
-                        }
-                    }
-                }
-                j++;
-            }
-            i++;
-        }
-        int cor = 0, t;
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
-        {
-            t = 1;
-            for (j = 0; j < _g.cur_unit.Models.Count; j++)
-            {
-                if(m[i, j]==0)
-                {
-                    t = 0;
-                }
-            }
-            if(t==1)
-            {
-                cor = 1;
-                break;
-            }
-        }
-        if(cor==0)
+        if (_g.cur_unit.coherency(_g)==false)
         {
             _g.IsShow.ShowMessage("Дистанция между моделями некорректна.");
         }
