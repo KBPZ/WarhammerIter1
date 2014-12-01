@@ -58,7 +58,10 @@ public class Unit
                 foreach (BasicModel b in Models)
                 {
                     if (b.IsAlive() == 2)
+                    {
                         d++;
+                        DelEffectsModelInUnit(b);
+                    }
                     if (b.IsAlive() == 0)
                         a++;
                 }
@@ -73,11 +76,11 @@ public class Unit
                 break;
             case Pfase.Charge:
                 IsShoot = 0;
-                break;
                 foreach (BasicModel b in Models)
                 {
                     b.EndPfase(_g);
                 }
+                break;
         }
         foreach (BasicModel b in Models)
         {
@@ -114,7 +117,7 @@ public class Unit
                         if (Effects[i].Name() == EffUfromModel)
                             break;
                     }
-                    if (i < Effects.Count)
+                    if (i >=Effects.Count)
                         Effects.Add(EfM.SpreadToUnit());
                 }
             }
@@ -294,6 +297,25 @@ public class Unit
         }
     }
 
+    private void DelEffectsModelInUnit(BasicModel DelModel)
+    {
+        List<EffectsUnit> ToDel = new List<EffectsUnit> { };
+        foreach (EffectsModel EfInd in DelModel.Effects)
+        {
+            foreach (EffectsUnit EfUni in Effects)
+            {
+                if (EfInd.NameSpreadToUnit() == EfUni.Name())
+                {
+                    ToDel.Add(EfUni);
+                }
+            }
+        }
+        foreach (EffectsUnit EfToDel in ToDel)
+        {
+            Effects.Remove(EfToDel);
+        }
+    }
+
     public void LeaveIndepChar(BasicModel IndepChar,Game _g)
     {
         int k=0;
@@ -310,21 +332,7 @@ public class Unit
             return;
         }
         Models.Remove(IndepChar);
-        List<EffectsUnit> ToDel = new List<EffectsUnit> { };
-        foreach(EffectsModel EfInd in IndepChar.Effects)
-        {
-            foreach (EffectsUnit EfUni in Effects)
-            {
-                if (EfInd.NameSpreadToUnit() == EfUni.Name())
-                {
-                    ToDel.Add(EfUni);
-                }
-            }
-        }
-        foreach(EffectsUnit EfToDel in ToDel)
-        {
-            Effects.Remove(EfToDel);
-        }
+        DelEffectsModelInUnit(IndepChar);
         Unit Indep = new Unit(new List<BasicModel> { IndepChar }, new List<EffectsUnit> { });
         Indep.w_Player = w_Player;
         IndepChar.w_Unit = Indep;

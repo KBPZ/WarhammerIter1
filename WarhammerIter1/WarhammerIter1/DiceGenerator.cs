@@ -20,6 +20,7 @@ public class TestDice : DiceInt
         dices = d;
         ran = r;
     }
+
     public int rand(int a, int b)
     {
         ranNow++;

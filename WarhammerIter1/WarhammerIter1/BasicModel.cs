@@ -36,6 +36,7 @@ public abstract class BasicModel
     }
 
     public int start_x, start_y;
+
     public virtual int MoveRange()
     {
         return 6;
