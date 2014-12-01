@@ -367,4 +367,61 @@ public class Unit
         }
         return Indeps;
     }
+
+    public bool coherency(Game _g)
+    {
+        int i, j, k;
+        int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            for (j = 0; j < _g.cur_unit.Models.Count; j++)
+            {
+                m[i, j] = 0;
+            }
+        }
+        i=0;
+        foreach (BasicModel model in _g.cur_unit.Models)
+        {
+            j=0;
+            foreach (BasicModel temp_m in _g.cur_unit.Models)
+            {
+                if (temp_m != model)
+                {
+                    if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                    {
+                        m[i, j] = 1;
+                        m[j, i] = 1;
+                        for(k=0; k<_g.cur_unit.Models.Count; k++)
+                        {
+                            if (m[j, k] == 1)
+                                m[i, k] = 1;
+                            if (m[i, k] == 1)
+                                m[j, k] = 1;
+                        }
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
+        int t;
+        bool cor = false;
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            t = 1;
+            for (j = 0; j < _g.cur_unit.Models.Count; j++)
+            {
+                if(m[i, j]==0)
+                {
+                    t = 0;
+                }
+            }
+            if(t==1)
+            {
+                cor = true;
+                break;
+            }
+        }
+        return cor;
+    }
 }//end Unit

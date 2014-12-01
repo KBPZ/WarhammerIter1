@@ -328,7 +328,7 @@ public class PfaseMove : PfaseSr
                     {
                         if (c_model!=t_model)
                         {
-                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y))-100 <= _g.enemy_distance)
+                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y)) <= _g.enemy_distance)
                             {
                                 BasicModel xy = new Infantry();
                                 xy.x=x;
@@ -336,7 +336,7 @@ public class PfaseMove : PfaseSr
                                 bool b = intersect(_g.cur_model.x, x, c_model.x, t_model.x)
                                         && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
                                 		&& area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
-		                                && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0; 
+		                                && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0;
                                 if (b == true)
                                 {
                                     en = 1;
@@ -370,58 +370,7 @@ public class PfaseMove : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-                int i, j, k;
-        int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
-        {
-            for (j = 0; j < _g.cur_unit.Models.Count; j++)
-            {
-                m[i, j] = 0;
-            }
-        }
-        i=0;
-        foreach (BasicModel model in _g.cur_unit.Models)
-        {
-            j=0;
-            foreach (BasicModel temp_m in _g.cur_unit.Models)
-            {
-                if (temp_m != model)
-                {
-                    if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
-                    {
-                        m[i, j] = 1;
-                        m[j, i] = 1;
-                        for(k=0; k<_g.cur_unit.Models.Count; k++)
-                        {
-                            if (m[j, k] == 1)
-                                m[i, k] = 1;
-                            if (m[i, k] == 1)
-                                m[j, k] = 1;
-                        }
-                    }
-                }
-                j++;
-            }
-            i++;
-        }
-        int cor = 0, t;
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
-        {
-            t = 1;
-            for (j = 0; j < _g.cur_unit.Models.Count; j++)
-            {
-                if(m[i, j]==0)
-                {
-                    t = 0;
-                }
-            }
-            if(t==1)
-            {
-                cor = 1;
-                break;
-            }
-        }
-        if(cor==0)
+        if (_g.cur_unit.coherency(_g)==false)
         {
             _g.IsShow.ShowMessage("Дистанция между моделями некорректна.");
         }
