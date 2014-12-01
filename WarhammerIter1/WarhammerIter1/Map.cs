@@ -23,7 +23,7 @@ public class Map
         {
             foreach(BasicModel model in unit.Models)
             {
-                if((x-model.x)*(x-model.x)+(y-model.y)*(y-model.y)<=25*25)
+                if((x-model.x)*(x-model.x)+(y-model.y)*(y-model.y)<=625)
                 {
                     return unit;
                 }
@@ -38,7 +38,22 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 25*25)
+                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 625)
+                {
+                    return model;
+                }
+            }
+        }
+        return null;
+    }
+
+    public BasicModel ModelDistance(int x, int y)
+    {
+        foreach (Unit unit in AllUnits)
+        {
+            foreach (BasicModel model in unit.Models)
+            {
+                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 2500)
                 {
                     return model;
                 }

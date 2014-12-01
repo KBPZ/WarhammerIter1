@@ -23,8 +23,8 @@ namespace UnitTest1
         {
             List<int> d = new List<int> { 1, 2, 2, 4, 5, 6, 4, 6, 4, 6, 5, 6, 6, 6 };
             DiceInt di = new TestDice(d, new List<int> { 2 });
-            Weapon ShurikenCatapult = new Weapon(4, TypeWeapon.Assault, 2, 0, 1, 7, new List<EffectsWeapons> {new baldestorm()});
-            Weapon StormBolter = new Weapon(3, TypeWeapon.Assault, 2, 0, 1, 5, new List<EffectsWeapons> { });
+            Weapon ShurikenCatapult = new Assault(4,5,2, new List<EffectsWeapons> { new baldestorm() });
+            Weapon StormBolter = new Assault(4,5,2,new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
                     new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),

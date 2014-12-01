@@ -13,27 +13,32 @@ using System.Collections.Generic;
 public enum TypeWeapon
 {
     Heavy,
-    Assault
+    Assault,
+    Pistol
 }
 
 
 public class Weapon 
 {
 
-	private int ArmorPenetretion = 7;
-	private int Strenght;
-    private TypeWeapon Type;
+	protected int ArmorPenetretion = 7;
+	protected int Strenght;
+    protected TypeWeapon Type;
     public List<EffectsWeapons> Effects;
-    private int Shoots;
-	private int StrenghtModificationMute;
-	private int StrenghtModificationPlus;
+    protected int Shoots;
+	protected int StrenghtModificationMute;
+	protected int StrenghtModificationPlus;
 	public BasicModel w_BasicModel;
 
-    public Weapon(int s,TypeWeapon t,int shoots,int strmP,int strmM,int ap,List<EffectsWeapons> Eff)
+    public virtual int IsHtHWeapon()
+    {
+        return 0;
+    }
+
+    public Weapon(int s,int ap,int shoots,int strmP,int strmM,List<EffectsWeapons> Eff)
     {
         ArmorPenetretion = ap;
         Shoots = shoots;
-        Type = t;
         Strenght = s;
         StrenghtModificationMute = strmM;
         StrenghtModificationPlus = strmP;
@@ -47,6 +52,11 @@ public class Weapon
         Shoots = 2;
         Effects = new List<EffectsWeapons> { };
 	}
+
+    public virtual List<Wound> HeadToHead()
+    {
+        return null;
+    }
 
     public virtual List<Wound> Shoot(int moved,int bs)
     {
@@ -68,3 +78,55 @@ public class Weapon
 	}
 
 }//end Weapon
+
+public class Assault : Weapon
+{
+    public Assault(int s,int ap,int shoots,List<EffectsWeapons> Eff)
+    {
+        ArmorPenetretion = ap;
+        Shoots = shoots;
+        Strenght = s;
+        Type = TypeWeapon.Assault;
+        Effects = Eff;
+    }
+
+    public override List<Wound> Shoot(int moved, int bs)
+    {
+        return base.Shoot(moved, bs);
+    }
+}
+public class Heavy : Weapon
+{
+    public Heavy(int s,int ap,int shoots,List<EffectsWeapons> Eff)
+    {
+        ArmorPenetretion = ap;
+        Shoots = shoots;
+        Strenght = s;
+        Effects = Eff;
+        Type = TypeWeapon.Heavy;
+    }
+    public override List<Wound> Shoot(int moved, int bs)
+    {
+        if (moved == 0)
+        {
+            return base.Shoot(moved, bs);
+        }
+        return base.Shoot(moved, 1);
+    }
+}
+public class Pistol : Weapon
+{
+    public Pistol(int s,int ap,List<EffectsWeapons> Eff)
+    {
+        ArmorPenetretion = ap;
+        Shoots = 1;
+        Strenght = s;
+        Effects = Eff;
+        Type = TypeWeapon.Pistol;
+    }
+
+    public override List<Wound> Shoot(int moved, int bs)
+    {
+        return base.Shoot(moved, bs);
+    }
+}

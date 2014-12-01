@@ -172,15 +172,18 @@ public class Unit
                 dices += " ";
             }
             //TextBox Box = new TextBox();
-            _g.IsShow.ShowMessage(dices);
+            //_g.IsShow.ShowMessage(dices);
             for (int i = 0; i < n; i++)
-            {
+            {  
+                L[i].dShoot = dice[i];
                 if (dice[i] < 7 - L[i].BalisticSkills)
                 {
+
                     //L.Remove(L[r.Next() % L.Count]);
                     L[i].fail();
                 }
             }
+            _g.IsShow.ShowSoots(L);
             if (L.Count != 0)
                 L[0].deleteFail(L);
         }
@@ -211,7 +214,7 @@ public class Unit
             TextDices += c;
             TextDices += " ";
         }
-        _g.IsShow.ShowMessage(TextDices);
+        //_g.IsShow.ShowMessage(TextDices);
         int rer = 0;
         Majority = Majority / t;
         for (int i = 0; i < n;i++)
@@ -228,6 +231,7 @@ public class Unit
                 ew.OnWound(Wounds[i], Wounds, ref rer,_g);
             }
         }
+        _g.IsShow.ShowWound(Wounds);
         if (Wounds.Count != 0)
             Wounds[0].deleteFail(Wounds);
         return Wounds;

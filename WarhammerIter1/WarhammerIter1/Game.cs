@@ -8,10 +8,13 @@
 
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System;
 
 public interface Show
 {
     void ShowMessage(string s);
+    void ShowSoots(List<Wound> Lw);
+    void ShowWound(List<Wound> Lw);
 }
 
 public class ShowMessageBox : Show
@@ -19,6 +22,97 @@ public class ShowMessageBox : Show
     public void ShowMessage(string s)
     {
         MessageBox.Show(s);
+    }
+    public void ShowSoots(List<Wound> Lw)
+    {
+        Lw.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.BalisticSkills > y.BalisticSkills)
+                return 1;
+            else if (x.BalisticSkills == y.BalisticSkills)
+                if (x.Strenght > y.Strenght)
+                    return 1;
+                else if (x.Strenght == y.Strenght)
+                    if (x.ap > y.ap)
+                        return 1;
+                    else if (x.ap == y.ap)
+                        return 0;
+                    else
+                        return -1;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        int s=0, bs=0, ap=0;
+        string Show = "";
+        char p = ' ';
+        foreach(Wound w in Lw)
+        {
+            if(s!=w.Strenght||bs!=w.BalisticSkills||ap!=w.ap)
+            {
+                if(Show!="")
+                {
+                    MessageBox.Show(Show,"bs "+ bs.ToString()+" s " + s.ToString() + " ap " + ap.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dShoot); ;
+                Show += p;
+                s = w.Strenght; bs = w.BalisticSkills; ap = w.ap;
+            }
+            else
+            {
+                Show += (char)('0' + w.dShoot);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+        }
+    }
+    public void ShowWound(List<Wound> Lw)
+    {
+        Lw.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Strenght > y.Strenght)
+                return 1;
+            else if (x.Strenght == y.Strenght)
+                if (x.ap > y.ap)
+                    return 1;
+                else if (x.ap == y.ap)
+                    return 0;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        int s = 0, ap = 0;
+        string Show = "";
+        char p = ' ';
+        foreach (Wound w in Lw)
+        {
+            if (s != w.Strenght || ap != w.ap)
+            {
+                if (Show != "")
+                {
+                    MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dWound);
+                Show += p;
+                s = w.Strenght; ap = w.ap;
+            }
+            else
+            {
+                Show += (char)('0' + w.dWound);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+        }
     }
 }
 
@@ -174,15 +268,26 @@ public class PfaseMove : PfaseSr
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
-        if (model!=null)
+        BasicModel model1 = _g.IsMap.ModelDistance(x, y);
+        if (model!=null || model1!=null)
         {
-            if(model.w_Unit!=_g.cur_unit)
+            if (model != null)
+            {
+                if (model.w_Unit != _g.cur_unit)
             {
                 _g.IsShow.ShowMessage("Вы не можете перемещать данную модель.");
             }
             else
             {
                 _g.cur_model = model;
+            }
+        }
+            if (model1 != null)
+            {
+                if (model1 != _g.cur_model)
+                {
+                    MessageBox.Show("Модели не могут пересекаться.");
+                }
             }
         }
         else
@@ -193,12 +298,37 @@ public class PfaseMove : PfaseSr
             {
                 foreach (BasicModel t_model in unit.Models)
                 {
-                    if((x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
+                    if(t_model.IsAlive()!=1 && (x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
                     {
                         _g.IsShow.ShowMessage("Слишком малая дистанция с врагом.");
                         en = 1;
                         break;
                     }
+                    /*
+                    foreach (BasicModel c_model in unit.Models)
+                    {
+                        if (c_model!=t_model)
+                        {
+                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y))-100 <= _g.enemy_distance)
+                            {
+                                double y1, y2, k1, k2, b1, b2, x1;
+                                k1 = (y - t_model.y) / (x - t_model.x);
+                                b1 = (y - k1 * x);
+                                k2 = (c_model.y - t_model.y) / (c_model.x - t_model.x);
+                                b2 = (c_model.y - k2 * x);
+                                x1 = (b2 - b1) / (k1 - k2);
+                                y1 = k1 * x1 + b1;
+                                y2 = k2 * x1 + b2;
+                                if(y1==y2)
+                                {
+                                    en = 1;
+                                    MessageBox.Show("Вы не можете пройти через вражеские модели.");
+                                    break;
+                                }
+                            }
+                        }
+                    } */
+
                 }
                 if (en == 1)
                     break;
@@ -221,7 +351,7 @@ public class PfaseMove : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-        int i, j, k;
+                int i, j, k;
         int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
         for (i = 0; i < _g.cur_unit.Models.Count; i++)
         {
@@ -238,7 +368,7 @@ public class PfaseMove : PfaseSr
             {
                 if (temp_m != model)
                 {
-                    if ((model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                    if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
                     {
                         m[i, j] = 1;
                         m[j, i] = 1;
