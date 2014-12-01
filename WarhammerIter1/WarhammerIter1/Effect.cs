@@ -14,9 +14,7 @@ using System;
 public abstract class Effect 
 {
     public abstract string Name();
-
-	//~Effect(){}
-}//end Effect
+}
 
 public abstract class EffectsUnit : Effect
 {
@@ -35,6 +33,14 @@ public abstract class EffectsWeapons : Effect
 }
 public abstract class EffectsModel : Effect
 {
+    public virtual EffectsUnit SpreadToUnit()
+    {
+        return null;
+    }
+    public virtual String NameSpreadToUnit()
+    {
+        return "";
+    }
     public virtual void EndTurn(BasicModel m)
     {
 
@@ -43,7 +49,7 @@ public abstract class EffectsModel : Effect
     {
 
     }
-    public virtual int IndependetCharecter()
+    public virtual int IsIndependetCharecter(Game _g)
     {
         return 0;
     }
@@ -63,7 +69,7 @@ public class baldestorm : EffectsWeapons
         return "Bladestorm";
     }
 }
-public class Fearless : EffectsUnit
+public class FearlessUnit : EffectsUnit
 {
     public override void Leader(Unit u, ref int res, ref int leadership, ref int ReRoll, Game _g)
     {
@@ -75,13 +81,30 @@ public class Fearless : EffectsUnit
         return "Fearless";
     }
 }
+public class Fearless : EffectsModel
+{
+    public override EffectsUnit SpreadToUnit()
+    {
+        return new FearlessUnit();
+    }
+
+    public virtual String NameSpreadToUnit()
+    {
+        return "Fearless";
+    }
+
+    public override string Name()
+    {
+        return "Fearless";
+    }
+}
 public class IndependetCharecter : EffectsModel
 {
     public override string Name()
     {
         return "IndependetCharecter";
     }
-    public virtual int Independet()
+    public override int IsIndependetCharecter(Game _g)
     {
         return 1;
     }

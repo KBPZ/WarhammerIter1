@@ -15,29 +15,32 @@ namespace WarhammerIter1
         Game IsGame; //= new Game(new DiceGenerator());
         private void Form1_Shown(object sender, EventArgs e)
         {
-           Weapon ShurikenCatapult = new Weapon(4, TypeWeapon.Assault, 2, 0, 1, 7, new List<EffectsWeapons> { new baldestorm() });
+            BasicModel Autarh = new Infantry(40, 160, 5, 5, 3, 3, 5, 10, 3, 4, new List<Weapon>{new Weapon(4, TypeWeapon.Assault, 1, 0, 1, 7,
+                new List<EffectsWeapons> { new baldestorm() })}, new List<EffectsModel>() { new Fearless(), new IndependetCharecter() });
+            Weapon ShurikenCatapult = new Weapon(4, TypeWeapon.Assault, 2, 0, 1, 7, new List<EffectsWeapons> { new baldestorm() });
             Weapon StormBolter = new Weapon(3, TypeWeapon.Assault, 2, 0, 1, 5, new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(160, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(100, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(100, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(160, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
-                    new List<EffectsUnit>{new Fearless()}),
+                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5,9, 4, 7,new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(100, 160, 4, 4, 3, 3, 5,9, 4, 7,new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(100, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    Autarh},
+                    new List<EffectsUnit>{}),
                     new Unit(
-                    new List<BasicModel>{new Infantry(500, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(560, 100, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(500, 160, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(500, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(560, 220, 4, 4, 3, 3, 5, 4, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),},new List<EffectsUnit>{new Fearless()})};
+                    new List<BasicModel>{new Infantry(500, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(560, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(500, 160, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(500, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(560, 220, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),},new List<EffectsUnit>{})};
             Player F = new Player(DireAvengersUnits);
             List<Unit> TerminatorsUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(300, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
-                    new Infantry(360, 100, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
-                    ,new Infantry(300, 160, 4, 4, 4, 4, 5, 2, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
-                    new List<EffectsUnit>{new Fearless()})};
+                    new List<BasicModel>{new Infantry(300, 100, 4, 4, 4, 4, 5,9, 2,5, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
+                    new Infantry(360, 100, 4, 4, 4, 4, 5,9, 2,5, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
+                    ,new Infantry(300, 160, 4, 4, 4, 4, 5,9, 2,5, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
+                    new List<EffectsUnit>{})};
             Player S = new Player(TerminatorsUnits);
             IsGame = new Game(F, S, new DiceGenerator());
         }

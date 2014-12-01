@@ -28,13 +28,15 @@ public class Infantry : BasicModel
         return _Leadership;
     }
 
-    public Infantry(int xin, int yin, int bs, int ws, int s, int t, int l, int ArSv, List<Weapon> wea, List<EffectsModel> Ef)
+    public Infantry(int xin, int yin, int bs, int ws, int s, int t,int I, int L, int ArSv, int InvSv, List<Weapon> wea, List<EffectsModel> Ef)
     {
         x = xin;
         y = yin;
         start_x = x;
         start_y = y;
-        _Leadership = l;
+        InvulnerableSave = InvSv;
+        _Leadership = L;
+        Initiative = I;
         BalisticSkill = bs;
         WeaponSkill = ws;
         Strength = s;
@@ -91,21 +93,25 @@ public class Infantry : BasicModel
 
 	}
 
-	public override void Paint(PaintEventArgs e,Game _g)
+    public override void Paint(PaintEventArgs e, Game _g)
     {
         SolidBrush B;
         if (w_Unit.w_Player == _g.PlayerNow())
+        {
             if (w_Unit == _g.cur_unit)
-                if (this == _g.cur_model)
-                    B = new SolidBrush(Color.Blue);
-                else
-                    B = new SolidBrush(Color.BlueViolet);
+                B = new SolidBrush(Color.BlueViolet);
             else
                 B = new SolidBrush(Color.Snow);
+            if (this == _g.cur_model)
+                B = new SolidBrush(Color.Blue);
+        }
         else
-            B = new SolidBrush(Color.DarkRed);
-        if(Alive==0)
-            e.Graphics.FillEllipse(B, x-25, y-25, 50, 50);
-	}
+            if (w_Unit == _g.Target)
+                B = new SolidBrush(Color.DarkRed);
+            else
+                B = new SolidBrush(Color.Red);
+        if (Alive == 0)
+            e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
+    }
 
 }//end Infantry

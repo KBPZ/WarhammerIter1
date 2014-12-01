@@ -13,7 +13,7 @@ using System;
 public class Map 
 {
 
-	private List<Unit> AllUnits;
+	public List<Unit> AllUnits;
 	private Point Coord;
 	private List<Object> MapObjects;
 
@@ -38,7 +38,7 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 2500)
+                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 25*25)
                 {
                     return model;
                 }
