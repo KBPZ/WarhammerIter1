@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System;
 
 public interface PfaseSr
 {
@@ -97,15 +98,26 @@ public class PfaseMove : PfaseSr
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
-        if (model!=null)
+        BasicModel model1 = _g.IsMap.ModelDistance(x, y);
+        if (model!=null || model1!=null)
         {
-            if(model.w_Unit!=_g.cur_unit)
+            if (model != null)
             {
-                MessageBox.Show("Вы не можете перемещать данную модель.");
+                if (model.w_Unit != _g.cur_unit)
+                {
+                    MessageBox.Show("Вы не можете перемещать данную модель.");
+                }
+                else
+                {
+                    _g.cur_model = model;
+                }
             }
-            else
+            if (model1 != null)
             {
-                _g.cur_model = model;
+                if (model1 != _g.cur_model)
+                {
+                    MessageBox.Show("Модели не могут пересекаться.");
+                }
             }
         }
         else
@@ -116,12 +128,37 @@ public class PfaseMove : PfaseSr
             {
                 foreach (BasicModel t_model in unit.Models)
                 {
-                    if((x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
+                    if(t_model.IsAlive()!=1 && (x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
                     {
                         MessageBox.Show("Слишком малая дистанция с врагом.");
                         en = 1;
                         break;
                     }
+                    /*
+                    foreach (BasicModel c_model in unit.Models)
+                    {
+                        if (c_model!=t_model)
+                        {
+                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y))-100 <= _g.enemy_distance)
+                            {
+                                double y1, y2, k1, k2, b1, b2, x1;
+                                k1 = (y - t_model.y) / (x - t_model.x);
+                                b1 = (y - k1 * x);
+                                k2 = (c_model.y - t_model.y) / (c_model.x - t_model.x);
+                                b2 = (c_model.y - k2 * x);
+                                x1 = (b2 - b1) / (k1 - k2);
+                                y1 = k1 * x1 + b1;
+                                y2 = k2 * x1 + b2;
+                                if(y1==y2)
+                                {
+                                    en = 1;
+                                    MessageBox.Show("Вы не можете пройти через вражеские модели.");
+                                    break;
+                                }
+                            }
+                        }
+                    } */
+
                 }
                 if (en == 1)
                     break;
@@ -144,7 +181,7 @@ public class PfaseMove : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-                int i, j, k;
+        int i, j, k;
         int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
         for (i = 0; i < _g.cur_unit.Models.Count; i++)
         {
@@ -161,7 +198,7 @@ public class PfaseMove : PfaseSr
             {
                 if (temp_m != model)
                 {
-                    if ((model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                    if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
                     {
                         m[i, j] = 1;
                         m[j, i] = 1;
