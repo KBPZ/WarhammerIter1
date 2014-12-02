@@ -42,7 +42,7 @@ public class Infantry : BasicModel
         Toughnes = t;
         ArmorSave = ArSv;
         Weapons = wea;
-        m_Weapons = Weapons[0];
+        //m_Weapons = Weapons[0];
         Effects = Ef;
         foreach (Weapon w in Weapons)
         {
@@ -111,6 +111,11 @@ public class Infantry : BasicModel
                 B = new SolidBrush(Color.Red);
         if (Alive == 0)
             e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
+        if(true == IsIndepChar(_g))
+        {
+            B = new SolidBrush(Color.Maroon);
+            e.Graphics.FillEllipse(B, x - 10, y - 10, 20, 20);
+        }
     }
 
 }//end Infantry

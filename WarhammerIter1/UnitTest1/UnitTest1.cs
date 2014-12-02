@@ -133,5 +133,45 @@ namespace UnitTest1
             IsGame.NextPfase();
             Assert.AreEqual(1, IsGame.Target.isFallBack());
         }
+        [TestMethod]
+        public void CogerTest()
+        {
+            List<BasicModel> LInCag = new List<BasicModel>
+            {
+                new Infantry(25,25,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,60,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,450,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,150,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,350,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,500,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,120,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(150,40,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(200,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+            };
+            Unit InCag = new Unit(LInCag, new List<EffectsUnit> { });
+            Game IsGame = new Game(new DiceGenerator(),new ShowNofing());
+            IsGame.cur_unit = InCag;
+            Assert.AreEqual(true, IsGame.cur_unit.coherency(IsGame));
+            List<BasicModel> LNotInCag = new List<BasicModel>
+            {
+                new Infantry(25,25,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,60,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(1000,450,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(1000,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,150,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,350,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,500,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,120,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(150,40,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(200,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+            };
+            Unit NotInCag = new Unit(LNotInCag, new List<EffectsUnit> { });
+            IsGame.cur_unit = NotInCag;
+            Assert.AreEqual(false, IsGame.cur_unit.coherency(IsGame));
+            Unit Alone=new Unit(new List<BasicModel>{new Infantry(100,100,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{})},new List<EffectsUnit>{});
+            IsGame.cur_unit = Alone;
+            Assert.AreEqual(true,Alone.coherency(IsGame));
+        }
     }
 }

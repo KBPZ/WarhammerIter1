@@ -97,6 +97,18 @@ public abstract class BasicModel
         Wound = 1;
 	}
 
+    public bool IsIndepChar(Game _g)
+    {
+        int k = 0;
+        foreach(EffectsModel Eff in Effects)
+        {
+            k += Eff.IsIndependetCharecter(_g);
+        }
+        if (k == 0)
+            return false;
+        return true;
+    }
+
     public virtual List<Wound> Shoot(int t,Game _g)
     {
         if (Alive == 0)
