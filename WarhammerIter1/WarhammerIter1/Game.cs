@@ -303,6 +303,8 @@ public class PfaseMove : PfaseSr
         && area(c, d, a) * area(c, d, b) <= 0;
     }
 
+
+
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
@@ -333,7 +335,7 @@ public class PfaseMove : PfaseSr
             {
                 foreach (BasicModel t_model in unit.Models)
                 {
-                    if(t_model.IsAlive()!=1 && (x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
+                    if (t_model.IsAlive() != 1 && _g.IsMap.squares(x, y, t_model.x, t_model.y, _g.enemy_distance) == true)
                     {
                         _g.IsShow.ShowMessage("—лишком мала€ дистанци€ с врагом.");
                         en = 1;
@@ -343,14 +345,14 @@ public class PfaseMove : PfaseSr
                     {
                         if (c_model!=t_model)
                         {
-                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y)) <= _g.enemy_distance)
+                            if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
                             {
                                 BasicModel xy = new Infantry();
                                 xy.x=x; xy.y=y;
                                 if (check_sections(_g.cur_model, xy, c_model, t_model))
                                 {
                                     en = 1;
-                                    MessageBox.Show("¬ы не можете пройти через вражеские модели.");
+                                    _g.IsShow.ShowMessage("¬ы не можете пройти через вражеские модели.");
                                     break;
                                 }
                             }
@@ -366,7 +368,7 @@ public class PfaseMove : PfaseSr
             }
             if (en == 0)
             {
-                if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+                if (_g.IsMap.squares(x, y, _g.cur_model.start_x, _g.cur_model.start_y, _g.length) == true)
                 {
                     _g.cur_model.x = x;
                     _g.cur_model.y = y;
