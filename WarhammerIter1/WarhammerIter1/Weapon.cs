@@ -23,6 +23,7 @@ public class Weapon
 
 	protected int ArmorPenetretion = 7;
 	protected int Strenght;
+    protected int Distance;
     protected TypeWeapon Type;
     public List<EffectsWeapons> Effects;
     protected int Shoots;
@@ -58,12 +59,15 @@ public class Weapon
         return null;
     }
 
-    public virtual List<Wound> Shoot(int moved,int bs)
-    {
+    public virtual List<Wound> Shoot(int moved,int bs,int Dis)
+    {   
         List<Wound> L = new List<Wound> { };
-        for (int i=0; i<Shoots;i++ )
+        if (Dis<Distance)
         {
-            L.Add(new Wound(Strenght, ArmorPenetretion, Effects.ToArray() ,bs,w_BasicModel));
+            for (int i = 0; i < Shoots; i++)
+            {
+                L.Add(new Wound(Dis,Strenght, ArmorPenetretion, Effects.ToArray(), bs, w_BasicModel));
+            }
         }
         return L;
     }
@@ -81,8 +85,9 @@ public class Weapon
 
 public class Assault : Weapon
 {
-    public Assault(int s,int ap,int shoots,List<EffectsWeapons> Eff)
+    public Assault(int Dist,int s,int ap,int shoots,List<EffectsWeapons> Eff)
     {
+        Distance=Dist;
         ArmorPenetretion = ap;
         Shoots = shoots;
         Strenght = s;
@@ -90,35 +95,37 @@ public class Assault : Weapon
         Effects = Eff;
     }
 
-    public override List<Wound> Shoot(int moved, int bs)
+    public override List<Wound> Shoot(int moved, int bs,int Dis)
     {
-        return base.Shoot(moved, bs);
+        return base.Shoot(moved, bs,Dis);
     }
 }
 public class Heavy : Weapon
 {
-    public Heavy(int s,int ap,int shoots,List<EffectsWeapons> Eff)
+    public Heavy(int Dist,int s,int ap,int shoots,List<EffectsWeapons> Eff)
     {
         ArmorPenetretion = ap;
+        Distance=Dist;
         Shoots = shoots;
         Strenght = s;
         Effects = Eff;
         Type = TypeWeapon.Heavy;
     }
 
-    public override List<Wound> Shoot(int moved, int bs)
+    public override List<Wound> Shoot(int moved, int bs,int Dis)
     {
         if (moved == 0)
         {
-            return base.Shoot(moved, bs);
+            return base.Shoot(moved, bs,Dis);
         }
-        return base.Shoot(moved, 1);
+        return base.Shoot(moved, 1,Dis);
     }
 }
 public class Pistol : Weapon
 {
-    public Pistol(int s,int ap,List<EffectsWeapons> Eff)
+    public Pistol(int Dist,int s,int ap,List<EffectsWeapons> Eff)
     {
+        Distance = Dist;
         ArmorPenetretion = ap;
         Shoots = 1;
         Strenght = s;
@@ -126,8 +133,8 @@ public class Pistol : Weapon
         Type = TypeWeapon.Pistol;
     }
 
-    public override List<Wound> Shoot(int moved, int bs)
+    public override List<Wound> Shoot(int moved, int bs,int Dist)
     {
-        return base.Shoot(moved, bs);
+        return base.Shoot(moved, bs,Dist);
     }
 }

@@ -75,6 +75,8 @@ public class Infantry : BasicModel
         if (x.ap <= ASave)
             ASave = 7;
         ASave = Math.Min(ASave, Math.Min(Cover, InvulnerableSave));
+        x.dSave=dice;
+        x.Save = ASave;
         if(ASave>dice)
         {
             Wound--;

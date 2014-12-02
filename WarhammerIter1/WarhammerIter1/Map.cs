@@ -17,6 +17,11 @@ public class Map
 	private Point Coord;
 	private List<Object> MapObjects;
 
+    public int Range(Unit A,Unit B)
+    {
+        return 1;
+    }
+
     public Unit FindUnit(int x, int y)
     {
         foreach(Unit unit in AllUnits)

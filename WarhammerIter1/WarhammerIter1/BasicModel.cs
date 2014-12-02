@@ -109,12 +109,12 @@ public abstract class BasicModel
         return true;
     }
 
-    public virtual List<Wound> Shoot(int t,Game _g)
+    public virtual List<Wound> Shoot(int Range,int t,Game _g)
     {
         if (Alive == 0)
         {
             List<Wound> L = new List<Wound> { };
-            L.AddRange(Weapons[0].Shoot(Moved,BalisticSkill));
+            L.AddRange(Weapons[0].Shoot(Moved,BalisticSkill,Range));
             return L;
         }
         else
