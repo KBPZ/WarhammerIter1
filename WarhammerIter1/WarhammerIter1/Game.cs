@@ -334,9 +334,9 @@ public class PfaseMove : PfaseSr
                                 xy.x=x;
                                 xy.y=y;
                                 bool b = intersect(_g.cur_model.x, x, c_model.x, t_model.x)
-                                        && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
-                                		&& area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
-		                                && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0;
+                                      && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
+                                	  && area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
+		                              && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0;
                                 if (b == true)
                                 {
                                     en = 1;
@@ -347,7 +347,9 @@ public class PfaseMove : PfaseSr
                         }
                         if (en == 1)
                             break;
-                    } 
+                    }
+                    if (en == 1)
+                        break;
                 }
                 if (en == 1)
                     break;
