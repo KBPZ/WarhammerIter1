@@ -37,13 +37,18 @@ public class Map
         return null;
     }
 
+    public bool squares(int a, int b, int c, int d, int e)
+    {
+        return (a - c) * (a - c) + (b - d) * (b - d) <= e * e;
+    }
+
     public BasicModel FindModel(int x, int y)
     {
         foreach (Unit unit in AllUnits)
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 625)
+                if (squares(x, y, model.x, model.y, 25) == true)
                 {
                     return model;
                 }
