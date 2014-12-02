@@ -295,6 +295,14 @@ public class PfaseMove : PfaseSr
         return Math.Max(a, c) <= Math.Min(b, d);
     }
 
+    public bool check_sections(BasicModel a, BasicModel b, BasicModel c, BasicModel d)
+    {
+        return intersect(a.x, b.x, c.x, d.x)
+        && intersect(a.y, b.y, c.y, d.y)
+        && area(a, b, c) * area(a, b, d) <= 0
+        && area(c, d, a) * area(c, d, b) <= 0;
+    }
+
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
@@ -338,13 +346,8 @@ public class PfaseMove : PfaseSr
                             if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y)) <= _g.enemy_distance)
                             {
                                 BasicModel xy = new Infantry();
-                                xy.x=x;
-                                xy.y=y;
-                                bool b = intersect(_g.cur_model.x, x, c_model.x, t_model.x)
-                                      && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
-                                	  && area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
-		                              && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0;
-                                if (b == true)
+                                xy.x=x; xy.y=y;
+                                if (check_sections(_g.cur_model, xy, c_model, t_model))
                                 {
                                     en = 1;
                                     MessageBox.Show("¬ы не можете пройти через вражеские модели.");

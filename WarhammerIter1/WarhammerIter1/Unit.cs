@@ -387,6 +387,10 @@ public class Unit
                 m[i, j] = 0;
             }
         }
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            m[i, i] = 1;            
+        }
         i=0;
         foreach (BasicModel model in _g.cur_unit.Models)
         {
@@ -407,7 +411,7 @@ public class Unit
                                 m[j, k] = 1;
                         }
                     }
-                }
+                }                
                 j++;
             }
             i++;
