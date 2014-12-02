@@ -88,7 +88,7 @@ public class Fearless : EffectsModel
         return new FearlessUnit();
     }
 
-    public virtual String NameSpreadToUnit()
+    public override String NameSpreadToUnit()
     {
         return "Fearless";
     }

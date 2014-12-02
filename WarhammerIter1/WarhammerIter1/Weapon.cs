@@ -105,6 +105,7 @@ public class Heavy : Weapon
         Effects = Eff;
         Type = TypeWeapon.Heavy;
     }
+
     public override List<Wound> Shoot(int moved, int bs)
     {
         if (moved == 0)

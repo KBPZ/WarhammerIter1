@@ -17,6 +17,13 @@ public interface Show
     void ShowWound(List<Wound> Lw);
 }
 
+public class ShowNofing : Show
+{
+    public void ShowMessage(string s){}
+    public void ShowSoots(List<Wound> Lw){}
+    public void ShowWound(List<Wound> Lw){}
+}
+
 public class ShowMessageBox : Show
 {
     public void ShowMessage(string s)
@@ -403,7 +410,7 @@ public enum Pfase
 
 public class Game 
 {
-    public Show IsShow = new ShowMessageBox();
+    public Show IsShow { get; private set; }
     public PfaseSr NowPfaseStr { get; set; }
     public PfaseSr MovePf = new PfaseMove();
     public PfaseSr ChosePf = new PfaseChose();
@@ -566,12 +573,13 @@ public class Game
         NowPfaseStr.IndependentCharecterButtonClick(this);
     }
 
-    public Game(Player P1, Player P2, DiceInt DiceG)
+    public Game(Player P1, Player P2, DiceInt DiceG,Show ShowStr)
     {
         Players = new Player[2];
         Players[0] = P1;
         Players[1] = P2;
         DiceGen = DiceG;
+        IsShow = ShowStr;
         NowMission = new EturnalWar1();
         NowPhase = Pfase.Move;
         Turn = 1;
@@ -585,9 +593,10 @@ public class Game
         IsMap = new Map(LUnit);
     }
 
-	public Game(DiceInt DiceG)
+    public Game(DiceInt DiceG, Show ShowStr)
     {
         NowPfaseStr = ShootPf;
+        IsShow = ShowStr;
         List<Unit> LUnit = new List<Unit> {};
         NowMission = new EturnalWar1();
         DiceGen = DiceG;

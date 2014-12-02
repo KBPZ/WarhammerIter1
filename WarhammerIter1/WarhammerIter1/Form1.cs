@@ -43,12 +43,12 @@ namespace WarhammerIter1
                     ,new Infantry(300, 160, 4, 4, 4, 4, 5,9, 2,5, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
                     new List<EffectsUnit>{})};
             Player S = new Player(TerminatorsUnits);
-            IsGame = new Game(F, S, new DiceGenerator());
+            IsGame = new Game(F, S, new DiceGenerator(),new ShowMessageBox());
         }
+
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void Form1_Load(object sender, EventArgs e)

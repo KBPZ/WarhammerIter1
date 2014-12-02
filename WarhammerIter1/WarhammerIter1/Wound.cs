@@ -34,11 +34,13 @@ public class Wound
         private set;
     }
     private int faled=0;
+
     public BasicModel Sourse
     {
         get;
         private set;
     }
+
     public int BalisticSkills
     {
         get;
@@ -75,6 +77,7 @@ public class Wound
     {
         faled = 0;
     }
+
     /*
     public int GetStrenght()
     {
@@ -110,7 +113,8 @@ public class Wound
         Sourse=Sor;
 	}
 
-	~Wound(){
+	~Wound()
+    {
 
 	}
 }//end Wound
