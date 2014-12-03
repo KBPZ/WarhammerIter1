@@ -36,9 +36,9 @@ public class ShowMessageBox : Show
     {
         Lw.Sort(delegate(Wound x, Wound y)
         {
-            if (x.BalisticSkills > y.BalisticSkills)
+            if (x.Skills > y.Skills)
                 return 1;
-            else if (x.BalisticSkills == y.BalisticSkills)
+            else if (x.Skills == y.Skills)
                 if (x.Strenght > y.Strenght)
                     return 1;
                 else if (x.Strenght == y.Strenght)
@@ -58,7 +58,7 @@ public class ShowMessageBox : Show
         char p = ' ';
         foreach(Wound w in Lw)
         {
-            if(s!=w.Strenght||bs!=w.BalisticSkills||ap!=w.ap)
+            if(s!=w.Strenght||bs!=w.Skills||ap!=w.ap)
             {
                 if(Show!="")
                 {
@@ -67,7 +67,7 @@ public class ShowMessageBox : Show
                 Show = "";
                 Show += (char)('0' + w.dShoot); ;
                 Show += p;
-                s = w.Strenght; bs = w.BalisticSkills; ap = w.ap;
+                s = w.Strenght; bs = w.Skills; ap = w.ap;
             }
             else
             {

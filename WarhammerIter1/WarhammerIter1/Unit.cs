@@ -197,7 +197,7 @@ public class Unit
             for (int i = 0; i < n; i++)
             {  
                 L[i].dShoot = dice[i];
-                if (dice[i] < 7 - L[i].BalisticSkills)
+                if (dice[i] < 7 - L[i].Skills)
                 {
 
                     //L.Remove(L[r.Next() % L.Count]);
@@ -484,7 +484,7 @@ public class Unit
             for (int i = 0; i < n; i++)
             {
                 L[i].dShoot = dice[i];
-                if (dice[i] < 7 - L[i].BalisticSkills)
+                if (dice[i] < 7 - L[i].Skills)
                 {
                     L[i].fail();
                 }
