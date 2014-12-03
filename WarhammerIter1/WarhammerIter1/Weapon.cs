@@ -59,6 +59,11 @@ public class Weapon
         return null;
     }
 
+    public virtual List<Wound> SnapShoots(int Dis)
+    {
+        return Shoot(1, 0, Dis);
+    }
+
     public virtual List<Wound> Shoot(int moved,int bs,int Dis)
     {   
         List<Wound> L = new List<Wound> { };

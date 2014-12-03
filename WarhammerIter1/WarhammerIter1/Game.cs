@@ -161,6 +161,7 @@ public interface PfaseSr
     void MousClick(int x, int y,Game _g);
     void ActButtonClick(Game _g);
     void IndependentCharecterButtonClick(Game _g);
+    void EndPfaseButton(Game _g);
 }
 
 public class PfaseNofing:PfaseSr
@@ -176,6 +177,10 @@ public class PfaseNofing:PfaseSr
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
     }
 }
 
@@ -208,6 +213,10 @@ public class PfaseJoin:PfaseSr
     {
 
     }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.IsShow.ShowMessage("«акончите присоединение независимого персонажа");
+    }
 }
 
 public class PfaseShoot : PfaseSr
@@ -236,6 +245,10 @@ public class PfaseShoot : PfaseSr
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
     }
 }
 
@@ -300,6 +313,10 @@ public class PfaseChose : PfaseSr
         {
             _g.NowPfaseStr = _g.JoinPf;
         }
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
     }
 }
 
@@ -435,6 +452,11 @@ public class PfaseMove : PfaseSr
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+
+    public void EndPfaseButton(Game _g)
+    {
+        _g.IsShow.ShowMessage("«акончите передвижени€ отр€да");
     }
 }
 
@@ -679,6 +701,21 @@ public class Game
             return 0;
         Target.Save(Cover, L, this);
         return 0;
+    }
+
+    public void Overwatch()
+    {
+
+        int Cover = 7;
+        List<Wound> L = new List<Wound> { };
+        int Range = IsMap.Range(cur_unit, Target);
+        Target.Overvatch(Range, 0, this);
+        if (L == null || L.Count == 0)
+            return;
+        L = Target.Wonding(cur_unit, L, this);
+        if (L == null || L.Count == 0)
+            return;
+        Target.Save(Cover, L, this);
     }
 
 	public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)

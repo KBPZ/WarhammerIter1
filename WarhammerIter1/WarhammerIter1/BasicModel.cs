@@ -120,6 +120,18 @@ public abstract class BasicModel
         else
             return null;
     }
+    public virtual List<Wound> Overvatch(int Range, int t, Game _g)
+    {
+        if (Alive == 0)
+        {
+            List<Wound> L = new List<Wound> { };
+            L.AddRange(Weapons[0].SnapShoots(Range));
+            return L;
+        }
+        else
+            return null;
+    }
+
 
 	~BasicModel()
     {

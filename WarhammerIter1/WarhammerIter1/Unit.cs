@@ -455,4 +455,38 @@ public class Unit
         int Dis = _g.DiceGen.D6plD6();
         return Dis;
     }
+
+    public List<Wound> Overvatch(int range, int type, Game _g)
+    {
+        List<Wound> L = new List<Wound> { }, Lp;
+        if (IsShoot == 0)
+        {
+            IsShoot = 1;
+            foreach (BasicModel ShootModel in Models)
+            {
+                Lp = ShootModel.Overvatch(range, type, _g);
+                if (Lp != null)
+                    L.AddRange(Lp);
+            }
+            int n = L.Count;
+            List<int> dice = _g.DiceGen.manyD6(n);
+            for (int i = 0; i < n; i++)
+            {
+                L[i].dShoot = dice[i];
+                if (dice[i] < 7 - L[i].BalisticSkills)
+                {
+                    L[i].fail();
+                }
+            }
+            _g.IsShow.ShowSoots(L);
+            if (L.Count != 0)
+                L[0].deleteFail(L);
+        }
+        else
+        {
+            _g.IsShow.ShowMessage("Уже стрелял");
+            return null;
+        }
+        return L;
+    }
 }//end Unit
