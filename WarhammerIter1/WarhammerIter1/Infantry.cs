@@ -111,6 +111,16 @@ public class Infantry : BasicModel
                 B = new SolidBrush(Color.Red);
         if (Alive == 0)
             e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
+        int k=0;
+        foreach(EffectsModel Eff in Effects)
+        {
+            k += Eff.IsIndependetCharecter(_g);
+        }
+        if(k==1)
+        {
+            B = new SolidBrush(Color.Navy);
+            e.Graphics.FillEllipse(B, x - 10, y - 10,20, 20);
+        }
     }
 
 }//end Infantry
