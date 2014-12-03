@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicModel.cs" />
+    <Compile Include="Charge.cs" />
     <Compile Include="DiceGenerator.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Exepshons.cs" />

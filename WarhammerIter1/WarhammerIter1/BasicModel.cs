@@ -30,6 +30,11 @@ public abstract class BasicModel
 	protected int Wound;
     public int x, y;
 
+    public virtual List<Wound> CombatAtack(int EnemyWs,int EnemyMajT)
+    {
+        return new List<Wound> { };
+    }
+
     public virtual int Leadership()
     {
         return 13;
@@ -97,17 +102,42 @@ public abstract class BasicModel
         Wound = 1;
 	}
 
-    public virtual List<Wound> Shoot(int t,Game _g)
+    public bool IsIndepChar(Game _g)
+    {
+        int k = 0;
+        foreach(EffectsModel Eff in Effects)
+        {
+            k += Eff.IsIndependetCharecter(_g);
+        }
+        if (k == 0)
+            return false;
+        return true;
+    }
+
+    public virtual List<Wound> Shoot(int Range,int t,Game _g)
     {
         if (Alive == 0)
         {
             List<Wound> L = new List<Wound> { };
-            L.AddRange(Weapons[0].Shoot(Moved,BalisticSkill));
+            L.AddRange(Weapons[0].Shoot(Moved,BalisticSkill,Range));
             return L;
         }
         else
             return null;
     }
+
+    public virtual List<Wound> Overvatch(int Range, int t, Game _g)
+    {
+        if (Alive == 0)
+        {
+            List<Wound> L = new List<Wound> { };
+            L.AddRange(Weapons[0].SnapShoots(Range));
+            return L;
+        }
+        else
+            return null;
+    }
+
 
 	~BasicModel()
     {

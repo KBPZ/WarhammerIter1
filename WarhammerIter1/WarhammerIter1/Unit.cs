@@ -21,6 +21,7 @@ public class Unit
 	public Effect m_Effect;
     public Player w_Player;
     public int Moved=0;
+    public int HeadToHead = 0;
 
     public int isFallBack()
     {
@@ -152,7 +153,7 @@ public class Unit
         }
     }
 
-    public List<Wound> Shoot(int type, Game _g)
+    public List<Wound> Shoot(int range,int type, Game _g)
     {
         List<Wound> L=new List<Wound>{},Lp;
         if (IsShoot == 0)
@@ -160,7 +161,7 @@ public class Unit
             IsShoot = 1;
             foreach (BasicModel ShootModel in Models)
             {
-                Lp = ShootModel.Shoot(type, _g);
+                Lp = ShootModel.Shoot(range,type, _g);
                 if(Lp!=null)
                     L.AddRange(Lp);
             }
@@ -259,7 +260,7 @@ public class Unit
         return false;
     }
 
-    public BasicModel Furst(Unit Sourse)
+    public BasicModel First(Unit Sourse)
     {
         foreach (BasicModel m in Models)
         {
@@ -281,20 +282,32 @@ public class Unit
             TextDices += c;
             TextDices += " ";
         }
-        _g.IsShow.ShowMessage(TextDices);
-
-
+        //_g.IsShow.ShowMessage(TextDices);
+        Wounds.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Strenght > y.Strenght)
+                return 1;
+            else if (x.Strenght == y.Strenght)
+                if (x.ap > y.ap)
+                    return 1;
+                else if (x.ap == y.ap)
+                    return 0;
+                else
+                    return -1;
+            else
+                return -1;
+        });
         for (int i = 0; i < n; i++)
         {
-            BasicModel m = Furst(_g.cur_unit);
+            BasicModel m = First(_g.cur_unit);
             if (m == null)
             {
                 _g.IsShow.ShowMessage("All dead");
                 break;
             }
-
             m.Save(Wounds[i], dices[i], Cover);
         }
+        _g.IsShow.ShowSave(Wounds);
     }
 
     private void DelEffectsModelInUnit(BasicModel DelModel)
@@ -387,6 +400,10 @@ public class Unit
                 m[i, j] = 0;
             }
         }
+        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        {
+            m[i, i] = 1;            
+        }
         i=0;
         foreach (BasicModel model in _g.cur_unit.Models)
         {
@@ -407,7 +424,7 @@ public class Unit
                                 m[j, k] = 1;
                         }
                     }
-                }
+                }                
                 j++;
             }
             i++;
@@ -431,5 +448,45 @@ public class Unit
             }
         }
         return cor;
+    }
+
+    public int ChargeRange(Game _g)
+    {
+        int Dis = _g.DiceGen.D6plD6();
+        return Dis;
+    }
+
+    public List<Wound> Overvatch(int range, int type, Game _g)
+    {
+        List<Wound> L = new List<Wound> { }, Lp;
+        if (IsShoot == 0)
+        {
+            IsShoot = 1;
+            foreach (BasicModel ShootModel in Models)
+            {
+                Lp = ShootModel.Overvatch(range, type, _g);
+                if (Lp != null)
+                    L.AddRange(Lp);
+            }
+            int n = L.Count;
+            List<int> dice = _g.DiceGen.manyD6(n);
+            for (int i = 0; i < n; i++)
+            {
+                L[i].dShoot = dice[i];
+                if (dice[i] < 7 - L[i].BalisticSkills)
+                {
+                    L[i].fail();
+                }
+            }
+            _g.IsShow.ShowSoots(L);
+            if (L.Count != 0)
+                L[0].deleteFail(L);
+        }
+        else
+        {
+            _g.IsShow.ShowMessage("Уже стрелял");
+            return null;
+        }
+        return L;
     }
 }//end Unit

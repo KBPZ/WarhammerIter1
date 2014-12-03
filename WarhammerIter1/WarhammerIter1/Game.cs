@@ -15,6 +15,7 @@ public interface Show
     void ShowMessage(string s);
     void ShowSoots(List<Wound> Lw);
     void ShowWound(List<Wound> Lw);
+    void ShowSave(List<Wound> Lw);
 }
 
 public class ShowNofing : Show
@@ -22,6 +23,7 @@ public class ShowNofing : Show
     public void ShowMessage(string s){}
     public void ShowSoots(List<Wound> Lw){}
     public void ShowWound(List<Wound> Lw){}
+    public void ShowSave(List<Wound> Lw) { }
 }
 
 public class ShowMessageBox : Show
@@ -121,6 +123,37 @@ public class ShowMessageBox : Show
             MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
         }
     }
+    public void ShowSave(List<Wound> Lw)
+    {
+        int save = 0;
+        string Show = "";
+        char p = ' ';
+        foreach (Wound w in Lw)
+        {
+            if (w.Save == 0)
+                break;
+            if (save != w.Save)
+            {
+                if (Show != "")
+                {
+                    MessageBox.Show(Show, "Save " + save.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dSave);
+                Show += p;
+                save = w.Save;
+            }
+            else
+            {
+                Show += (char)('0' + w.dSave);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show, "Save " + save.ToString());
+        }
+    }
 }
 
 public interface PfaseSr
@@ -128,6 +161,7 @@ public interface PfaseSr
     void MousClick(int x, int y,Game _g);
     void ActButtonClick(Game _g);
     void IndependentCharecterButtonClick(Game _g);
+    void EndPfaseButton(Game _g);
 }
 
 public class PfaseNofing:PfaseSr
@@ -143,6 +177,10 @@ public class PfaseNofing:PfaseSr
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
     }
 }
 
@@ -163,7 +201,7 @@ public class PfaseJoin:PfaseSr
         }
         else if (_g.cur_unit.w_Player != _g.PlayerNow())
         {
-            _g.IsShow.ShowMessage("Ётот отр€д не пренадлежит вам.");
+            _g.IsShow.ShowMessage("Ётот отр€д не принадлежит вам.");
         }
         else
         {
@@ -174,6 +212,10 @@ public class PfaseJoin:PfaseSr
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.IsShow.ShowMessage("«акончите присоединение независимого персонажа");
     }
 }
 
@@ -204,6 +246,10 @@ public class PfaseShoot : PfaseSr
     {
 
     }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
+    }
 }
 
 public class PfaseChose : PfaseSr
@@ -226,7 +272,7 @@ public class PfaseChose : PfaseSr
         }        
         else if(_g.cur_unit.w_Player!=_g.PlayerNow())
         {
-            _g.IsShow.ShowMessage("Ётот отр€д не пренадлежит вам.");
+            _g.IsShow.ShowMessage("Ётот отр€д не принадлежит вам.");
         }
         else if (_g.cur_unit.Moved != 0)
         {
@@ -268,6 +314,10 @@ public class PfaseChose : PfaseSr
             _g.NowPfaseStr = _g.JoinPf;
         }
     }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
+    }
 }
 
 public class PfaseMove : PfaseSr
@@ -293,6 +343,14 @@ public class PfaseMove : PfaseSr
             d = n;
         }
         return Math.Max(a, c) <= Math.Min(b, d);
+    }
+
+    public bool check_sections(BasicModel a, BasicModel b, BasicModel c, BasicModel d)
+    {
+        return intersect(a.x, b.x, c.x, d.x)
+        && intersect(a.y, b.y, c.y, d.y)
+        && area(a, b, c) * area(a, b, d) <= 0
+        && area(c, d, a) * area(c, d, b) <= 0;
     }
 
     public void MousClick(int x, int y, Game _g)
@@ -325,7 +383,7 @@ public class PfaseMove : PfaseSr
             {
                 foreach (BasicModel t_model in unit.Models)
                 {
-                    if(t_model.IsAlive()!=1 && (x-t_model.x)*(x-t_model.x)+(y-t_model.y)*(y-t_model.y)<=_g.enemy_distance*_g.enemy_distance)
+                    if (t_model.IsAlive() != 1 && _g.IsMap.squares(x, y, t_model.x, t_model.y, _g.enemy_distance) == true)
                     {
                         _g.IsShow.ShowMessage("—лишком мала€ дистанци€ с врагом.");
                         en = 1;
@@ -335,33 +393,30 @@ public class PfaseMove : PfaseSr
                     {
                         if (c_model!=t_model)
                         {
-                            if (Math.Sqrt((c_model.x - t_model.x) * (c_model.x - t_model.x) + (c_model.y - t_model.y) * (c_model.x - t_model.y)) <= _g.enemy_distance)
+                            if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
                             {
                                 BasicModel xy = new Infantry();
-                                xy.x=x;
-                                xy.y=y;
-                                bool b = intersect(_g.cur_model.x, x, c_model.x, t_model.x)
-                                        && intersect(_g.cur_model.y, y, c_model.y, t_model.y)
-                                		&& area(_g.cur_model, xy, c_model) * area(_g.cur_model, xy, t_model) <= 0
-		                                && area(c_model, t_model, _g.cur_model) * area(c_model, t_model, xy) <= 0;
-                                if (b == true)
+                                xy.x=x; xy.y=y;
+                                if (check_sections(_g.cur_model, xy, c_model, t_model))
                                 {
                                     en = 1;
-                                    MessageBox.Show("¬ы не можете пройти через вражеские модели.");
+                                    _g.IsShow.ShowMessage("¬ы не можете пройти через вражеские модели.");
                                     break;
                                 }
                             }
                         }
                         if (en == 1)
                             break;
-                    } 
+                    }
+                    if (en == 1)
+                        break;
                 }
                 if (en == 1)
                     break;
             }
             if (en == 0)
             {
-                if ((x - _g.cur_model.start_x) * (x - _g.cur_model.start_x) + (y - _g.cur_model.start_y) * (y - _g.cur_model.start_y) <= _g.length * _g.length)
+                if (_g.IsMap.squares(x, y, _g.cur_model.start_x, _g.cur_model.start_y, _g.length) == true)
                 {
                     _g.cur_model.x = x;
                     _g.cur_model.y = y;
@@ -396,6 +451,102 @@ public class PfaseMove : PfaseSr
     {
 
     }
+
+    public void EndPfaseButton(Game _g)
+    {
+        _g.IsShow.ShowMessage("«акончите передвижени€ отр€да");
+    }
+}
+
+public class PfaseChoseUnit : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        if(_g.cur_unit==null)
+        {
+            _g.cur_unit = _g.IsMap.FindUnit(x, y);
+        }
+        else
+        {
+            _g.Target = _g.IsMap.FindUnit(x, y);
+        }
+    }
+    public void ActButtonClick(Game _g)
+    {
+        if (_g.cur_unit == null)
+        {
+            _g.IsShow.ShowMessage("¬ыберите атакующий отр€д.");
+        }
+        if (_g.Target == null)
+        {
+            _g.IsShow.ShowMessage("¬ыберите вражеский отр€д.");
+        }
+        else if (_g.cur_unit.w_Player != _g.PlayerNow())
+        {
+            _g.IsShow.ShowMessage("¬ыбранный атакующий отр€д не принадлежит вам.");
+        }
+        else if (_g.Target.w_Player == _g.PlayerNow())
+        {
+            _g.IsShow.ShowMessage("¬ыбранный вражеский отр€д принадлежит вам.");
+        }
+        else if (_g.cur_unit.Moved != 0)
+        {
+            _g.IsShow.ShowMessage("¬ы уже совершали бросок данным отр€дом.");
+        }
+        else
+        {
+            _g.NowPfaseStr = _g.MarchPf;
+
+        }
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
+    }
+}
+
+public class PfaseMarch : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
+    }
+}
+
+public class PfaseCharge : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
+    }
 }
 
 public enum Pfase
@@ -415,18 +566,23 @@ public class Game
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
     public PfaseSr JoinPf = new PfaseJoin();
+    public PfaseSr ChargePf = new PfaseCharge();
+    public PfaseSr MarchPf = new PfaseMarch();
+    public PfaseSr ChoseUnitPf = new PfaseChoseUnit();
     public int NowPlayer { get; private set; }
     public Pfase NowPhase { get; private set; }
     public Player[] Players { get; private set; }
     public Map IsMap { get; private set; }
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
+    public List<Combat> AllCombat = new List<Combat> { };
 	private int Turn;
     public Unit Target {get;set;}
     //public Unit Sourse {get;set;}
     public intMission NowMission { get; set; }
     public BasicModel cur_model { get; set; }
     public Unit cur_unit { get; set; }
+    public BasicModel cur_en_model { get; set; }
     public int length = 600;
     public int distance = 200;
     public int enemy_distance = 100;
@@ -454,6 +610,14 @@ public class Game
             case Pfase.Move:
                 break;
             case Pfase.Shoot:
+                Target = null;
+                cur_unit = null;
+                cur_model = null;
+                cur_en_model = null;
+                foreach (Unit unit in Players[NowPlayer].GetUnits())
+                {
+                    unit.Moved = 0;
+                }
                 break;
             case Pfase.Charge:
                 foreach (Unit unit in Players[NowPlayer].GetUnits())
@@ -463,9 +627,9 @@ public class Game
                         model.Moved = 0;
                     }
                     unit.Moved = 0;
-                    cur_unit = null;
-                    Target = null;
                 }
+                cur_unit = null;
+                Target = null;
                 break;
         }
     }
@@ -491,7 +655,7 @@ public class Game
                 break;
             case Pfase.Charge:
                 IsShow.ShowMessage("‘аза атаки");
-                NowPfaseStr = NofingPf;
+                NowPfaseStr = ChoseUnitPf;
                 break;
         }
     }
@@ -630,7 +794,8 @@ public class Game
         }
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        L = cur_unit.Shoot(0, this);
+        int Range = (int)IsMap.Range(cur_unit, Target);
+        L = cur_unit.Shoot(Range,0, this);
         if (L == null || L.Count==0)
             return 0;
         L = Target.Wonding(cur_unit, L, this);
@@ -640,9 +805,34 @@ public class Game
         return 0;
     }
 
+    public void Overwatch()
+    {
+
+        int Cover = 7;
+        List<Wound> L = new List<Wound> { };
+        int Range = (int)IsMap.Range(cur_unit, Target);
+        Target.Overvatch(Range, 0, this);
+        if (L == null || L.Count == 0)
+            return;
+        L = Target.Wonding(cur_unit, L, this);
+        if (L == null || L.Count == 0)
+            return;
+        Target.Save(Cover, L, this);
+    }
+
 	public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)
     {
 
 	}
+
+    public void HeadToHead()
+    {
+
+    }
+
+    public void NewCombat()
+    {
+        AllCombat.Add(new Combat(cur_unit,Target,this));
+    }
 
 }//end Game

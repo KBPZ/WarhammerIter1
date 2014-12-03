@@ -24,9 +24,9 @@ public abstract class Object {
 	}
 
 	/// 
-	/// <param name="Furst"></param>
+	/// <param name="First"></param>
 	/// <param name="Second"></param>
-	public int InLIne(Point Furst, Point Second){
+	public int InLIne(Point First, Point Second){
 
 		return 0;
 	}

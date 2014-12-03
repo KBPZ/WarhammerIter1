@@ -13,6 +13,9 @@ public class Wound
 {
     public int dShoot { get;set; }
     public int dWound { get; set; }
+    public int dSave { get; set; }
+    public int Save { get; set; }
+    public int Range;
 	public int ap 
     {
         get;
@@ -104,8 +107,9 @@ public class Wound
         return m_Effect;
     }*/
 
-	public Wound(int S,int AP,Effect[] Ef,int bs,BasicModel Sor)
+	public Wound(int range,int S,int AP,Effect[] Ef,int bs,BasicModel Sor)
     {
+        Range = range;
         ap = AP;
         Strenght=S;
         Effects=Ef;

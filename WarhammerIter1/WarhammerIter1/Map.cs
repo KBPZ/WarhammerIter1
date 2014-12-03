@@ -17,6 +17,24 @@ public class Map
 	private Point Coord;
 	private List<Object> MapObjects;
 
+    public double Range(Unit A, Unit B)
+    {
+        //int Dis=_g.cur_unit.ChargeRange(_g);
+        double min = 1000000;
+        foreach (BasicModel model in A.Models)
+        {
+            foreach (BasicModel en_model in B.Models)
+            {
+                double d=distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min)
+                {
+                    min = d;
+                }
+            }
+        }        
+        return min;
+    }
+
     public Unit FindUnit(int x, int y)
     {
         foreach(Unit unit in AllUnits)
@@ -32,13 +50,33 @@ public class Map
         return null;
     }
 
+    public bool squares(int a, int b, int c, int d, int e)
+    {
+        return (a - c) * (a - c) + (b - d) * (b - d) <= e * e;
+    }
+
+    public double distance(int a, int b, int c, int d)
+    {
+        return Math.Sqrt((a - c) * (a - c) + (b - d) * (b - d));
+    }
+
+    public double triangle_x (int x1, int x2, int y1, int y2)
+    {
+        return (x2 - x1) * Math.Cos(60 * Math.PI / 180) - (y2 - y1) * Math.Sin(60 * Math.PI / 180) + x1;
+    }
+
+    public double triangle_y (int x1, int x2, int y1, int y2)
+    {
+        return (x2 - x1) * Math.Sin(60 * Math.PI / 180) + (y2 - y1) * Math.Cos(60 * Math.PI / 180) + y1;
+    }
+
     public BasicModel FindModel(int x, int y)
     {
         foreach (Unit unit in AllUnits)
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) <= 625)
+                if (squares(x, y, model.x, model.y, 25) == true)
                 {
                     return model;
                 }
@@ -53,7 +91,7 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) < 2500)
+                if (squares(x, y, model.x, model.y, 50) == true)
                 {
                     return model;
                 }

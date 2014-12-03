@@ -42,7 +42,7 @@ public class Infantry : BasicModel
         Toughnes = t;
         ArmorSave = ArSv;
         Weapons = wea;
-        m_Weapons = Weapons[0];
+        //m_Weapons = Weapons[0];
         Effects = Ef;
         foreach (Weapon w in Weapons)
         {
@@ -69,12 +69,20 @@ public class Infantry : BasicModel
         }
 	}
 
+    public override List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
+    {
+        
+        return base.CombatAtack(EnemyWs, EnemyMajT);
+    }
+
     public override int Save(Wound x, int dice,int Cover)
     {
         int ASave = ArmorSave;
         if (x.ap <= ASave)
             ASave = 7;
         ASave = Math.Min(ASave, Math.Min(Cover, InvulnerableSave));
+        x.dSave=dice;
+        x.Save = ASave;
         if(ASave>dice)
         {
             Wound--;
@@ -111,15 +119,10 @@ public class Infantry : BasicModel
                 B = new SolidBrush(Color.Red);
         if (Alive == 0)
             e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
-        int k=0;
-        foreach(EffectsModel Eff in Effects)
-        {
-            k += Eff.IsIndependetCharecter(_g);
-        }
-        if(k==1)
+        if(true == IsIndepChar(_g))
         {
             B = new SolidBrush(Color.Navy);
-            e.Graphics.FillEllipse(B, x - 10, y - 10,20, 20);
+            e.Graphics.FillEllipse(B, x - 10, y - 10, 20, 20);
         }
     }
 
