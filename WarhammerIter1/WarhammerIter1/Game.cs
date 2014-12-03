@@ -15,6 +15,7 @@ public interface Show
     void ShowMessage(string s);
     void ShowSoots(List<Wound> Lw);
     void ShowWound(List<Wound> Lw);
+    void ShowSave(List<Wound> Lw);
 }
 
 public class ShowNofing : Show
@@ -22,6 +23,7 @@ public class ShowNofing : Show
     public void ShowMessage(string s){}
     public void ShowSoots(List<Wound> Lw){}
     public void ShowWound(List<Wound> Lw){}
+    public void ShowSave(List<Wound> Lw) { }
 }
 
 public class ShowMessageBox : Show
@@ -119,6 +121,37 @@ public class ShowMessageBox : Show
         if (Show != "")
         {
             MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+        }
+    }
+    public void ShowSave(List<Wound> Lw)
+    {
+        int save = 0;
+        string Show = "";
+        char p = ' ';
+        foreach (Wound w in Lw)
+        {
+            if (w.Save == 0)
+                break;
+            if (save != w.Save)
+            {
+                if (Show != "")
+                {
+                    MessageBox.Show(Show, "Save " + save.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dSave);
+                Show += p;
+                save = w.Save;
+            }
+            else
+            {
+                Show += (char)('0' + w.dSave);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show, "Save " + save.ToString());
         }
     }
 }
@@ -723,7 +756,8 @@ public class Game
         }
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        L = cur_unit.Shoot(0, this);
+        int Range = IsMap.Range(cur_unit, Target);
+        L = cur_unit.Shoot(Range,0, this);
         if (L == null || L.Count==0)
             return 0;
         L = Target.Wonding(cur_unit, L, this);
@@ -737,5 +771,10 @@ public class Game
     {
 
 	}
+
+    public void HeadToHead()
+    {
+
+    }
 
 }//end Game
