@@ -17,9 +17,22 @@ public class Map
 	private Point Coord;
 	private List<Object> MapObjects;
 
-    public int Range(Unit A,Unit B)
+    public int Range(Unit A, Unit B)
     {
-        return 1;
+        //int Dis=_g.cur_unit.ChargeRange(_g);
+        double min = 1000000;
+        foreach (BasicModel model in A.Models)
+        {
+            foreach (BasicModel en_model in B.Models)
+            {
+                double d=distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min)
+                {
+                    min = d;
+                }
+            }
+        }        
+        return 0;
     }
 
     public Unit FindUnit(int x, int y)
@@ -40,6 +53,11 @@ public class Map
     public bool squares(int a, int b, int c, int d, int e)
     {
         return (a - c) * (a - c) + (b - d) * (b - d) <= e * e;
+    }
+
+    public double distance(int a, int b, int c, int d)
+    {
+        return Math.Sqrt((a - c) * (a - c) + (b - d) * (b - d));
     }
 
     public BasicModel FindModel(int x, int y)
@@ -63,7 +81,7 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if ((x - model.x) * (x - model.x) + (y - model.y) * (y - model.y) < 2500)
+                if (squares(x, y, model.x, model.y, 50) == true)
                 {
                     return model;
                 }

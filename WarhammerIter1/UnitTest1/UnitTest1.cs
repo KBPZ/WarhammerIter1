@@ -99,7 +99,7 @@ namespace UnitTest1
             DiceInt di = new TestDice(d, new List<int> { 2 });
             List<Unit> FirstPlayerUnits, SecondPlayerUnits;
             BasicModel TerminatorLeader =
-               new Infantry(200, 400, 5, 5, 4, 4, 5, 9, 2, 7,
+               new Infantry(200, 400, 5, 5, 4, 4, 5, 9, 2, 7, 
                    new List<Weapon> { new Pistol(12,4, 5, new List<EffectsWeapons> { new baldestorm() }) },
                    new List<EffectsModel> { new Fearless(), new IndependetCharecter() });
             List<BasicModel> DireAvengers = new List<BasicModel>

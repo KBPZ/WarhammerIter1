@@ -201,7 +201,7 @@ public class PfaseJoin:PfaseSr
         }
         else if (_g.cur_unit.w_Player != _g.PlayerNow())
         {
-            _g.IsShow.ShowMessage("Ётот отр€д не пренадлежит вам.");
+            _g.IsShow.ShowMessage("Ётот отр€д не принадлежит вам.");
         }
         else
         {
@@ -272,7 +272,7 @@ public class PfaseChose : PfaseSr
         }        
         else if(_g.cur_unit.w_Player!=_g.PlayerNow())
         {
-            _g.IsShow.ShowMessage("Ётот отр€д не пренадлежит вам.");
+            _g.IsShow.ShowMessage("Ётот отр€д не принадлежит вам.");
         }
         else if (_g.cur_unit.Moved != 0)
         {
@@ -352,8 +352,6 @@ public class PfaseMove : PfaseSr
         && area(a, b, c) * area(a, b, d) <= 0
         && area(c, d, a) * area(c, d, b) <= 0;
     }
-
-
 
     public void MousClick(int x, int y, Game _g)
     {
@@ -460,6 +458,82 @@ public class PfaseMove : PfaseSr
     }
 }
 
+public class PfaseChoseUnit : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+        if(_g.cur_unit==null)
+        {
+            _g.cur_unit = _g.IsMap.FindUnit(x, y);
+        }
+        else
+        {
+            _g.Target = _g.IsMap.FindUnit(x, y);
+        }
+    }
+    public void ActButtonClick(Game _g)
+    {
+        if (_g.cur_unit == null)
+        {
+            _g.IsShow.ShowMessage("¬ыберите атакующий отр€д.");
+        }
+        if (_g.Target == null)
+        {
+            _g.IsShow.ShowMessage("¬ыберите вражеский отр€д.");
+        }
+        else if (_g.cur_unit.w_Player != _g.PlayerNow())
+        {
+            _g.IsShow.ShowMessage("¬ыбранный атакующий отр€д не принадлежит вам.");
+        }
+        else if (_g.Target.w_Player == _g.PlayerNow())
+        {
+            _g.IsShow.ShowMessage("¬ыбранный вражеский отр€д принадлежит вам.");
+        }
+        else if (_g.cur_unit.Moved != 0)
+        {
+            _g.IsShow.ShowMessage("¬ы уже совершали бросок данным отр€дом.");
+        }
+        else
+            _g.NowPfaseStr = _g.MarchPf;
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+}
+
+public class PfaseMarch : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+}
+
+public class PfaseCharge : PfaseSr
+{
+    public void MousClick(int x, int y, Game _g)
+    {
+
+    }
+    public void ActButtonClick(Game _g)
+    {
+
+    }
+    public void IndependentCharecterButtonClick(Game _g)
+    {
+
+    }
+}
+
 public enum Pfase
 {
     Move,
@@ -477,6 +551,9 @@ public class Game
     public PfaseSr NofingPf = new PfaseNofing();
     public PfaseSr ShootPf = new PfaseShoot();
     public PfaseSr JoinPf = new PfaseJoin();
+    public PfaseSr ChargePf = new PfaseCharge();
+    public PfaseSr MarchPf = new PfaseMarch();
+    public PfaseSr ChoseUnitPf = new PfaseChoseUnit();
     public int NowPlayer { get; private set; }
     public Pfase NowPhase { get; private set; }
     public Player[] Players { get; private set; }
@@ -489,6 +566,7 @@ public class Game
     public intMission NowMission { get; set; }
     public BasicModel cur_model { get; set; }
     public Unit cur_unit { get; set; }
+    public BasicModel cur_en_model { get; set; }
     public int length = 600;
     public int distance = 200;
     public int enemy_distance = 100;
@@ -516,6 +594,14 @@ public class Game
             case Pfase.Move:
                 break;
             case Pfase.Shoot:
+                Target = null;
+                cur_unit = null;
+                cur_model = null;
+                cur_en_model = null;
+                foreach (Unit unit in Players[NowPlayer].GetUnits())
+                {
+                    unit.Moved = 0;
+                }
                 break;
             case Pfase.Charge:
                 foreach (Unit unit in Players[NowPlayer].GetUnits())
@@ -525,9 +611,9 @@ public class Game
                         model.Moved = 0;
                     }
                     unit.Moved = 0;
-                    cur_unit = null;
-                    Target = null;
                 }
+                cur_unit = null;
+                Target = null;
                 break;
         }
     }
@@ -553,7 +639,7 @@ public class Game
                 break;
             case Pfase.Charge:
                 IsShow.ShowMessage("‘аза атаки");
-                NowPfaseStr = NofingPf;
+                NowPfaseStr = ChoseUnitPf;
                 break;
         }
     }
