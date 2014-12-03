@@ -796,7 +796,7 @@ public class Game
         }
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        int Range = IsMap.Range(cur_unit, Target);
+        int Range = (int)IsMap.Range(cur_unit, Target);
         L = cur_unit.Shoot(Range,0, this);
         if (L == null || L.Count==0)
             return 0;
@@ -812,7 +812,7 @@ public class Game
 
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        int Range = IsMap.Range(cur_unit, Target);
+        int Range = (int)IsMap.Range(cur_unit, Target);
         Target.Overvatch(Range, 0, this);
         if (L == null || L.Count == 0)
             return;

@@ -121,7 +121,7 @@ public class Infantry : BasicModel
             e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
         if(true == IsIndepChar(_g))
         {
-            B = new SolidBrush(Color.Maroon);
+            B = new SolidBrush(Color.Navy);
             e.Graphics.FillEllipse(B, x - 10, y - 10, 20, 20);
         }
     }
