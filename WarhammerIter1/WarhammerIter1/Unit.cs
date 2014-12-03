@@ -153,6 +153,23 @@ public class Unit
         }
     }
 
+    public int MajorityWeaponSkill()
+    {
+        return 4;
+    }
+
+    public int MajorityToughnes()
+    {
+        int t = 0, Majority = 0;
+        foreach (BasicModel m in Models)
+        {
+            t++;
+            Majority += m.GetToughnes();
+        }
+        Majority = Majority / t;
+        return Majority;
+    }
+
     public List<Wound> Shoot(int range,int type, Game _g)
     {
         List<Wound> L=new List<Wound>{},Lp;
@@ -202,13 +219,8 @@ public class Unit
     public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, Game _g)
     {
         int n = Wounds.Count;
-        int t=0,Majority=0;
+        int Majority=MajorityToughnes();
         List<int> dices = _g.DiceGen.manyD6(n);
-        foreach(BasicModel m in Models)
-        {
-            t++;
-            Majority += m.GetToughnes(Sourse);
-        }
 
         char a = ' ';
         string TextDices = new string(a, 1);
@@ -220,7 +232,6 @@ public class Unit
         }
         //_g.IsShow.ShowMessage(TextDices);
         int rer = 0;
-        Majority = Majority / t;
         for (int i = 0; i < n;i++)
         {
             Wounds[i].dWound = dices[i];

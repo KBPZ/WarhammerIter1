@@ -54,8 +54,13 @@ public class Weapon
         Effects = new List<EffectsWeapons> { };
 	}
 
-    public virtual List<Wound> HeadToHead()
+    public virtual List<Wound> HeadToHead(int atack,int S)
     {
+        List<Wound> L = new List<Wound> { };
+        for (int i = 0; i < atack; i++)
+        {
+            L.Add(new Wound(w_BasicModel.WeaponSkill,S,7,Effects.ToArray(),w_BasicModel));
+        }
         return null;
     }
 

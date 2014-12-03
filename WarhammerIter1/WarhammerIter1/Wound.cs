@@ -44,7 +44,7 @@ public class Wound
         private set;
     }
 
-    public int BalisticSkills
+    public int Skills
     {
         get;
         private set;
@@ -113,9 +113,18 @@ public class Wound
         ap = AP;
         Strenght=S;
         Effects=Ef;
-        BalisticSkills=bs;
+        Skills=bs;
         Sourse=Sor;
 	}
+
+    public Wound(int ws,int S, int AP, Effect[] Ef, BasicModel Sor)
+    {
+        ap = AP;
+        Strenght = S;
+        Effects = Ef;
+        Skills = ws;
+        Sourse = Sor;
+    }
 
 	~Wound()
     {

@@ -17,7 +17,7 @@ public class Infantry : BasicModel
 	private int _Leadership;
 	private int Toughnes;
 
-    public override int GetToughnes(Unit Surce)
+    public override int GetToughnes()
     {
         return Toughnes;
     }

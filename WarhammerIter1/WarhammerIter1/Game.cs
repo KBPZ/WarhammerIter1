@@ -739,7 +739,9 @@ public class Game
     {
         Players = new Player[2];
         Players[0] = P1;
+        P1.PlayerN = 0;
         Players[1] = P2;
+        P2.PlayerN = 1;
         DiceGen = DiceG;
         IsShow = ShowStr;
         NowMission = new EturnalWar1();
@@ -832,7 +834,13 @@ public class Game
 
     public void NewCombat()
     {
-        AllCombat.Add(new Combat(cur_unit,Target,this));
+        //Overwatch();
+        int ChargeRange = cur_unit.ChargeRange(this);
+        double Range=IsMap.Range(Target,cur_unit);
+        if(Range>ChargeRange)
+        {
+            AllCombat.Add(new Combat(cur_unit,Target,this));
+        }
     }
 
 }//end Game

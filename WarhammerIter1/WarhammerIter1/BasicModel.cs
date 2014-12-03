@@ -26,13 +26,18 @@ public abstract class BasicModel
     protected Weapon m_Weapons;
     public List<EffectsModel> Effects { get; protected set; }
     public Unit w_Unit;
-	protected int WeaponSkill;
+    public int WeaponSkill { get; protected set; }
 	protected int Wound;
     public int x, y;
 
     public virtual List<Wound> CombatAtack(int EnemyWs,int EnemyMajT)
     {
         return new List<Wound> { };
+    }
+
+    public virtual int GetInitiative(Game _g)
+    {
+        return Initiative;
     }
 
     public virtual int Leadership()
@@ -92,7 +97,7 @@ public abstract class BasicModel
         return Alive;
     }
 
-    public virtual int  GetToughnes(Unit Surce)
+    public virtual int  GetToughnes()
     {
         return 4;
     }
