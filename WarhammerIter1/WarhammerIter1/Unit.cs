@@ -259,7 +259,7 @@ public class Unit
         return false;
     }
 
-    public BasicModel Furst(Unit Sourse)
+    public BasicModel First(Unit Sourse)
     {
         foreach (BasicModel m in Models)
         {
@@ -286,7 +286,7 @@ public class Unit
 
         for (int i = 0; i < n; i++)
         {
-            BasicModel m = Furst(_g.cur_unit);
+            BasicModel m = First(_g.cur_unit);
             if (m == null)
             {
                 _g.IsShow.ShowMessage("All dead");
@@ -435,5 +435,10 @@ public class Unit
             }
         }
         return cor;
+    }
+
+    public int ChargeDistance (Game _g)
+    {
+        return 600;
     }
 }//end Unit

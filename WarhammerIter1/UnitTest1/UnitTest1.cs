@@ -42,11 +42,11 @@ namespace UnitTest1
             Game IsGame = new Game(F, S, di,new ShowNofing());
             IsGame.cur_unit = IsGame.Players[0].PlayersUnit[0];
             IsGame.Target = IsGame.Players[1].PlayersUnit[0];
-            BasicModel TargetFurst = IsGame.Target.Furst(IsGame.cur_unit);
+            BasicModel TargetFirst = IsGame.Target.First(IsGame.cur_unit);
             IsGame.NextPfase();
             IsGame.Shooting();
             IsGame.NextPfase();
-            Assert.AreEqual(1,TargetFurst.IsAlive());
+            Assert.AreEqual(1,TargetFirst.IsAlive());
             Assert.AreEqual(0, IsGame.Target.isFallBack());
         }
         [TestMethod]
