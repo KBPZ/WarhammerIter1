@@ -17,7 +17,7 @@ public class Map
 	private Point Coord;
 	private List<Object> MapObjects;
 
-    public int Range(Unit A, Unit B)
+    public double Range(Unit A, Unit B)
     {
         //int Dis=_g.cur_unit.ChargeRange(_g);
         double min = 1000000;
@@ -32,7 +32,7 @@ public class Map
                 }
             }
         }        
-        return 0;
+        return min;
     }
 
     public Unit FindUnit(int x, int y)
@@ -58,6 +58,16 @@ public class Map
     public double distance(int a, int b, int c, int d)
     {
         return Math.Sqrt((a - c) * (a - c) + (b - d) * (b - d));
+    }
+
+    public double triangle_x (int x1, int x2, int y1, int y2)
+    {
+        return (x2 - x1) * Math.Cos(60 * Math.PI / 180) - (y2 - y1) * Math.Sin(60 * Math.PI / 180) + x1;
+    }
+
+    public double triangle_y (int x1, int x2, int y1, int y2)
+    {
+        return (x2 - x1) * Math.Sin(60 * Math.PI / 180) + (y2 - y1) * Math.Cos(60 * Math.PI / 180) + y1;
     }
 
     public BasicModel FindModel(int x, int y)
