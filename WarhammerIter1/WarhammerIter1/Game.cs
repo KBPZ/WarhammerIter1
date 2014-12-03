@@ -494,11 +494,18 @@ public class PfaseChoseUnit : PfaseSr
             _g.IsShow.ShowMessage("¬ы уже совершали бросок данным отр€дом.");
         }
         else
+        {
             _g.NowPfaseStr = _g.MarchPf;
+
+        }
     }
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
     }
 }
 
@@ -516,6 +523,10 @@ public class PfaseMarch : PfaseSr
     {
 
     }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
+    }
 }
 
 public class PfaseCharge : PfaseSr
@@ -531,6 +542,10 @@ public class PfaseCharge : PfaseSr
     public void IndependentCharecterButtonClick(Game _g)
     {
 
+    }
+    public void EndPfaseButton(Game _g)
+    {
+        _g.NextPfase();
     }
 }
 
@@ -560,6 +575,7 @@ public class Game
     public Map IsMap { get; private set; }
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
+    public List<Combat> AllCombat = new List<Combat> { };
 	private int Turn;
     public Unit Target {get;set;}
     //public Unit Sourse {get;set;}
@@ -812,6 +828,11 @@ public class Game
     public void HeadToHead()
     {
 
+    }
+
+    public void NewCombat()
+    {
+        AllCombat.Add(new Combat(cur_unit,Target,this));
     }
 
 }//end Game

@@ -69,6 +69,12 @@ public class Infantry : BasicModel
         }
 	}
 
+    public override List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
+    {
+        
+        return base.CombatAtack(EnemyWs, EnemyMajT);
+    }
+
     public override int Save(Wound x, int dice,int Cover)
     {
         int ASave = ArmorSave;
