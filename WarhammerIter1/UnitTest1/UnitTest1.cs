@@ -163,8 +163,8 @@ namespace UnitTest1
                 new Infantry(25,350,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
                 new Infantry(25,500,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
                 new Infantry(300,120,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(150,40,1,1,1,1,1,1,1,1,,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(200,300,1,1,1,1,1,1,1,1,,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(150,40,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(200,300,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
             };
             Unit NotInCag = new Unit(LNotInCag, new List<EffectsUnit> { });
             IsGame.cur_unit = NotInCag;

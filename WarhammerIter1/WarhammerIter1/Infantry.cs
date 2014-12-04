@@ -73,23 +73,32 @@ public class Infantry : BasicModel
 
     public override List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
     {
-        List<Weapon> CCW = new List<Weapon> { };
-        List<Wound> L; //= new List<Wound> { };
-        foreach(Weapon W in Weapons)
+        if (Alive == 0)
         {
-            if(W.IsHtHWeapon()==1)
+            List<Weapon> CCW = new List<Weapon> { };
+            List<Weapon> SCCW = new List<Weapon> { };
+            List<Wound> L; //= new List<Wound> { };
+            foreach (Weapon W in Weapons)
             {
-                CCW.Add(W);
+                if (W.IsHtHWeapon() == 1)
+                {
+                    CCW.Add(W);
+                }
+                if (W.IsSpecialHtHWeapon() == 1)
+                    SCCW.Add(W);
             }
+            int bonus = 0;
+            if (CCW.Count > 1)
+                bonus++;
+            if (SCCW.Count > 0)
+                L = SCCW[0].HeadToHead(Atack + bonus, Strength, EnemyMajT, WeaponSkill, EnemyWs);
+            else if (SCCW.Count > 0)
+                L = CCW[0].HeadToHead(Atack + bonus, Strength, EnemyMajT, WeaponSkill, EnemyWs);
+            else
+                L = Weapons[0].HeadToHead(Atack + bonus, Strength, EnemyMajT, WeaponSkill, EnemyWs);
+            return L;
         }
-        int bonus = 0;
-        if (CCW.Count > 1)
-            bonus++;
-        if(CCW.Count>0)
-            L = CCW[0].HeadToHead(Atack + bonus, Strength);
-        else 
-            L = Weapons[0].HeadToHead(Atack + bonus, Strength);
-        return L;
+        return new List<Wound> { };
     }
 
     public override int Save(Wound x, int dice,int Cover)
@@ -103,6 +112,8 @@ public class Infantry : BasicModel
         if(ASave>dice)
         {
             Wound--;
+            if (x.Strenght >= Toughnes * 2)
+                Wound = 0;
         }
         if (Wound <= 0)
         {
@@ -155,11 +166,13 @@ public class Infantry : BasicModel
             else
                 B = new SolidBrush(Color.Red);
         if (Alive == 0)
-            e.Graphics.FillEllipse(B,(int) x - 25, (int)y - 25, 50, 50);
-        if(true == IsIndepChar(_g))
         {
-            B = new SolidBrush(Color.Navy);
-            e.Graphics.FillEllipse(B,(int) x - 10, (int)y - 10, 20, 20);
+            e.Graphics.FillEllipse(B, (int)x - 25, (int)y - 25, 50, 50);
+            if (true == IsIndepChar(_g))
+            {
+                B = new SolidBrush(Color.Navy);
+                e.Graphics.FillEllipse(B, (int)x - 10, (int)y - 10, 20, 20);
+            }
         }
     }
 

@@ -80,6 +80,56 @@ public class ShowMessageBox : Show
             MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
         }
     }
+
+    public void ShowHtH(List<Wound> Lw)
+    {
+        Lw.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Skills > y.Skills)
+                return 1;
+            else if (x.Skills == y.Skills)
+                if (x.Strenght > y.Strenght)
+                    return 1;
+                else if (x.Strenght == y.Strenght)
+                    if (x.ap > y.ap)
+                        return 1;
+                    else if (x.ap == y.ap)
+                        return 0;
+                    else
+                        return -1;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        int s = 0, bs = 0, ap = 0;
+        string Show = "";
+        char p = ' ';
+        foreach (Wound w in Lw)
+        {
+            if (s != w.Strenght || bs != w.Skills || ap != w.ap)
+            {
+                if (Show != "")
+                {
+                    MessageBox.Show(Show, "ws " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dShoot); ;
+                Show += p;
+                s = w.Strenght; bs = w.Skills; ap = w.ap;
+            }
+            else
+            {
+                Show += (char)('0' + w.dShoot);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+        }
+    }
+
     public void ShowWound(List<Wound> Lw)
     {
         Lw.Sort(delegate(Wound x, Wound y)
@@ -164,7 +214,7 @@ public interface PfaseSr
     void EndPfaseButton(Game _g);
 }
 
-public class PfaseNofing:PfaseSr
+public class PfaseNofing : PfaseSr
 {
     public void MousClick(int x, int y, Game _g) 
     {
@@ -184,7 +234,7 @@ public class PfaseNofing:PfaseSr
     }
 }
 
-public class PfaseJoin:PfaseSr
+public class PfaseJoin : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
@@ -841,7 +891,7 @@ public class Game
         {
             Combat NCombat = new Combat(cur_unit, Target, this);
             AllCombat.Add(NCombat);
-            NCombat.FightSubPf(this);
+            NCombat.FightSubPh(this);
         }
     }
 

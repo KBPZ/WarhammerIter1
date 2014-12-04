@@ -12,7 +12,7 @@ using System;
 
 public class Unit 
 {
-	private int Alive = 0;
+	public int Alive = 0;
 	private List<EffectsUnit> Effects;
 	public List<BasicModel> Models;
     private int IsShoot=0;
@@ -22,6 +22,14 @@ public class Unit
     public Player w_Player;
     public int Moved=0;
     public int HeadToHead = 0;
+
+    public void Destroy(Game  _g)
+    {
+        foreach(BasicModel M in Models)
+        {
+            M.Destroy(_g);
+        }
+    }
 
     public int isFallBack()
     {
@@ -47,6 +55,19 @@ public class Unit
         }
     }
 
+    public int Waste()
+    {
+        int W=0;
+        foreach (BasicModel b in Models)
+        {
+            if (b.IsAlive() == 2)
+            {
+                W++;
+            }
+        }
+        return W;
+    }
+
     public void EndPfase(Game _g)
     {
 
@@ -68,7 +89,7 @@ public class Unit
                 }
                 if(0.25<d/(a+d))
                 {
-                    if(!LeadershipTest(_g))
+                    if(!LeadershipTest(_g,0))
                     {
                         FallBack = 1;
                         _g.IsShow.ShowMessage("FallBack!");
@@ -252,7 +273,7 @@ public class Unit
         return Wounds;
     }
 
-    public bool LeadershipTest(Game _g)
+    public bool LeadershipTest(Game _g,int penalty)
     {
         int leader = 0,DiceLeader=_g.DiceGen.D6plD6(),rer=0;
         String s = "LeaderTest ";
@@ -266,7 +287,7 @@ public class Unit
         {
             EfU.Leader(this,ref DiceLeader,ref leader,ref rer,_g);
         }
-        if(leader==13||leader>=DiceLeader)
+        if (leader == 13 || leader - penalty >= DiceLeader)
             return true;
         return false;
     }

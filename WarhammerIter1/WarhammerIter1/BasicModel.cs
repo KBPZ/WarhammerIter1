@@ -31,6 +31,11 @@ public abstract class BasicModel
     public int Wound { get; protected set; }
     public double x, y;
 
+    public void Destroy(Game _g)
+    {
+        Alive = 1;
+    }
+
     public virtual List<Wound> CombatAtack(int EnemyWs,int EnemyMajT)
     {
         return new List<Wound> { };

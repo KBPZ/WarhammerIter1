@@ -15,6 +15,8 @@ public class Wound
     public int dWound { get; set; }
     public int dSave { get; set; }
     public int Save { get; set; }
+    public int enMajT { get; set; }
+    public int enSkills { get; set; }
     public int Range;
 	public int ap 
     {
@@ -117,8 +119,10 @@ public class Wound
         Sourse=Sor;
 	}
 
-    public Wound(int ws,int S, int AP, Effect[] Ef, BasicModel Sor)
+    public Wound(int ws,int Enws,int Ent,int S, int AP, Effect[] Ef, BasicModel Sor)
     {
+        enMajT = Ent;
+        enSkills = Enws;
         ap = AP;
         Strenght = S;
         Effects = Ef;
