@@ -57,6 +57,9 @@ public class Charge
                 }
                 if(intersection==false)
                 {
+                    f_m.x = x;
+                    f_m.y = y;
+                    f_m.Moved = 1;
                     ModelCharge f_m_ch=new ModelCharge(f_m);
                     f_m_ch.Enemies.add(f_em);
                     warriors.add(f_m_ch);

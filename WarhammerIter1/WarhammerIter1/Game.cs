@@ -322,14 +322,14 @@ public class PfaseChose : PfaseSr
 
 public class PfaseMove : PfaseSr
 {
-    public int area(BasicModel a, BasicModel b, BasicModel c)
+    public double area(BasicModel a, BasicModel b, BasicModel c)
     {
         return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
     }
 
-    public bool intersect(int a, int b, int c, int d)
+    public bool intersect(double a, double b, double c, double d)
     {
-        int n;
+        double n;
         if (a > b)
         {
             n = a;

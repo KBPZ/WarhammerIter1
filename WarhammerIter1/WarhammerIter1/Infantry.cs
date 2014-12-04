@@ -118,11 +118,11 @@ public class Infantry : BasicModel
             else
                 B = new SolidBrush(Color.Red);
         if (Alive == 0)
-            e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
+            e.Graphics.FillEllipse(B, (int)x - 25, (int)y - 25, 50, 50);
         if(true == IsIndepChar(_g))
         {
             B = new SolidBrush(Color.Maroon);
-            e.Graphics.FillEllipse(B, x - 10, y - 10, 20, 20);
+            e.Graphics.FillEllipse(B, (int)x - 10, (int)y - 10, 20, 20);
         }
     }
 

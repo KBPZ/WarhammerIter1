@@ -50,27 +50,27 @@ public class Map
         return null;
     }
 
-    public bool squares(int a, int b, int c, int d, int e)
+    public bool squares(double a, double b, double c, double d, double e)
     {
         return (a - c) * (a - c) + (b - d) * (b - d) <= e * e;
     }
 
-    public double distance(int a, int b, int c, int d)
+    public double distance(double a, double b, double c, double d)
     {
         return Math.Sqrt((a - c) * (a - c) + (b - d) * (b - d));
     }
 
-    public double triangle_x (int x1, int x2, int y1, int y2)
+    public double triangle_x(double x1, double x2, double y1, double y2)
     {
         return (x2 - x1) * Math.Cos(60 * Math.PI / 180) - (y2 - y1) * Math.Sin(60 * Math.PI / 180) + x1;
     }
 
-    public double triangle_y (int x1, int x2, int y1, int y2)
+    public double triangle_y(double x1, double x2, double y1, double y2)
     {
         return (x2 - x1) * Math.Sin(60 * Math.PI / 180) + (y2 - y1) * Math.Cos(60 * Math.PI / 180) + y1;
     }
 
-    public BasicModel FindModel(int x, int y)
+    public BasicModel FindModel(double x, double y)
     {
         foreach (Unit unit in AllUnits)
         {
@@ -85,7 +85,7 @@ public class Map
         return null;
     }
 
-    public BasicModel ModelDistance(int x, int y)
+    public BasicModel ModelDistance(double x, double y)
     {
         foreach (Unit unit in AllUnits)
         {

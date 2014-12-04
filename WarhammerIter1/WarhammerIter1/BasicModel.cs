@@ -28,7 +28,7 @@ public abstract class BasicModel
     public Unit w_Unit;
 	protected int WeaponSkill;
 	protected int Wound;
-    public int x, y;
+    public double x, y;
 
     public virtual List<Wound> CombatAtack(int EnemyWs,int EnemyMajT)
     {
@@ -40,7 +40,7 @@ public abstract class BasicModel
         return 13;
     }
 
-    public int start_x, start_y;
+    public double start_x, start_y;
 
     public virtual int MoveRange()
     {
