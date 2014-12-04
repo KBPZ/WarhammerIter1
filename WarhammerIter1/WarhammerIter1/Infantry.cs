@@ -27,15 +27,17 @@ public class Infantry : BasicModel
         return _Leadership;
     }
 
-    public Infantry(int xin, int yin, int bs, int ws, int s, int t,int I, int L, int ArSv, int InvSv, List<Weapon> wea, List<EffectsModel> Ef)
+    public Infantry(int xin, int yin, int bs, int ws, int s, int t,int a,int I,int w, int L, int ArSv, int InvSv, List<Weapon> wea, List<EffectsModel> Ef)
     {
         x = xin;
         y = yin;
+        Atack = a;
         start_x = x;
         start_y = y;
         InvulnerableSave = InvSv;
         _Leadership = L;
         Initiative = I;
+        Wound = w;
         BalisticSkill = bs;
         WeaponSkill = ws;
         Strength = s;
@@ -44,9 +46,9 @@ public class Infantry : BasicModel
         Weapons = wea;
         //m_Weapons = Weapons[0];
         Effects = Ef;
-        foreach (Weapon w in Weapons)
+        foreach (Weapon weap in Weapons)
         {
-            w.w_BasicModel = this;
+            weap.w_BasicModel = this;
         }
     }
 
@@ -71,8 +73,23 @@ public class Infantry : BasicModel
 
     public override List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
     {
-        
-        return base.CombatAtack(EnemyWs, EnemyMajT);
+        List<Weapon> CCW = new List<Weapon> { };
+        List<Wound> L; //= new List<Wound> { };
+        foreach(Weapon W in Weapons)
+        {
+            if(W.IsHtHWeapon()==1)
+            {
+                CCW.Add(W);
+            }
+        }
+        int bonus = 0;
+        if (CCW.Count > 1)
+            bonus++;
+        if(CCW.Count>0)
+            L = CCW[0].HeadToHead(Atack + bonus, Strength);
+        else 
+            L = Weapons[0].HeadToHead(Atack + bonus, Strength);
+        return L;
     }
 
     public override int Save(Wound x, int dice,int Cover)
@@ -84,6 +101,26 @@ public class Infantry : BasicModel
         x.dSave=dice;
         x.Save = ASave;
         if(ASave>dice)
+        {
+            Wound--;
+        }
+        if (Wound <= 0)
+        {
+            Alive = 2;
+            return 2;
+        }
+        return 0;
+    }
+
+    public override int HtHSave(Wound x, int dice)
+    {
+        int ASave = ArmorSave;
+        if (x.ap <= ASave)
+            ASave = 7;
+        ASave = Math.Min(ASave, InvulnerableSave);
+        x.dSave = dice;
+        x.Save = ASave;
+        if (ASave > dice)
         {
             Wound--;
         }
@@ -118,11 +155,11 @@ public class Infantry : BasicModel
             else
                 B = new SolidBrush(Color.Red);
         if (Alive == 0)
-            e.Graphics.FillEllipse(B, x - 25, y - 25, 50, 50);
+            e.Graphics.FillEllipse(B,(int) x - 25, (int)y - 25, 50, 50);
         if(true == IsIndepChar(_g))
         {
             B = new SolidBrush(Color.Navy);
-            e.Graphics.FillEllipse(B, x - 10, y - 10, 20, 20);
+            e.Graphics.FillEllipse(B,(int) x - 10, (int)y - 10, 20, 20);
         }
     }
 

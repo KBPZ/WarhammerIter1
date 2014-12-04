@@ -322,14 +322,14 @@ public class PfaseChose : PfaseSr
 
 public class PfaseMove : PfaseSr
 {
-    public int area(BasicModel a, BasicModel b, BasicModel c)
+    public double area(BasicModel a, BasicModel b, BasicModel c)
     {
         return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
     }
 
-    public bool intersect(int a, int b, int c, int d)
+    public bool intersect(double a, double b, double c, double d)
     {
-        int n;
+        double n;
         if (a > b)
         {
             n = a;
@@ -495,8 +495,8 @@ public class PfaseChoseUnit : PfaseSr
         }
         else
         {
-            _g.NowPfaseStr = _g.MarchPf;
-
+            //_g.NowPfaseStr = _g.MarchPf;
+            _g.NewCombat();
         }
     }
     public void IndependentCharecterButtonClick(Game _g)
@@ -796,7 +796,7 @@ public class Game
         }
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        int Range = (int)IsMap.Range(cur_unit, Target);
+        int Range = (int)IsMap.Range(cur_unit, Target)*50;
         L = cur_unit.Shoot(Range,0, this);
         if (L == null || L.Count==0)
             return 0;
@@ -813,7 +813,7 @@ public class Game
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
         int Range = (int)IsMap.Range(cur_unit, Target);
-        Target.Overvatch(Range, 0, this);
+        Target.Overwatch(Range, 0, this);
         if (L == null || L.Count == 0)
             return;
         L = Target.Wonding(cur_unit, L, this);
@@ -837,9 +837,11 @@ public class Game
         //Overwatch();
         int ChargeRange = cur_unit.ChargeRange(this);
         double Range=IsMap.Range(Target,cur_unit);
-        if(Range>ChargeRange)
+        if(true)//Range>ChargeRange)
         {
-            AllCombat.Add(new Combat(cur_unit,Target,this));
+            Combat NCombat = new Combat(cur_unit, Target, this);
+            AllCombat.Add(NCombat);
+            NCombat.FightSubPf(this);
         }
     }
 

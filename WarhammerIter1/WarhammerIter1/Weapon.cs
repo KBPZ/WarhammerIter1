@@ -61,7 +61,7 @@ public class Weapon
         {
             L.Add(new Wound(w_BasicModel.WeaponSkill,S,7,Effects.ToArray(),w_BasicModel));
         }
-        return null;
+        return L;
     }
 
     public virtual List<Wound> SnapShoots(int Dis)
@@ -72,7 +72,7 @@ public class Weapon
     public virtual List<Wound> Shoot(int moved,int bs,int Dis)
     {   
         List<Wound> L = new List<Wound> { };
-        if (Dis<Distance)
+        if (Dis>=Distance)
         {
             for (int i = 0; i < Shoots; i++)
             {
@@ -110,6 +110,7 @@ public class Assault : Weapon
         return base.Shoot(moved, bs,Dis);
     }
 }
+
 public class Heavy : Weapon
 {
     public Heavy(int Dist,int s,int ap,int shoots,List<EffectsWeapons> Eff)
@@ -131,6 +132,7 @@ public class Heavy : Weapon
         return base.Shoot(moved, 1,Dis);
     }
 }
+
 public class Pistol : Weapon
 {
     public Pistol(int Dist,int s,int ap,List<EffectsWeapons> Eff)
@@ -146,5 +148,23 @@ public class Pistol : Weapon
     public override List<Wound> Shoot(int moved, int bs,int Dist)
     {
         return base.Shoot(moved, bs,Dist);
+    }
+
+    public override int IsHtHWeapon()
+    {
+        return 1;
+    }
+}
+
+public class CloseCombatWeapon : Weapon
+{
+    public CloseCombatWeapon()
+    {
+        Effects = new List<EffectsWeapons> { };
+        Distance = 0;
+    }
+    public override int IsHtHWeapon()
+    {
+        return 1;
     }
 }

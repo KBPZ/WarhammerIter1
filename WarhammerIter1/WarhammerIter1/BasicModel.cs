@@ -21,14 +21,15 @@ public abstract class BasicModel
 	protected int Move = 6;
 	protected int Stilness = 0;
 	protected int Strength;
+    public int Atack { get;protected set; }
     public int Moved=0;
 	protected List<Weapon> Weapons;
     protected Weapon m_Weapons;
     public List<EffectsModel> Effects { get; protected set; }
     public Unit w_Unit;
     public int WeaponSkill { get; protected set; }
-	protected int Wound;
-    public int x, y;
+    public int Wound { get; protected set; }
+    public double x, y;
 
     public virtual List<Wound> CombatAtack(int EnemyWs,int EnemyMajT)
     {
@@ -45,7 +46,7 @@ public abstract class BasicModel
         return 13;
     }
 
-    public int start_x, start_y;
+    public double start_x, start_y;
 
     public virtual int MoveRange()
     {
@@ -92,6 +93,11 @@ public abstract class BasicModel
         return 0;
     }
 
+    virtual public int HtHSave(Wound x, int dice)
+    {
+        return 0;
+    }
+
     public int IsAlive()
     {
         return Alive;
@@ -131,7 +137,7 @@ public abstract class BasicModel
             return null;
     }
 
-    public virtual List<Wound> Overvatch(int Range, int t, Game _g)
+    public virtual List<Wound> Overwatch(int Range, int t, Game _g)
     {
         if (Alive == 0)
         {

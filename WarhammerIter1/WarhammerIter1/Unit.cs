@@ -321,6 +321,46 @@ public class Unit
         _g.IsShow.ShowSave(Wounds);
     }
 
+    public void HtHSave(List<Wound> Wounds, Game _g)
+    {
+        int n = Wounds.Count;
+        List<int> dices = _g.DiceGen.manyD6(n);
+        char a = ' ';
+        string TextDices = new string(a, 1);
+        foreach (int d in dices)
+        {
+            char c = (char)('0' + d);
+            TextDices += c;
+            TextDices += " ";
+        }
+        //_g.IsShow.ShowMessage(TextDices);
+        Wounds.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Strenght > y.Strenght)
+                return 1;
+            else if (x.Strenght == y.Strenght)
+                if (x.ap > y.ap)
+                    return 1;
+                else if (x.ap == y.ap)
+                    return 0;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        for (int i = 0; i < n; i++)
+        {
+            BasicModel m = First(_g.cur_unit);
+            if (m == null)
+            {
+                _g.IsShow.ShowMessage("All dead");
+                break;
+            }
+            m.HtHSave(Wounds[i], dices[i]);
+        }
+        _g.IsShow.ShowSave(Wounds);
+    }
+
     private void DelEffectsModelInUnit(BasicModel DelModel)
     {
         List<EffectsUnit> ToDel = new List<EffectsUnit> { };
@@ -467,7 +507,7 @@ public class Unit
         return Dis;
     }
 
-    public List<Wound> Overvatch(int range, int type, Game _g)
+    public List<Wound> Overwatch(int range, int type, Game _g)
     {
         List<Wound> L = new List<Wound> { }, Lp;
         if (IsShoot == 0)
@@ -475,7 +515,7 @@ public class Unit
             IsShoot = 1;
             foreach (BasicModel ShootModel in Models)
             {
-                Lp = ShootModel.Overvatch(range, type, _g);
+                Lp = ShootModel.Overwatch(range, type, _g);
                 if (Lp != null)
                     L.AddRange(Lp);
             }

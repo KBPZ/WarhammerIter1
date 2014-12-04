@@ -27,22 +27,22 @@ namespace UnitTest1
             Weapon StormBolter = new Assault(24,4, 5, 2, new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
-                    new Infantry(160, 100, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })
-                    ,new Infantry(100, 160, 4, 4, 3, 3, 5,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
+                    new List<BasicModel>{new Infantry(100, 100, 4, 4, 3, 3,1, 5,1,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { }),
+                    new Infantry(160, 100, 4, 4, 3, 3, 1,5,1,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })
+                    ,new Infantry(100, 160, 4, 4, 3, 3,1, 5,1,9, 4,7, new List<Weapon> { ShurikenCatapult }, new List<EffectsModel> { })},
                     new List<EffectsUnit>{new FearlessUnit()})};
             Player F = new Player(DireAvengersUnits);
             List<Unit> TerminatorsUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(200, 100, 4, 4, 4, 4, 5,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
-                    new Infantry(260, 100, 4, 4, 4, 4, 5,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
-                    ,new Infantry(200, 160, 4, 4, 4, 4, 5,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
+                    new List<BasicModel>{new Infantry(200, 100, 4, 4, 4, 4,1, 5,1,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { }),
+                    new Infantry(260, 100, 4, 4, 4, 4,1, 5,1,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { })
+                    ,new Infantry(200, 160, 4, 4, 4, 4,1, 5,1,9, 2,7, new List<Weapon> { StormBolter }, new List<EffectsModel> { })},
                     new List<EffectsUnit>{new FearlessUnit()})};
             Player S = new Player(TerminatorsUnits);
             Game IsGame = new Game(F, S, di, new ShowNofing());
             IsGame.cur_unit = IsGame.Players[0].PlayersUnit[0];
             IsGame.Target = IsGame.Players[1].PlayersUnit[0];
-            BasicModel TargetFurst = IsGame.Target.Furst(IsGame.cur_unit);
+            BasicModel TargetFurst = IsGame.Target.First(IsGame.cur_unit);
             IsGame.NextPfase();
             IsGame.Shooting();
             IsGame.NextPfase();
@@ -59,24 +59,24 @@ namespace UnitTest1
             List<Unit> FirstPlayerUnits, SecondPlayerUnits;
             List<BasicModel> DireAvengers = new List<BasicModel>
             {
-                new Infantry(100,150,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,200,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,250,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,300,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,350,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,400,5,5,3,3,5,9,4,7,new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{})
+                new Infantry(100,150,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,200,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,250,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,300,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,350,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,400,5,5,3,3,1,5,1,9,4,7,new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{})
             };
             List<BasicModel> Terminators = new List<BasicModel>
             {
-                new Infantry(200,150,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,200,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,250,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,300,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,350,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,150,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,200,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,250,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,300,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,350,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(24,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
             };
             List<BasicModel> TerminatorLeader = new List<BasicModel>
             {
-               new Infantry(200,400,5,5,4,4,5,9,2,7,new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons> { new baldestorm() }) }, new List<EffectsModel> { new Fearless(), new IndependetCharecter()})
+               new Infantry(200,400,5,5,4,4,1,5,1,9,2,7,new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons> { new baldestorm() }) }, new List<EffectsModel> { new Fearless(), new IndependetCharecter()})
             };
             FirstPlayerUnits = new List<Unit> { new Unit(DireAvengers, new List<EffectsUnit> { }) };
             SecondPlayerUnits = new List<Unit> { new Unit(Terminators, new List<EffectsUnit> { }), new Unit(TerminatorLeader, new List<EffectsUnit> { }) };
@@ -99,25 +99,25 @@ namespace UnitTest1
             DiceInt di = new TestDice(d, new List<int> { 2 });
             List<Unit> FirstPlayerUnits, SecondPlayerUnits;
             BasicModel TerminatorLeader =
-               new Infantry(200, 400, 5, 5, 4, 4, 5, 9, 2, 7, 
+               new Infantry(200, 400, 5, 5, 4, 4, 5,1, 9,1, 2, 7, 
                    new List<Weapon> { new Pistol(12,4, 5, new List<EffectsWeapons> { new baldestorm() }) },
                    new List<EffectsModel> { new Fearless(), new IndependetCharecter() });
             List<BasicModel> DireAvengers = new List<BasicModel>
             {
-                new Infantry(100,150,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,200,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,250,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,300,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,350,4,4,3,3,5,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
-                new Infantry(100,400,5,5,3,3,5,9,4,7,new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{})
+                new Infantry(100,150,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,200,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,250,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,300,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,350,4,4,3,3,1,5,1,9,4,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{}),
+                new Infantry(100,400,5,5,3,3,1,5,1,9,4,7,new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons>{new baldestorm()})},new List<EffectsModel>{})
             };
             List<BasicModel> Terminators = new List<BasicModel>
             {
-                new Infantry(200,150,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,200,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,250,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,300,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
-                new Infantry(200,350,4,4,4,4,5,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,150,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,200,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,250,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,300,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
+                new Infantry(200,350,4,4,4,4,1,5,1,9,2,7,new List<Weapon>{new Assault(12,4,5,2,new List<EffectsWeapons>{})},new List<EffectsModel>{}),
                 TerminatorLeader
             };
 
@@ -138,16 +138,16 @@ namespace UnitTest1
         {
             List<BasicModel> LInCag = new List<BasicModel>
             {
-                new Infantry(25,25,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,60,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(300,450,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(300,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,150,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,350,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,500,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(300,120,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(150,40,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(200,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,25,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,60,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,450,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,300,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,150,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,350,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,500,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,120,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(150,40,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(200,300,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
             };
             Unit InCag = new Unit(LInCag, new List<EffectsUnit> { });
             Game IsGame = new Game(new DiceGenerator(), new ShowNofing());
@@ -155,21 +155,21 @@ namespace UnitTest1
             Assert.AreEqual(true, IsGame.cur_unit.coherency(IsGame));
             List<BasicModel> LNotInCag = new List<BasicModel>
             {
-                new Infantry(25,25,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,60,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(1000,450,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(1000,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,150,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,350,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(25,500,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(300,120,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(150,40,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(200,300,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,25,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,60,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(1000,450,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(1000,300,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,150,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,350,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(25,500,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(300,120,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(150,40,1,1,1,1,1,1,1,1,,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(200,300,1,1,1,1,1,1,1,1,,1,new List<Weapon>{},new List<EffectsModel>{}),
             };
             Unit NotInCag = new Unit(LNotInCag, new List<EffectsUnit> { });
             IsGame.cur_unit = NotInCag;
             Assert.AreEqual(false, IsGame.cur_unit.coherency(IsGame));
-            Unit Alone = new Unit(new List<BasicModel> { new Infantry(100, 100, 1, 1, 1, 1, 1, 1, 1, 1, new List<Weapon> { }, new List<EffectsModel> { }) }, new List<EffectsUnit> { });
+            Unit Alone = new Unit(new List<BasicModel> { new Infantry(100, 100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, new List<Weapon> { }, new List<EffectsModel> { }) }, new List<EffectsUnit> { });
             IsGame.cur_unit = Alone;
             Assert.AreEqual(true, Alone.coherency(IsGame));
         }

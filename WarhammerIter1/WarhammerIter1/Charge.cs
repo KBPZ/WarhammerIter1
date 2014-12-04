@@ -8,6 +8,7 @@ public class Combat
     List<Unit> UnitInCombat;
     public Combat(Unit A, Unit B, Game _g)
     {
+        warriors = new List<model_charge> { };
         UnitInCombat = new List<Unit> { A, B };
         foreach(BasicModel BM in A.Models)
         {
@@ -35,11 +36,26 @@ public class Combat
             }
             foreach (model_charge ModChar in warriors)
             {
-
                 if(ModChar.model.GetInitiative(_g)==Initiative)
                 {
                     InitiativeWound[ModChar.model.w_Unit.w_Player.PlayerN].AddRange(ModChar.model.CombatAtack(MajT[1 - ModChar.model.w_Unit.w_Player.PlayerN]
                         , MajWS[1 - ModChar.model.w_Unit.w_Player.PlayerN]));
+                }
+            }
+            for(int i=0;i<2;i++)
+            {
+                if (InitiativeWound[i].Count>0)
+                {
+                    Unit TargetWound;
+                    foreach(Unit EnU in UnitInCombat)
+                    {
+                        if(EnU.w_Player.PlayerN!=i)
+                        {
+                            TargetWound = EnU;
+                            break;
+                        }
+                    }
+                    //TargetWound.HtHSave(InitiativeWound[1-TargetWound.w_Player.PlayerN], _g);
                 }
             }
         }
