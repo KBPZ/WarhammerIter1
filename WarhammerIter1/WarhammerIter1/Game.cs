@@ -322,37 +322,6 @@ public class PfaseChose : PfaseSr
 
 public class PfaseMove : PfaseSr
 {
-    public double area(BasicModel a, BasicModel b, BasicModel c)
-    {
-        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-    }
-
-    public bool intersect(double a, double b, double c, double d)
-    {
-        double n;
-        if (a > b)
-        {
-            n = a;
-            a = b;
-            b = n;
-        }
-        if (c > d)
-        {
-            n = c;
-            c = d;
-            d = n;
-        }
-        return Math.Max(a, c) <= Math.Min(b, d);
-    }
-
-    public bool check_sections(BasicModel a, BasicModel b, BasicModel c, BasicModel d)
-    {
-        return intersect(a.x, b.x, c.x, d.x)
-        && intersect(a.y, b.y, c.y, d.y)
-        && area(a, b, c) * area(a, b, d) <= 0
-        && area(c, d, a) * area(c, d, b) <= 0;
-    }
-
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
@@ -395,9 +364,11 @@ public class PfaseMove : PfaseSr
                         {
                             if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
                             {
-                                BasicModel xy = new Infantry();
-                                xy.x=x; xy.y=y;
-                                if (check_sections(_g.cur_model, xy, c_model, t_model))
+                                Point a = new Point(_g.cur_model.x, _g.cur_model.y);
+                                Point b = new Point(x, y);
+                                Point c = new Point(c_model.x, c_model.y);
+                                Point d = new Point(t_model.x, t_model.y);
+                                if (a.check_sections(a, b, c, d))
                                 {
                                     en = 1;
                                     _g.IsShow.ShowMessage("Вы не можете пройти через вражеские модели.");
@@ -495,7 +466,70 @@ public class PfaseChoseUnit : PfaseSr
         }
         else
         {
-            _g.NowPfaseStr = _g.MarchPf;
+            double min = 10000000;
+            BasicModel model=null, en_model=null;
+            foreach (BasicModel m in _g.cur_unit.Models)
+            {
+                if(m.IsAlive()==0)
+                {
+                    BasicModel em = _g.cur_unit.First(m, _g.Target, _g);
+                    double d = _g.IsMap.distance(em.x, em.y, m.x, m.y);
+                    if (d < min)
+                    {
+                        min = d;
+                        model = m;
+                        en_model = em;
+                    }
+                }
+            }
+            
+            int en = 0;
+            foreach (Unit unit in _g.Players[1 - _g.NowPlayer].GetUnits())
+            {
+                if (unit != _g.Target)
+                {
+                    foreach (BasicModel t_model in unit.Models)
+                    {
+                        foreach (BasicModel c_model in unit.Models)
+                        {
+                            if (c_model != t_model)
+                            {
+                                if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
+                                {
+                                    Point a = new Point(model.x, model.y);
+                                    Point b = new Point(en_model.x, en_model.y);
+                                    Point c = new Point(c_model.x, c_model.y);
+                                    Point d = new Point(t_model.x, t_model.y);
+                                    if (a.check_sections(a, b, c, d))
+                                    {
+                                        en = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (en == 1)
+                                break;
+                        }
+                        if (en == 1)
+                            break;
+                    }
+                    if (en == 1)
+                        break;
+                }
+            }
+            if(en==1)
+            {
+                _g.IsShow.ShowMessage("Выбранный вражеский отряд не является ближайшим.");
+            }
+            else
+            {
+                double length = (double)_g.cur_unit.ChargeRange(_g);
+                Charge charge = new Charge(_g.cur_unit, _g.Target, length, _g);
+                _g.AllCharge.Add(charge);
+                _g.cur_unit = null;
+                _g.Target = null;
+            }
+            
 
         }
     }
@@ -505,27 +539,7 @@ public class PfaseChoseUnit : PfaseSr
     }
     public void EndPfaseButton(Game _g)
     {
-        _g.NextPfase();
-    }
-}
-
-public class PfaseMarch : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g)
-    {
-
-    }
-    public void ActButtonClick(Game _g)
-    {
-
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        _g.NextPfase();
+        _g.NowPfaseStr = _g.ChargePf;
     }
 }
 
@@ -567,7 +581,6 @@ public class Game
     public PfaseSr ShootPf = new PfaseShoot();
     public PfaseSr JoinPf = new PfaseJoin();
     public PfaseSr ChargePf = new PfaseCharge();
-    public PfaseSr MarchPf = new PfaseMarch();
     public PfaseSr ChoseUnitPf = new PfaseChoseUnit();
     public int NowPlayer { get; private set; }
     public Pfase NowPhase { get; private set; }
@@ -588,6 +601,7 @@ public class Game
     public int enemy_distance = 100;
     public int friend_distance = 100;
     public DiceInt DiceGen { get; private set; }
+    public List<Charge> AllCharge = new List<Charge> { };
 
     public  bool IsNowPfase(Pfase p)
     {

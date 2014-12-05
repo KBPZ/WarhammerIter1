@@ -270,6 +270,69 @@ public class Unit
         return null;
     }
 
+    public BasicModel First(Unit A, Unit B, Game _g)
+    {
+        double min = 100000000, d;
+        BasicModel rez = null;
+        foreach (BasicModel model in A.Models)
+        {
+            if (model.IsAlive() == 0)
+            {
+                foreach (BasicModel en_model in B.Models)
+                {
+                    if (en_model.IsAlive() == 0)
+                    {
+                        d = _g.IsMap.distance(model.x, model.y, en_model.x, en_model.y);
+                        if(d<min)
+                        {
+                            min = d;
+                            rez = en_model;
+                        }
+                    }
+                }
+            }
+        }
+        return rez;
+    }
+
+    public BasicModel First(BasicModel model, Unit B, Game _g)
+    {
+        double min = 1000000;
+        BasicModel rez = null;
+        foreach (BasicModel en_model in B.Models)
+        {
+            if (en_model.IsAlive() == 0)
+            {
+                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min)
+                {
+                    min = d;
+                    rez = en_model;
+                }
+            }
+        }
+        return rez;
+    }
+
+    public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, Game _g)
+    {
+        double min = 1000000;
+        BasicModel rez = null;
+        foreach (BasicModel en_model in B.Models)
+        {
+            if (en_model.IsAlive() == 0 && bad_enemies.Contains(en_model) == false)
+            {
+                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min)
+                {
+                    min = d;
+                    rez = en_model;
+                }
+            }
+        }
+        return rez;
+    }
+
     public void Save(int Cover,List<Wound> Wounds,Game _g)
     {
         int n = Wounds.Count;

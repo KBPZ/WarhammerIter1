@@ -6,24 +6,50 @@
 //  Original author: Samurai
 ///////////////////////////////////////////////////////////
 
+using System;
 
 
+public class Point 
+{
+    public double x;
+    public double y;
 
-public class Point {
-
-	private int x;
-	private int y;
-
-	public Point(){
-
+	public Point(double xx, double yy)
+    {
+        x = xx;
+        y = yy;
 	}
 
-	~Point(){
+    ~Point() { }
+    public double area(Point a, Point b, Point c)
+    {
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
 
-	}
+    public bool intersect(double a, double b, double c, double d)
+    {
+        double n;
+        if (a > b)
+        {
+            n = a;
+            a = b;
+            b = n;
+        }
+        if (c > d)
+        {
+            n = c;
+            c = d;
+            d = n;
+        }
+        return Math.Max(a, c) <= Math.Min(b, d);
+    }
 
-	public virtual void Dispose(){
-
-	}
+    public bool check_sections(Point a, Point b, Point c, Point d)
+    {
+        return intersect(a.x, b.x, c.x, d.x)
+        && intersect(a.y, b.y, c.y, d.y)
+        && area(a, b, c) * area(a, b, d) <= 0
+        && area(c, d, a) * area(c, d, b) <= 0;
+    }
 
 }//end Point

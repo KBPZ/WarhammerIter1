@@ -60,12 +60,12 @@ public class Map
         return Math.Sqrt((a - c) * (a - c) + (b - d) * (b - d));
     }
 
-    public double triangle_x(double x1, double x2, double y1, double y2)
+    public double triangle_x(double x1, double y1, double x2, double y2)
     {
         return (x2 - x1) * Math.Cos(60 * Math.PI / 180) - (y2 - y1) * Math.Sin(60 * Math.PI / 180) + x1;
     }
 
-    public double triangle_y(double x1, double x2, double y1, double y2)
+    public double triangle_y(double x1, double y1, double x2, double y2)
     {
         return (x2 - x1) * Math.Sin(60 * Math.PI / 180) + (y2 - y1) * Math.Cos(60 * Math.PI / 180) + y1;
     }
