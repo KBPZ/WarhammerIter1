@@ -183,44 +183,56 @@ public class Charge
             {
                 intersection = false;
                 double d = _g.IsMap.distance(f_m.x, f_m.y, f_em.x, f_em.y);
-                double sootn = 1 - 50.0 / d;
+                double sootn;
                 if (f_m.x < f_em.x)
-                    f_m.x = (f_em.x - f_m.x) * sootn + f_m.x;
+                    sootn = 1 - 50.0 / d;
                 else
-                    f_m.x = (f_m.x - f_em.x) * sootn + f_em.x;
+                    sootn = 50.0 / d;
+                if (f_m.x < f_em.x)
+                    m[0, 0] = (f_em.x - f_m.x) * sootn + f_m.x;
+                else
+                    m[0, 0] = (f_m.x - f_em.x) * sootn + f_em.x;
                 if (f_m.y < f_em.y)
-                    f_m.y = (f_em.y - f_m.y) * sootn + f_m.y;
+                    m[0, 1] = (f_em.y - f_m.y) * sootn + f_m.y;
                 else
-                    f_m.y = (f_m.y - f_em.y) * sootn + f_em.y;
+                    m[0, 1] = (f_m.y - f_em.y) * sootn + f_em.y;
+                /*
                 f_m.Moved = 1;
                 ModelCharge f_m_ch = new ModelCharge(f_m);
                 f_m_ch.Enemies.Add(f_em);
-                warriors.Add(f_m_ch);                
+                warriors.Add(f_m_ch);         
+                */
+                i = 1;
             }
-            else
+            for (int j = 0; j < i; j++)
             {
-                for (int j = 0; j < i; j++)
+                double xx = m[j, 0];
+                double yy = m[j, 1];
+                for (int k = 0; k < 6; k++)
                 {
-                    x = _g.IsMap.triangle_x(f_em.x, f_em.y, m[j, 0], m[j, 1]);
-                    y = _g.IsMap.triangle_y(f_em.x, f_em.y, m[j, 0], m[j, 1]);
+                    x = _g.IsMap.triangle_x(f_em.x, f_em.y, xx, yy);
+                    y = _g.IsMap.triangle_y(f_em.x, f_em.y, xx, yy);
                     BasicModel vac = _g.IsMap.FindModel(x, y);
                     intersection = false;
                     if (vac == null)
                     {
                         foreach (BasicModel en_model in B.Models)
                         {
-                            if (_g.IsMap.squares(x, y, en_model.x, en_model.y, 50) == true)
+                            if (en_model.IsAlive() == 0 && _g.IsMap.distance(x, y, en_model.x, en_model.y) < 50)
                             {
                                 intersection = true;
                                 break;
                             }
                         }
-                        foreach (BasicModel en_model in _g.cur_unit.Models)
+                        if (intersection == false)
                         {
-                            if (_g.IsMap.squares(x, y, en_model.x, en_model.y, 50) == true)
+                            foreach (BasicModel en_model in _g.cur_unit.Models)
                             {
-                                intersection = true;
-                                break;
+                                if (en_model.IsAlive() == 0 && _g.IsMap.distance(x, y, en_model.x, en_model.y) < 50)
+                                {
+                                    intersection = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -236,47 +248,24 @@ public class Charge
                         warriors.Add(f_m_ch);
                         break;
                     }
+                    xx = x;
+                    yy = y;
                 }
-            }
+            }            
         }
         if (intersection == false)
             return true;
         return false;
     }
 
-    public Charge(Unit A, Unit B, double l, Game _g)
+    public Charge(Unit A, Unit B, double l, BasicModel stm, BasicModel stem, Game _g)
     {
         //Pile
         length = l;
-        double min = 1000000;
         int i;
         bool found;
-        BasicModel f_m=null, f_em=null;
-        foreach (BasicModel model in A.Models)
-        {
-            i = 0;
-            found = false;
-            for (i = 0; i < warriors.Count; i++)
-            {
-                if(warriors[i].model==model)
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (found == false && model.IsAlive() == 0)
-            {
-                BasicModel en_model = _g.cur_unit.First(model, B, _g);
-                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min)
-                {
-                    min = d;
-                    f_m = model;
-                    f_em = en_model;
-                }
-            }
-        }
-        bool c=check(f_m, f_em, _g, B);
+        BasicModel f_m=null, f_em=null;        
+        bool c=check(stm, stem, _g, B);
         foreach (BasicModel model in A.Models)
         {
             i = 0;

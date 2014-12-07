@@ -514,13 +514,17 @@ public class PfaseChoseUnit : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
-        if(_g.cur_unit==null)
+        Unit found = _g.IsMap.FindUnit(x, y);
+        if(found!=null)
         {
-            _g.cur_unit = _g.IsMap.FindUnit(x, y);
-        }
-        else
-        {
-            _g.Target = _g.IsMap.FindUnit(x, y);
+            if(found.w_Player == _g.PlayerNow())
+            {
+                _g.cur_unit = found;
+            }
+            else
+            {
+                _g.Target = found;
+            }
         }
     }
     public void ActButtonClick(Game _g)
@@ -548,10 +552,10 @@ public class PfaseChoseUnit : PfaseSr
         else
         {
             double min = 10000000;
-            BasicModel model=null, en_model=null;
+            BasicModel model = null, en_model = null;
             foreach (BasicModel m in _g.cur_unit.Models)
             {
-                if(m.IsAlive()==0)
+                if (m.IsAlive() == 0)
                 {
                     BasicModel em = _g.cur_unit.First(m, _g.Target, _g);
                     double d = _g.IsMap.distance(em.x, em.y, m.x, m.y);
@@ -563,7 +567,6 @@ public class PfaseChoseUnit : PfaseSr
                     }
                 }
             }
-            
             int en = 0;
             foreach (Unit unit in _g.Players[1 - _g.NowPlayer].GetUnits())
             {
@@ -571,48 +574,67 @@ public class PfaseChoseUnit : PfaseSr
                 {
                     foreach (BasicModel t_model in unit.Models)
                     {
-                        foreach (BasicModel c_model in unit.Models)
+                        if (t_model.IsAlive() == 0)
                         {
-                            if (c_model != t_model)
+                            foreach (BasicModel c_model in unit.Models)
                             {
-                                if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
+                                if (c_model.IsAlive() == 0 && c_model != t_model)
                                 {
-                                    Point a = new Point(model.x, model.y);
-                                    Point b = new Point(en_model.x, en_model.y);
-                                    Point c = new Point(c_model.x, c_model.y);
-                                    Point d = new Point(t_model.x, t_model.y);
-                                    if (a.check_sections(a, b, c, d))
+                                    if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
                                     {
-                                        en = 1;
-                                        break;
+                                        Point a = new Point(model.x, model.y);
+                                        Point b = new Point(en_model.x, en_model.y);
+                                        Point c = new Point(c_model.x, c_model.y);
+                                        Point d = new Point(t_model.x, t_model.y);
+                                        if (a.check_sections(a, b, c, d))
+                                        {
+                                            en = 1;
+                                            break;
+                                        }
                                     }
                                 }
+                                if (en == 1)
+                                    break;
                             }
-                            if (en == 1)
-                                break;
                         }
                         if (en == 1)
                             break;
                     }
                     if (en == 1)
                         break;
-        }
-    }
-            if(en==1)
-    {
+                }
+            }
+            if (en == 1)
+            {
                 _g.IsShow.ShowMessage("Выбранный вражеский отряд не является ближайшим.");
-    }
+            }
             else
-    {
+            {
                 double length = (double)_g.cur_unit.ChargeRange(_g);
-                Charge charge = new Charge(_g.cur_unit, _g.Target, length, _g);
-                _g.AllCharge.Add(charge);
+                length *= 50;
+                //ПАША РАССТОЯНИЯ ПИЗДЕЦ КАКОЙ-ТО ВТФ
+                _g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
+                if (min > length)
+                {
+                    _g.IsShow.ShowMessage("Вражеский отряд слишком далеко.");
+                }
+                else
+                {
+                    Charge charge = new Charge(_g.cur_unit, _g.Target, length, model, en_model, _g);
+                    _g.AllCharge.Add(charge);
+                    _g.cur_unit.Moved = 1;
+                    foreach (BasicModel t_model in _g.cur_unit.Models)
+                    {
+                        t_model.start_x = t_model.x;
+                        t_model.start_y = t_model.y;
+                    }
+                }
                 _g.cur_unit = null;
                 _g.Target = null;
-}
+            }
 
 
-    }
+        }
     }
     public void IndependentCharecterButtonClick(Game _g)
     {
