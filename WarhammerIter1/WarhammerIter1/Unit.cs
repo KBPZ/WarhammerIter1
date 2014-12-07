@@ -12,7 +12,7 @@ using System;
 
 public class Unit 
 {
-	private int Alive = 0;
+	public int Alive = 0;
 	private List<EffectsUnit> Effects;
 	public List<BasicModel> Models;
     private int IsShoot=0;
@@ -22,6 +22,14 @@ public class Unit
     public Player w_Player;
     public int Moved=0;
     public int HeadToHead = 0;
+
+    public void Destroy(Game  _g)
+    {
+        foreach(BasicModel M in Models)
+        {
+            M.Destroy(_g);
+        }
+    }
 
     public int isFallBack()
     {
@@ -47,6 +55,19 @@ public class Unit
         }
     }
 
+    public int Waste()
+    {
+        int W=0;
+        foreach (BasicModel b in Models)
+        {
+            if (b.IsAlive() == 2)
+            {
+                W++;
+            }
+        }
+        return W;
+    }
+
     public void EndPfase(Game _g)
     {
 
@@ -68,7 +89,7 @@ public class Unit
                 }
                 if(0.25<d/(a+d))
                 {
-                    if(!LeadershipTest(_g))
+                    if(!LeadershipTest(_g,0))
                     {
                         FallBack = 1;
                         _g.IsShow.ShowMessage("FallBack!");
@@ -153,6 +174,23 @@ public class Unit
         }
     }
 
+    public int MajorityWeaponSkill()
+    {
+        return 4;
+    }
+
+    public int MajorityToughnes()
+    {
+        int t = 0, Majority = 0;
+        foreach (BasicModel m in Models)
+        {
+            t++;
+            Majority += m.GetToughnes();
+        }
+        Majority = Majority / t;
+        return Majority;
+    }
+
     public List<Wound> Shoot(int range,int type, Game _g)
     {
         List<Wound> L=new List<Wound>{},Lp;
@@ -180,7 +218,7 @@ public class Unit
             for (int i = 0; i < n; i++)
             {  
                 L[i].dShoot = dice[i];
-                if (dice[i] < 7 - L[i].BalisticSkills)
+                if (dice[i] < 7 - L[i].Skills)
                 {
 
                     //L.Remove(L[r.Next() % L.Count]);
@@ -202,13 +240,8 @@ public class Unit
     public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, Game _g)
     {
         int n = Wounds.Count;
-        int t=0,Majority=0;
+        int Majority=MajorityToughnes();
         List<int> dices = _g.DiceGen.manyD6(n);
-        foreach(BasicModel m in Models)
-        {
-            t++;
-            Majority += m.GetToughnes(Sourse);
-        }
 
         char a = ' ';
         string TextDices = new string(a, 1);
@@ -220,7 +253,6 @@ public class Unit
         }
         //_g.IsShow.ShowMessage(TextDices);
         int rer = 0;
-        Majority = Majority / t;
         for (int i = 0; i < n;i++)
         {
             Wounds[i].dWound = dices[i];
@@ -241,7 +273,7 @@ public class Unit
         return Wounds;
     }
 
-    public bool LeadershipTest(Game _g)
+    public bool LeadershipTest(Game _g,int penalty)
     {
         int leader = 0,DiceLeader=_g.DiceGen.D6plD6(),rer=0;
         String s = "LeaderTest ";
@@ -255,7 +287,7 @@ public class Unit
         {
             EfU.Leader(this,ref DiceLeader,ref leader,ref rer,_g);
         }
-        if(leader==13||leader>=DiceLeader)
+        if (leader == 13 || leader - penalty >= DiceLeader)
             return true;
         return false;
     }
@@ -369,6 +401,46 @@ public class Unit
                 break;
             }
             m.Save(Wounds[i], dices[i], Cover);
+        }
+        _g.IsShow.ShowSave(Wounds);
+    }
+
+    public void HtHSave(List<Wound> Wounds, Game _g)
+    {
+        int n = Wounds.Count;
+        List<int> dices = _g.DiceGen.manyD6(n);
+        char a = ' ';
+        string TextDices = new string(a, 1);
+        foreach (int d in dices)
+        {
+            char c = (char)('0' + d);
+            TextDices += c;
+            TextDices += " ";
+        }
+        //_g.IsShow.ShowMessage(TextDices);
+        Wounds.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Strenght > y.Strenght)
+                return 1;
+            else if (x.Strenght == y.Strenght)
+                if (x.ap > y.ap)
+                    return 1;
+                else if (x.ap == y.ap)
+                    return 0;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        for (int i = 0; i < n; i++)
+        {
+            BasicModel m = First(_g.cur_unit);
+            if (m == null)
+            {
+                _g.IsShow.ShowMessage("All dead");
+                break;
+            }
+            m.HtHSave(Wounds[i], dices[i]);
         }
         _g.IsShow.ShowSave(Wounds);
     }
@@ -519,7 +591,7 @@ public class Unit
         return Dis;
     }
 
-    public List<Wound> Overvatch(int range, int type, Game _g)
+    public List<Wound> Overwatch(int range, int type, Game _g)
     {
         List<Wound> L = new List<Wound> { }, Lp;
         if (IsShoot == 0)
@@ -527,7 +599,7 @@ public class Unit
             IsShoot = 1;
             foreach (BasicModel ShootModel in Models)
             {
-                Lp = ShootModel.Overvatch(range, type, _g);
+                Lp = ShootModel.Overwatch(range, type, _g);
                 if (Lp != null)
                     L.AddRange(Lp);
             }
@@ -536,7 +608,7 @@ public class Unit
             for (int i = 0; i < n; i++)
             {
                 L[i].dShoot = dice[i];
-                if (dice[i] < 7 - L[i].BalisticSkills)
+                if (dice[i] < 7 - L[i].Skills)
                 {
                     L[i].fail();
                 }

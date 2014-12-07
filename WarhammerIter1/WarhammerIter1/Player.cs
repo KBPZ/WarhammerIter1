@@ -9,10 +9,11 @@
 using System.Collections.Generic;
 
 
-public class Player {
+public class Player 
+{
 
 	public List<Unit> PlayersUnit;
-    int m_PlayersUnit;
+    public int PlayerN;
 
     public List<Unit> GetUnits()
     {
@@ -32,7 +33,6 @@ public class Player {
     {
         PlayersUnit = new List<Unit>{};
         PlayersUnit.Add(new Unit());
-        m_PlayersUnit = 1;
         foreach(Unit w in PlayersUnit)
         {
             w.w_Player = this;

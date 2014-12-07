@@ -15,6 +15,8 @@ public class Wound
     public int dWound { get; set; }
     public int dSave { get; set; }
     public int Save { get; set; }
+    public int enMajT { get; set; }
+    public int enSkills { get; set; }
     public int Range;
 	public int ap 
     {
@@ -44,7 +46,7 @@ public class Wound
         private set;
     }
 
-    public int BalisticSkills
+    public int Skills
     {
         get;
         private set;
@@ -113,9 +115,20 @@ public class Wound
         ap = AP;
         Strenght=S;
         Effects=Ef;
-        BalisticSkills=bs;
+        Skills=bs;
         Sourse=Sor;
 	}
+
+    public Wound(int ws,int Enws,int Ent,int S, int AP, Effect[] Ef, BasicModel Sor)
+    {
+        enMajT = Ent;
+        enSkills = Enws;
+        ap = AP;
+        Strenght = S;
+        Effects = Ef;
+        Skills = ws;
+        Sourse = Sor;
+    }
 
 	~Wound()
     {

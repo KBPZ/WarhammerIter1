@@ -30,6 +30,12 @@ public abstract class EffectsWeapons : Effect
     public virtual void OnWound(Wound w, List<Wound> l, ref int ReRoll, Game _g)
     {
     }
+    public virtual void OnHtHWound(Wound w, List<Wound> l, ref int ReRoll, Game _g)
+    {
+    }
+    public virtual void OnHtTShoot(Wound w, List<Wound> l, ref int ReRoll, Game _g)
+    {
+    }
 }
 public abstract class EffectsModel : Effect
 {

@@ -36,9 +36,9 @@ public class ShowMessageBox : Show
     {
         Lw.Sort(delegate(Wound x, Wound y)
         {
-            if (x.BalisticSkills > y.BalisticSkills)
+            if (x.Skills > y.Skills)
                 return 1;
-            else if (x.BalisticSkills == y.BalisticSkills)
+            else if (x.Skills == y.Skills)
                 if (x.Strenght > y.Strenght)
                     return 1;
                 else if (x.Strenght == y.Strenght)
@@ -58,7 +58,7 @@ public class ShowMessageBox : Show
         char p = ' ';
         foreach(Wound w in Lw)
         {
-            if(s!=w.Strenght||bs!=w.BalisticSkills||ap!=w.ap)
+            if(s!=w.Strenght||bs!=w.Skills||ap!=w.ap)
             {
                 if(Show!="")
                 {
@@ -67,7 +67,7 @@ public class ShowMessageBox : Show
                 Show = "";
                 Show += (char)('0' + w.dShoot); ;
                 Show += p;
-                s = w.Strenght; bs = w.BalisticSkills; ap = w.ap;
+                s = w.Strenght; bs = w.Skills; ap = w.ap;
             }
             else
             {
@@ -80,6 +80,56 @@ public class ShowMessageBox : Show
             MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
         }
     }
+
+    public void ShowHtH(List<Wound> Lw)
+    {
+        Lw.Sort(delegate(Wound x, Wound y)
+        {
+            if (x.Skills > y.Skills)
+                return 1;
+            else if (x.Skills == y.Skills)
+                if (x.Strenght > y.Strenght)
+                    return 1;
+                else if (x.Strenght == y.Strenght)
+                    if (x.ap > y.ap)
+                        return 1;
+                    else if (x.ap == y.ap)
+                        return 0;
+                    else
+                        return -1;
+                else
+                    return -1;
+            else
+                return -1;
+        });
+        int s = 0, bs = 0, ap = 0;
+        string Show = "";
+        char p = ' ';
+        foreach (Wound w in Lw)
+        {
+            if (s != w.Strenght || bs != w.Skills || ap != w.ap)
+            {
+                if (Show != "")
+                {
+                    MessageBox.Show(Show, "ws " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+                }
+                Show = "";
+                Show += (char)('0' + w.dShoot); ;
+                Show += p;
+                s = w.Strenght; bs = w.Skills; ap = w.ap;
+            }
+            else
+            {
+                Show += (char)('0' + w.dShoot);
+                Show += p;
+            }
+        }
+        if (Show != "")
+        {
+            MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+        }
+    }
+
     public void ShowWound(List<Wound> Lw)
     {
         Lw.Sort(delegate(Wound x, Wound y)
@@ -164,7 +214,7 @@ public interface PfaseSr
     void EndPfaseButton(Game _g);
 }
 
-public class PfaseNofing:PfaseSr
+public class PfaseNofing : PfaseSr
 {
     public void MousClick(int x, int y, Game _g) 
     {
@@ -184,7 +234,7 @@ public class PfaseNofing:PfaseSr
     }
 }
 
-public class PfaseJoin:PfaseSr
+public class PfaseJoin : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
@@ -322,6 +372,37 @@ public class PfaseChose : PfaseSr
 
 public class PfaseMove : PfaseSr
 {
+    public double area(BasicModel a, BasicModel b, BasicModel c)
+    {
+        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+    }
+
+    public bool intersect(double a, double b, double c, double d)
+    {
+        double n;
+        if (a > b)
+        {
+            n = a;
+            a = b;
+            b = n;
+        }
+        if (c > d)
+        {
+            n = c;
+            c = d;
+            d = n;
+        }
+        return Math.Max(a, c) <= Math.Min(b, d);
+    }
+
+    public bool check_sections(BasicModel a, BasicModel b, BasicModel c, BasicModel d)
+    {
+        return intersect(a.x, b.x, c.x, d.x)
+        && intersect(a.y, b.y, c.y, d.y)
+        && area(a, b, c) * area(a, b, d) <= 0
+        && area(c, d, a) * area(c, d, b) <= 0;
+    }
+
     public void MousClick(int x, int y, Game _g)
     {
         BasicModel model=_g.IsMap.FindModel(x, y);
@@ -515,23 +596,23 @@ public class PfaseChoseUnit : PfaseSr
                     }
                     if (en == 1)
                         break;
-                }
-            }
+        }
+    }
             if(en==1)
-            {
+    {
                 _g.IsShow.ShowMessage("Выбранный вражеский отряд не является ближайшим.");
-            }
+    }
             else
-            {
+    {
                 double length = (double)_g.cur_unit.ChargeRange(_g);
                 Charge charge = new Charge(_g.cur_unit, _g.Target, length, _g);
                 _g.AllCharge.Add(charge);
                 _g.cur_unit = null;
                 _g.Target = null;
-            }
-            
+}
 
-        }
+
+    }
     }
     public void IndependentCharecterButtonClick(Game _g)
     {
@@ -753,7 +834,9 @@ public class Game
     {
         Players = new Player[2];
         Players[0] = P1;
+        P1.PlayerN = 0;
         Players[1] = P2;
+        P2.PlayerN = 1;
         DiceGen = DiceG;
         IsShow = ShowStr;
         NowMission = new EturnalWar1();
@@ -808,7 +891,7 @@ public class Game
         }
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        int Range = (int)IsMap.Range(cur_unit, Target);
+        int Range = (int)IsMap.Range(cur_unit, Target)*50;
         L = cur_unit.Shoot(Range,0, this);
         if (L == null || L.Count==0)
             return 0;
@@ -825,7 +908,7 @@ public class Game
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
         int Range = (int)IsMap.Range(cur_unit, Target);
-        Target.Overvatch(Range, 0, this);
+        Target.Overwatch(Range, 0, this);
         if (L == null || L.Count == 0)
             return;
         L = Target.Wonding(cur_unit, L, this);
@@ -846,7 +929,15 @@ public class Game
 
     public void NewCombat()
     {
-        AllCombat.Add(new Combat(cur_unit,Target,this));
+        //Overwatch();
+        int ChargeRange = cur_unit.ChargeRange(this);
+        double Range=IsMap.Range(Target,cur_unit);
+        if(true)//Range>ChargeRange)
+        {
+            Combat NCombat = new Combat(cur_unit, Target, this);
+            AllCombat.Add(NCombat);
+            NCombat.FightSubPh(this);
+        }
     }
 
 }//end Game
