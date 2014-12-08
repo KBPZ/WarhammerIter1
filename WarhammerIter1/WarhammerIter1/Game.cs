@@ -645,6 +645,10 @@ public class PfaseChoseUnit : PfaseSr
     }
     public void EndPfaseButton(Game _g)
     {
+        foreach(Charge ch in _g.AllCharge)
+        {
+            ch.FightSubPh(_g);
+        }
         _g.NowPfaseStr = _g.ChargePf;
     }
 }
@@ -694,7 +698,7 @@ public class Game
     public Map IsMap { get; private set; }
     public MapInterfeise IsMapInter = new MapInterfeise();
     public MiniMap IsMiniMap = new MiniMap();
-    public List<Combat> AllCombat = new List<Combat> { };
+    //public List<Combat> AllCombat = new List<Combat> { };
 	private int Turn;
     public Unit Target {get;set;}
     //public Unit Sourse {get;set;}
@@ -960,7 +964,7 @@ public class Game
         if(true)//Range>ChargeRange)
         {
             Combat NCombat = new Combat(cur_unit, Target, this);
-            AllCombat.Add(NCombat);
+            //AllCombat.Add(NCombat);
             NCombat.FightSubPh(this);
         }
     }
