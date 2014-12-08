@@ -235,6 +235,8 @@ public class Charge
                     f_m_ch.Enemies.Add(f_em);
                     warriors.Add(f_m_ch);
                     base_contact.Add(f_m);
+                    ModelCharge f_em_ch = new ModelCharge(f_em);
+                    warriors.Add(f_em_ch);
                     i = 0;
                 }
                 else
@@ -263,6 +265,8 @@ public class Charge
                         f_m_ch.Enemies.Add(f_em);
                         warriors.Add(f_m_ch);
                         base_contact.Add(f_m);
+                        ModelCharge f_em_ch = new ModelCharge(f_em);
+                        warriors.Add(f_em_ch);
                         break;
                     }
                     xx = x;
@@ -463,6 +467,16 @@ public class Charge
                         f_m.x = x;
                         f_m.y = y;
                     }
+                }
+            }
+        }
+        foreach (ModelCharge mch in warriors)
+        {
+            foreach(BasicModel en in _g.Target.Models)
+            {
+                if(mch.Enemies.Contains(en)==false && _g.IsMap.distance(mch.model.x, mch.model.y, en.x, en.y)==50)
+                {
+                    mch.Enemies.Add(en);
                 }
             }
         }
