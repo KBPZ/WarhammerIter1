@@ -153,6 +153,37 @@ public class Charge
     public List<ModelCharge> warriors = new List<ModelCharge> { };
     public double length;
 
+    public bool inter(double x, double y, Unit A, Unit B, Game _g)
+    {
+        BasicModel vac = _g.IsMap.FindModel(x, y);
+        bool intersection = false;
+        if (vac == null)
+        {
+            foreach (BasicModel en_model in B.Models)
+            {
+                if (en_model.IsAlive() == 0 && _g.IsMap.distance(x, y, en_model.x, en_model.y) < 50)
+                {
+                    intersection = true;
+                    break;
+                }
+            }
+            if (intersection == false)
+            {
+                foreach (BasicModel en_model in _g.cur_unit.Models)
+                {
+                    if (en_model.IsAlive() == 0 && _g.IsMap.distance(x, y, en_model.x, en_model.y) < 50)
+                    {
+                        intersection = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+            intersection = true;
+        return intersection;
+    }
+
     public bool check(BasicModel f_m, BasicModel f_em, Game _g, Unit B)
     {
         double[,] m = new double[6, 2];
@@ -183,26 +214,38 @@ public class Charge
             {
                 intersection = false;
                 double d = _g.IsMap.distance(f_m.x, f_m.y, f_em.x, f_em.y);
-                double sootn;
+                double sootn1, sootn2;
+                sootn1 = 50.0 / d;
+                sootn2 = 1 - 50.0 / d;
                 if (f_m.x < f_em.x)
-                    sootn = 1 - 50.0 / d;
+                    m[0, 0] = (f_em.x - f_m.x) * sootn2 + f_m.x;
                 else
-                    sootn = 50.0 / d;
-                if (f_m.x < f_em.x)
-                    m[0, 0] = (f_em.x - f_m.x) * sootn + f_m.x;
-                else
-                    m[0, 0] = (f_m.x - f_em.x) * sootn + f_em.x;
+                    m[0, 0] = (f_m.x - f_em.x) * sootn1 + f_em.x;
                 if (f_m.y < f_em.y)
-                    m[0, 1] = (f_em.y - f_m.y) * sootn + f_m.y;
+                    m[0, 1] = (f_em.y - f_m.y) * sootn2 + f_m.y;
                 else
-                    m[0, 1] = (f_m.y - f_em.y) * sootn + f_em.y;
-                /*
-                f_m.Moved = 1;
-                ModelCharge f_m_ch = new ModelCharge(f_m);
-                f_m_ch.Enemies.Add(f_em);
-                warriors.Add(f_m_ch);         
-                */
-                i = 1;
+                    m[0, 1] = (f_m.y - f_em.y) * sootn1 + f_em.y;
+
+                x = m[0, 0];
+                y = m[0, 1];
+                if (_g.IsMap.distance(f_m.x, f_m.y, x, y) <= length)
+                {
+                    intersection = inter(x, y, _g.cur_unit, _g.Target, _g);
+                }
+                else
+                    intersection = true;
+                if (intersection == false)
+                {
+                    f_m.x = x;
+                    f_m.y = y;
+                    f_m.Moved = 1;
+                    ModelCharge f_m_ch = new ModelCharge(f_m);
+                    f_m_ch.Enemies.Add(f_em);
+                    warriors.Add(f_m_ch);
+                    i = 0;
+                }
+                else
+                    i = 1;
             }
             for (int j = 0; j < i; j++)
             {
@@ -212,29 +255,9 @@ public class Charge
                 {
                     x = _g.IsMap.triangle_x(f_em.x, f_em.y, xx, yy);
                     y = _g.IsMap.triangle_y(f_em.x, f_em.y, xx, yy);
-                    BasicModel vac = _g.IsMap.FindModel(x, y);
-                    intersection = false;
-                    if (vac == null)
+                    if (_g.IsMap.distance(f_m.x, f_m.y, x, y) <= length)
                     {
-                        foreach (BasicModel en_model in B.Models)
-                        {
-                            if (en_model.IsAlive() == 0 && _g.IsMap.distance(x, y, en_model.x, en_model.y) < 50)
-                            {
-                                intersection = true;
-                                break;
-                            }
-                        }
-                        if (intersection == false)
-                        {
-                            foreach (BasicModel en_model in _g.cur_unit.Models)
-                            {
-                                if (en_model.IsAlive() == 0 && _g.IsMap.distance(x, y, en_model.x, en_model.y) < 50)
-                                {
-                                    intersection = true;
-                                    break;
-                                }
-                            }
-                        }
+                        intersection = inter(x, y, _g.cur_unit, _g.Target, _g);
                     }
                     else
                         intersection = true;
@@ -281,13 +304,14 @@ public class Charge
             if (found == false && model.IsAlive() == 0)
             {
                 f_m = model;
-                f_em = _g.cur_unit.First(f_m, B, _g);
+                f_em = _g.cur_unit.First(f_m, B, warriors, _g);
+                //f_em = _g.cur_unit.First(f_m, B, _g);
                 c = check(f_m, f_em, _g, B);
                 List<BasicModel> bad_enemies = new List<BasicModel>();
                 while (c == false)
                 {                    
                     bad_enemies.Add(f_em);
-                    f_em = _g.cur_unit.First(f_m, B, bad_enemies, _g);
+                    f_em = _g.cur_unit.First(f_m, B, bad_enemies, warriors, _g);
                     if (f_em == null)
                     {
                         break;
@@ -310,23 +334,13 @@ public class Charge
                         y = (f_m.y - f_em.y) * sootn + f_em.y;
                     bool intersection = true;
                     while (intersection == true)
-                    {
-                        foreach (BasicModel en_model in B.Models)
+                    {                        
+                        if (_g.IsMap.distance(f_m.x, f_m.y, x, y) <= length)
                         {
-                            if (_g.IsMap.squares(x, y, en_model.x, en_model.y, 50) == true)
-                            {
-                                intersection = true;
-                                break;
-                            }
+                            intersection = inter(x, y, _g.cur_unit, _g.Target, _g);
                         }
-                        foreach (BasicModel en_model in _g.cur_unit.Models)
-                        {
-                            if (_g.IsMap.squares(x, y, en_model.x, en_model.y, 50) == true)
-                            {
-                                intersection = true;
-                                break;
-                            }
-                        }
+                        else
+                            intersection = true;
                         if (intersection == true)
                         {
                             if (f_m.x < f_em.x)

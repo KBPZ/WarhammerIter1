@@ -346,6 +346,88 @@ public class Unit
         return rez;
     }
 
+    public BasicModel First(BasicModel model, Unit B, List<ModelCharge> warriors, Game _g)
+    {
+        double min = 1000000;
+        double min1 = 1000000;
+        BasicModel rez = null;
+        BasicModel rez1 = null;
+        foreach (BasicModel en_model in B.Models)
+        {
+            if (en_model.IsAlive() == 0)
+            {
+                bool found=false;
+                foreach (ModelCharge mch in warriors)
+                {
+                    foreach (BasicModel c_model in mch.Enemies)
+                    {
+                        if(c_model == en_model)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min)
+                {
+                    if (found == false)
+                    {
+                        min = d;
+                        rez = en_model;
+                    }
+                    min1 = d;
+                    rez1 = en_model;
+                }
+            }
+        }
+        if (rez != null)
+            return rez;
+        else
+            return rez1;
+    }
+
+    public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, List<ModelCharge> warriors, Game _g)
+    {
+        double min = 1000000;
+        double min1 = 1000000;
+        BasicModel rez = null;
+        BasicModel rez1 = null;
+        foreach (BasicModel en_model in B.Models)
+        {
+            if (en_model.IsAlive() == 0 && bad_enemies.Contains(en_model) == false)
+            {
+                bool found = false;
+                foreach (ModelCharge mch in warriors)
+                {
+                    foreach (BasicModel c_model in mch.Enemies)
+                    {
+                        if (c_model == en_model)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min)
+                {
+                    if (found == false)
+                    {
+                        min = d;
+                        rez = en_model;
+                    }
+                    min1 = d;
+                    rez1 = en_model;
+                }
+            }
+        }
+        if (rez != null)
+            return rez;
+        else
+            return rez1;
+    }
+
     public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, Game _g)
     {
         double min = 1000000;

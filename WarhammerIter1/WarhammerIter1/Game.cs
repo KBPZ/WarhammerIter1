@@ -612,8 +612,9 @@ public class PfaseChoseUnit : PfaseSr
             {
                 double length = (double)_g.cur_unit.ChargeRange(_g);
                 length *= 50;
+                length = 500;
                 //ПАША РАССТОЯНИЯ ПИЗДЕЦ КАКОЙ-ТО ВТФ
-                _g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
+                //_g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
                 if (min > length)
                 {
                     _g.IsShow.ShowMessage("Вражеский отряд слишком далеко.");
