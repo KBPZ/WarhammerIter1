@@ -428,6 +428,35 @@ public class Unit
             return rez1;
     }
 
+    public BasicModel First(BasicModel model, List<BasicModel> base_contact, Game _g, double length)
+    {
+        double min = 1000000;
+        double min1 = 1000000;
+        BasicModel rez = null;
+        BasicModel rez1 = null;
+        foreach (BasicModel en_model in base_contact)
+        {
+            if (en_model.IsAlive() == 0)
+            {
+                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                if (d < min && d <= length)
+                {
+                    if (en_model.Moved == 1)
+                    {
+                        min = d;
+                        rez = en_model;
+                    }
+                    min1 = d;
+                    rez1 = en_model;
+                }
+            }
+        }
+        if (rez != null)
+            return rez;
+        else
+            return rez1;
+    }
+
     public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, Game _g)
     {
         double min = 1000000;

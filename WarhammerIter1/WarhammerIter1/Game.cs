@@ -497,6 +497,8 @@ public class PfaseMove : PfaseSr
             }
             _g.cur_model.w_Unit.Moved = 1;
             _g.NowPfaseStr = _g.ChosePf;
+            _g.cur_unit = null;
+            _g.cur_model = null;
         }
     }
     public void IndependentCharecterButtonClick(Game _g)
