@@ -9,199 +9,203 @@
 
 
 using System.Collections.Generic;
-
-public enum TypeWeapon
+using Warhammer;
+namespace Warhammer
 {
-    Heavy,
-    Assault,
-    Pistol
-}
-
-
-public class Weapon 
-{
-
-	protected int ArmorPenetretion = 7;
-	protected int Strenght;
-    protected int Distance;
-    protected TypeWeapon Type;
-    public List<EffectsWeapons> Effects;
-    protected int Shoots;
-	protected int StrenghtModificationMute;
-	protected int StrenghtModificationPlus;
-	public BasicModel w_BasicModel;
-
-    public virtual int IsHtHWeapon()
+    public enum TypeWeapon
     {
-        return 0;
+        Heavy,
+        Assault,
+        Pistol
     }
 
-    public virtual int IsSpecialHtHWeapon()
-    {
-        return 0;
-    }
 
-    public Weapon(int s,int ap,int shoots,int strmP,int strmM,List<EffectsWeapons> Eff)
+    public class Weapon
     {
-        ArmorPenetretion = ap;
-        Shoots = shoots;
-        Strenght = s;
-        StrenghtModificationMute = strmM;
-        StrenghtModificationPlus = strmP;
-        Effects = Eff;
-    }
 
-	public Weapon()
-    {
-        Strenght = 4;
-        Type = TypeWeapon.Assault;
-        Shoots = 2;
-        Effects = new List<EffectsWeapons> { };
-	}
+        protected int ArmorPenetretion = 7;
+        protected int Strenght;
+        protected int Distance;
+        protected TypeWeapon Type;
+        public List<EffectsWeapons> Effects;
+        protected int Shoots;
+        protected int StrenghtModificationMute;
+        protected int StrenghtModificationPlus;
+        public BasicModel w_BasicModel;
 
-    public virtual List<Wound> HeadToHead(int atack,int S,int t,int ws,int Enws)
-    {
-        List<Wound> L = new List<Wound> { };
-        for (int i = 0; i < atack; i++)
+        public virtual int IsHtHWeapon()
         {
-            L.Add(new Wound(ws,Enws,t,S,7,Effects.ToArray(),w_BasicModel));
+            return 0;
         }
-        return L;
-    }
 
-    public virtual List<Wound> SnapShoots(int Dis)
-    {
-        return Shoot(1, 0, Dis);
-    }
-
-    public virtual List<Wound> Shoot(int moved,int bs,int Dis)
-    {   
-        List<Wound> L = new List<Wound> { };
-        if (Dis>=Distance)
+        public virtual int IsSpecialHtHWeapon()
         {
-            for (int i = 0; i < Shoots; i++)
+            return 0;
+        }
+
+        public Weapon(int s, int ap, int shoots, int strmP, int strmM, List<EffectsWeapons> Eff)
+        {
+            ArmorPenetretion = ap;
+            Shoots = shoots;
+            Strenght = s;
+            StrenghtModificationMute = strmM;
+            StrenghtModificationPlus = strmP;
+            Effects = Eff;
+        }
+
+        public Weapon()
+        {
+            Strenght = 4;
+            Type = TypeWeapon.Assault;
+            Shoots = 2;
+            Effects = new List<EffectsWeapons> { };
+        }
+
+        public virtual List<Wound> HeadToHead(int atack, int S, int t, int ws, int Enws)
+        {
+            List<Wound> L = new List<Wound> { };
+            for (int i = 0; i < atack; i++)
             {
-                L.Add(new Wound(Dis,Strenght, ArmorPenetretion, Effects.ToArray(), bs, w_BasicModel));
+                L.Add(new Wound(ws, Enws, t, S, 7, Effects.ToArray(), w_BasicModel));
             }
+            return L;
         }
-        return L;
-    }
 
-	~Weapon()
-    {
-
-	}
-
-	public virtual void Dispose(){
-
-	}
-
-}//end Weapon
-
-public class Assault : Weapon
-{
-    public Assault(int Dist,int s,int ap,int shoots,List<EffectsWeapons> Eff)
-    {
-        Distance=Dist;
-        ArmorPenetretion = ap;
-        Shoots = shoots;
-        Strenght = s;
-        Type = TypeWeapon.Assault;
-        Effects = Eff;
-    }
-
-    public override List<Wound> Shoot(int moved, int bs,int Dis)
-    {
-        return base.Shoot(moved, bs,Dis);
-    }
-}
-
-public class Heavy : Weapon
-{
-    public Heavy(int Dist,int s,int ap,int shoots,List<EffectsWeapons> Eff)
-    {
-        ArmorPenetretion = ap;
-        Distance=Dist;
-        Shoots = shoots;
-        Strenght = s;
-        Effects = Eff;
-        Type = TypeWeapon.Heavy;
-    }
-
-    public override List<Wound> Shoot(int moved, int bs,int Dis)
-    {
-        if (moved == 0)
+        public virtual List<Wound> SnapShoots(int Dis)
         {
-            return base.Shoot(moved, bs,Dis);
+            return Shoot(1, 0, Dis);
         }
-        return base.Shoot(moved, 1,Dis);
-    }
-}
 
-public class Pistol : Weapon
-{
-    public Pistol(int Dist,int s,int ap,List<EffectsWeapons> Eff)
-    {
-        Distance = Dist;
-        ArmorPenetretion = ap;
-        Shoots = 1;
-        Strenght = s;
-        Effects = Eff;
-        Type = TypeWeapon.Pistol;
-    }
-
-    public override List<Wound> Shoot(int moved, int bs,int Dist)
-    {
-        return base.Shoot(moved, bs,Dist);
-    }
-
-    public override int IsHtHWeapon()
-    {
-        return 1;
-    }
-}
-
-public class CloseCombatWeapon : Weapon
-{
-    public CloseCombatWeapon()
-    {
-        Effects = new List<EffectsWeapons> { };
-        Distance = 0;
-    }
-    public override int IsHtHWeapon()
-    {
-        return 1;
-    }
-}
-
-public class MuteCCW : Weapon
-{
-    public MuteCCW(int MuteS, int AP, List<EffectsWeapons> Eff)
-    {
-        StrenghtModificationMute = MuteS;
-        ArmorPenetretion = AP;
-        Effects = Eff;
-        Distance = 0;
-    }
-
-    public override List<Wound> HeadToHead(int atack, int S, int t, int ws, int Enws)
-    {
-        List<Wound> L = new List<Wound> { };
-        for (int i = 0; i < atack; i++)
+        public virtual List<Wound> Shoot(int moved, int bs, int Dis)
         {
-            L.Add(new Wound(ws, Enws, t, S*StrenghtModificationMute, ArmorPenetretion, Effects.ToArray(), w_BasicModel));
+            List<Wound> L = new List<Wound> { };
+            if (Dis >= Distance)
+            {
+                for (int i = 0; i < Shoots; i++)
+                {
+                    L.Add(new Wound(Dis, Strenght, ArmorPenetretion, Effects.ToArray(), bs, w_BasicModel));
+                }
+            }
+            return L;
         }
-        return L;
+
+        ~Weapon()
+        {
+
+        }
+
+        public virtual void Dispose()
+        {
+
+        }
+
+    }//end Weapon
+
+    public class Assault : Weapon
+    {
+        public Assault(int Dist, int s, int ap, int shoots, List<EffectsWeapons> Eff)
+        {
+            Distance = Dist;
+            ArmorPenetretion = ap;
+            Shoots = shoots;
+            Strenght = s;
+            Type = TypeWeapon.Assault;
+            Effects = Eff;
+        }
+
+        public override List<Wound> Shoot(int moved, int bs, int Dis)
+        {
+            return base.Shoot(moved, bs, Dis);
+        }
     }
 
-    public override int IsHtHWeapon()
+    public class Heavy : Weapon
     {
-        return 1;
+        public Heavy(int Dist, int s, int ap, int shoots, List<EffectsWeapons> Eff)
+        {
+            ArmorPenetretion = ap;
+            Distance = Dist;
+            Shoots = shoots;
+            Strenght = s;
+            Effects = Eff;
+            Type = TypeWeapon.Heavy;
+        }
+
+        public override List<Wound> Shoot(int moved, int bs, int Dis)
+        {
+            if (moved == 0)
+            {
+                return base.Shoot(moved, bs, Dis);
+            }
+            return base.Shoot(moved, 1, Dis);
+        }
     }
 
-
-    public override int IsSpecialHtHWeapon()
+    public class Pistol : Weapon
     {
-        return 1;
+        public Pistol(int Dist, int s, int ap, List<EffectsWeapons> Eff)
+        {
+            Distance = Dist;
+            ArmorPenetretion = ap;
+            Shoots = 1;
+            Strenght = s;
+            Effects = Eff;
+            Type = TypeWeapon.Pistol;
+        }
+
+        public override List<Wound> Shoot(int moved, int bs, int Dist)
+        {
+            return base.Shoot(moved, bs, Dist);
+        }
+
+        public override int IsHtHWeapon()
+        {
+            return 1;
+        }
+    }
+
+    public class CloseCombatWeapon : Weapon
+    {
+        public CloseCombatWeapon()
+        {
+            Effects = new List<EffectsWeapons> { };
+            Distance = 0;
+        }
+        public override int IsHtHWeapon()
+        {
+            return 1;
+        }
+    }
+
+    public class MuteCCW : Weapon
+    {
+        public MuteCCW(int MuteS, int AP, List<EffectsWeapons> Eff)
+        {
+            StrenghtModificationMute = MuteS;
+            ArmorPenetretion = AP;
+            Effects = Eff;
+            Distance = 0;
+        }
+
+        public override List<Wound> HeadToHead(int atack, int S, int t, int ws, int Enws)
+        {
+            List<Wound> L = new List<Wound> { };
+            for (int i = 0; i < atack; i++)
+            {
+                L.Add(new Wound(ws, Enws, t, S * StrenghtModificationMute, ArmorPenetretion, Effects.ToArray(), w_BasicModel));
+            }
+            return L;
+        }
+
+        public override int IsHtHWeapon()
+        {
+            return 1;
+        }
+
+
+        public override int IsSpecialHtHWeapon()
+        {
+            return 1;
+        }
     }
 }

@@ -10,156 +10,159 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
 using System.Drawing;
-
-public abstract class BasicModel 
+using Warhammer;
+namespace Warhammer
 {
-
-	protected int Alive = 0;
-	protected int BalisticSkill;
-	protected int Initiative;
-	protected int InvulnerableSave = 7;
-	protected int Move = 6;
-	protected int Stilness = 0;
-	protected int Strength;
-    public int Atack { get;protected set; }
-    public int Moved=0;
-	protected List<Weapon> Weapons;
-    protected Weapon m_Weapons;
-    public List<EffectsModel> Effects { get; protected set; }
-    public Unit w_Unit;
-    public int WeaponSkill { get; protected set; }
-    public int Wound { get; protected set; }
-    public double x, y;
-
-    public void Destroy(Game _g)
+    public abstract class BasicModel
     {
-        Alive = 1;
-    }
 
-    public virtual List<Wound> CombatAtack(int EnemyWs,int EnemyMajT)
-    {
-        return new List<Wound> { };
-    }
+        protected int Alive = 0;
+        protected int BalisticSkill;
+        protected int Initiative;
+        protected int InvulnerableSave = 7;
+        protected int Move = 6;
+        protected int Stilness = 0;
+        protected int Strength;
+        public int Atack { get; protected set; }
+        public int Moved = 0;
+        protected List<Weapon> Weapons;
+        protected Weapon m_Weapons;
+        public List<EffectsModel> Effects { get; protected set; }
+        public Unit w_Unit;
+        public int WeaponSkill { get; protected set; }
+        public int Wound { get; protected set; }
+        public double x, y;
 
-    public virtual int GetInitiative(Game _g)
-    {
-        return Initiative;
-    }
-
-    public virtual int Leadership()
-    {
-        return 13;
-    }
-
-    public double start_x, start_y;
-
-    public virtual int MoveRange()
-    {
-        return 6;
-    }
-
-    public virtual int DificltMoveRange(DiceInt d)
-    {
-        return Math.Max(d.D6(), d.D6());
-    }
-
-    public void BeginPfase(Game _g)
-    {
-        if (Alive < 1)
+        public void Destroy(Game _g)
+        {
             Alive = 1;
-        switch (_g.NowPhase)
-        {
-            case Pfase.Move:
-                break;
-            case Pfase.Shoot:
-                break;
-            case Pfase.Charge:
-                break;
         }
-    }
 
-    public void EndPfase(Game _g)
-    {
-        if (Alive > 1)
-            Alive = 1;
-        switch (_g.NowPhase)
+        public virtual List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
         {
-            case Pfase.Move:
-                break;
-            case Pfase.Shoot:
-                break;
-            case Pfase.Charge:
-                break;
+            return new List<Wound> { };
         }
-    }
 
-    virtual public int Save(Wound x, int dice,int Cover)
-    {
-        return 0;
-    }
-
-    virtual public int HtHSave(Wound x, int dice)
-    {
-        return 0;
-    }
-
-    public int IsAlive()
-    {
-        return Alive;
-    }
-
-    public virtual int  GetToughnes()
-    {
-        return 4;
-    }
-
-	public BasicModel()
-    {
-        Wound = 1;
-	}
-
-    public bool IsIndepChar(Game _g)
-    {
-        int k = 0;
-        foreach(EffectsModel Eff in Effects)
+        public virtual int GetInitiative(Game _g)
         {
-            k += Eff.IsIndependetCharecter(_g);
+            return Initiative;
         }
-        if (k == 0)
-            return false;
-        return true;
-    }
 
-    public virtual List<Wound> Shoot(int Range,int t,Game _g)
-    {
-        if (Alive == 0)
+        public virtual int Leadership()
         {
-            List<Wound> L = new List<Wound> { };
-            L.AddRange(Weapons[0].Shoot(Moved,BalisticSkill,Range));
-            return L;
+            return 13;
         }
-        else
-            return null;
-    }
 
-    public virtual List<Wound> Overwatch(int Range, int t, Game _g)
-    {
-        if (Alive == 0)
+        public double start_x, start_y;
+
+        public virtual int MoveRange()
         {
-            List<Wound> L = new List<Wound> { };
-            L.AddRange(Weapons[0].SnapShoots(Range));
-            return L;
+            return 6;
         }
-        else
-            return null;
-    }
+
+        public virtual int DificltMoveRange(DiceInt d)
+        {
+            return Math.Max(d.D6(), d.D6());
+        }
+
+        public void BeginPfase(Game _g)
+        {
+            if (Alive < 1)
+                Alive = 1;
+            switch (_g.NowPhase)
+            {
+                case Pfase.Move:
+                    break;
+                case Pfase.Shoot:
+                    break;
+                case Pfase.Charge:
+                    break;
+            }
+        }
+
+        public void EndPfase(Game _g)
+        {
+            if (Alive > 1)
+                Alive = 1;
+            switch (_g.NowPhase)
+            {
+                case Pfase.Move:
+                    break;
+                case Pfase.Shoot:
+                    break;
+                case Pfase.Charge:
+                    break;
+            }
+        }
+
+        virtual public int Save(Wound x, int dice, int Cover)
+        {
+            return 0;
+        }
+
+        virtual public int HtHSave(Wound x, int dice)
+        {
+            return 0;
+        }
+
+        public int IsAlive()
+        {
+            return Alive;
+        }
+
+        public virtual int GetToughnes()
+        {
+            return 4;
+        }
+
+        public BasicModel()
+        {
+            Wound = 1;
+        }
+
+        public bool IsIndepChar(Game _g)
+        {
+            int k = 0;
+            foreach (EffectsModel Eff in Effects)
+            {
+                k += Eff.IsIndependetCharecter(_g);
+            }
+            if (k == 0)
+                return false;
+            return true;
+        }
+
+        public virtual List<Wound> Shoot(int Range, int t, Game _g)
+        {
+            if (Alive == 0)
+            {
+                List<Wound> L = new List<Wound> { };
+                L.AddRange(Weapons[0].Shoot(Moved, BalisticSkill, Range));
+                return L;
+            }
+            else
+                return null;
+        }
+
+        public virtual List<Wound> Overwatch(int Range, int t, Game _g)
+        {
+            if (Alive == 0)
+            {
+                List<Wound> L = new List<Wound> { };
+                L.AddRange(Weapons[0].SnapShoots(Range));
+                return L;
+            }
+            else
+                return null;
+        }
 
 
-	~BasicModel()
-    {
+        ~BasicModel()
+        {
 
-	}
+        }
 
-    public abstract void Paint(PaintEventArgs e,Game _g);
+        public abstract void Paint(PaintEventArgs e, Game _g);
 
-}//end BasicModel
+    }//end BasicModel
+}

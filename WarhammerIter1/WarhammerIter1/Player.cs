@@ -7,41 +7,44 @@
 ///////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
-
-
-public class Player 
+using Warhammer;
+namespace Warhammer
 {
 
-	public List<Unit> PlayersUnit;
-    public int PlayerN;
-
-    public List<Unit> GetUnits()
+    public class Player
     {
-        return PlayersUnit;
-    }
 
-    public Player(List<Unit> L)
-    {
-        PlayersUnit = L;
-        foreach(Unit U in L)
+        public List<Unit> PlayersUnit;
+        public int PlayerN;
+
+        public List<Unit> GetUnits()
         {
-            U.w_Player = this;
+            return PlayersUnit;
         }
-    }
 
-	public Player()
-    {
-        PlayersUnit = new List<Unit>{};
-        PlayersUnit.Add(new Unit());
-        foreach(Unit w in PlayersUnit)
+        public Player(List<Unit> L)
         {
-            w.w_Player = this;
+            PlayersUnit = L;
+            foreach (Unit U in L)
+            {
+                U.w_Player = this;
+            }
         }
-	}
 
-	~Player()
-    {
+        public Player()
+        {
+            PlayersUnit = new List<Unit> { };
+            PlayersUnit.Add(new Unit());
+            foreach (Unit w in PlayersUnit)
+            {
+                w.w_Player = this;
+            }
+        }
 
-	}
+        ~Player()
+        {
 
-}//end Player
+        }
+
+    }//end Player
+}

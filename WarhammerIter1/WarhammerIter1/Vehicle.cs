@@ -9,25 +9,31 @@
 using System;
 using System.Windows.Forms;
 
-
-public class Vehicle : BasicModel {
-
-	private int BackArmor;
-	private int FrontArmor;
-	private int SideArmor;
-
-	public Vehicle(){
-
-	}
-
-	~Vehicle(){
-
-	}
-
-    public override void Paint(PaintEventArgs e,Game _g)
+using Warhammer;
+namespace Warhammer
+{
+    public class Vehicle : BasicModel
     {
-        
-    }
+
+        private int BackArmor;
+        private int FrontArmor;
+        private int SideArmor;
+
+        public Vehicle()
+        {
+
+        }
+
+        ~Vehicle()
+        {
+
+        }
+
+        public override void Paint(PaintEventArgs e, Game _g)
+        {
+
+        }
 
 
-}//end Vehicle
+    }//end Vehicle
+}

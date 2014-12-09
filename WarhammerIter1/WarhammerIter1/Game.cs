@@ -9,36 +9,133 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
-
-public interface Show
+using Warhammer;
+namespace Warhammer
 {
-    void ShowMessage(string s);
-    void ShowSoots(List<Wound> Lw);
-    void ShowWound(List<Wound> Lw);
-    void ShowSave(List<Wound> Lw);
-}
-
-public class ShowNofing : Show
-{
-    public void ShowMessage(string s){}
-    public void ShowSoots(List<Wound> Lw){}
-    public void ShowWound(List<Wound> Lw){}
-    public void ShowSave(List<Wound> Lw) { }
-}
-
-public class ShowMessageBox : Show
-{
-    public void ShowMessage(string s)
+    public interface Show
     {
-        MessageBox.Show(s);
+        void ShowMessage(string s);
+        void ShowSoots(List<Wound> Lw);
+        void ShowWound(List<Wound> Lw);
+        void ShowSave(List<Wound> Lw);
     }
-    public void ShowSoots(List<Wound> Lw)
+
+    public class ShowNofing : Show
     {
-        Lw.Sort(delegate(Wound x, Wound y)
+        public void ShowMessage(string s) { }
+        public void ShowSoots(List<Wound> Lw) { }
+        public void ShowWound(List<Wound> Lw) { }
+        public void ShowSave(List<Wound> Lw) { }
+    }
+
+    public class ShowMessageBox : Show
+    {
+        public void ShowMessage(string s)
         {
-            if (x.Skills > y.Skills)
-                return 1;
-            else if (x.Skills == y.Skills)
+            MessageBox.Show(s);
+        }
+        public void ShowSoots(List<Wound> Lw)
+        {
+            Lw.Sort(delegate(Wound x, Wound y)
+            {
+                if (x.Skills > y.Skills)
+                    return 1;
+                else if (x.Skills == y.Skills)
+                    if (x.Strenght > y.Strenght)
+                        return 1;
+                    else if (x.Strenght == y.Strenght)
+                        if (x.ap > y.ap)
+                            return 1;
+                        else if (x.ap == y.ap)
+                            return 0;
+                        else
+                            return -1;
+                    else
+                        return -1;
+                else
+                    return -1;
+            });
+            int s = 0, bs = 0, ap = 0;
+            string Show = "";
+            char p = ' ';
+            foreach (Wound w in Lw)
+            {
+                if (s != w.Strenght || bs != w.Skills || ap != w.ap)
+                {
+                    if (Show != "")
+                    {
+                        MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+                    }
+                    Show = "";
+                    Show += (char)('0' + w.dShoot); ;
+                    Show += p;
+                    s = w.Strenght; bs = w.Skills; ap = w.ap;
+                }
+                else
+                {
+                    Show += (char)('0' + w.dShoot);
+                    Show += p;
+                }
+            }
+            if (Show != "")
+            {
+                MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+            }
+        }
+
+        public void ShowHtH(List<Wound> Lw)
+        {
+            Lw.Sort(delegate(Wound x, Wound y)
+            {
+                if (x.Skills > y.Skills)
+                    return 1;
+                else if (x.Skills == y.Skills)
+                    if (x.Strenght > y.Strenght)
+                        return 1;
+                    else if (x.Strenght == y.Strenght)
+                        if (x.ap > y.ap)
+                            return 1;
+                        else if (x.ap == y.ap)
+                            return 0;
+                        else
+                            return -1;
+                    else
+                        return -1;
+                else
+                    return -1;
+            });
+            int s = 0, bs = 0, ap = 0;
+            string Show = "";
+            char p = ' ';
+            foreach (Wound w in Lw)
+            {
+                if (s != w.Strenght || bs != w.Skills || ap != w.ap)
+                {
+                    if (Show != "")
+                    {
+                        MessageBox.Show(Show, "ws " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+                    }
+                    Show = "";
+                    Show += (char)('0' + w.dShoot); ;
+                    Show += p;
+                    s = w.Strenght; bs = w.Skills; ap = w.ap;
+                }
+                else
+                {
+                    Show += (char)('0' + w.dShoot);
+                    Show += p;
+                }
+            }
+            if (Show != "")
+            {
+                MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
+            }
+        }
+
+        public void ShowWound(List<Wound> Lw)
+        {
+            Lw.Sort(delegate(Wound x, Wound y)
+            {
                 if (x.Strenght > y.Strenght)
                     return 1;
                 else if (x.Strenght == y.Strenght)
@@ -50,554 +147,320 @@ public class ShowMessageBox : Show
                         return -1;
                 else
                     return -1;
-            else
-                return -1;
-        });
-        int s=0, bs=0, ap=0;
-        string Show = "";
-        char p = ' ';
-        foreach(Wound w in Lw)
-        {
-            if(s!=w.Strenght||bs!=w.Skills||ap!=w.ap)
+            });
+            int s = 0, ap = 0;
+            string Show = "";
+            char p = ' ';
+            foreach (Wound w in Lw)
             {
-                if(Show!="")
+                if (s != w.Strenght || ap != w.ap)
                 {
-                    MessageBox.Show(Show,"bs "+ bs.ToString()+" s " + s.ToString() + " ap " + ap.ToString());
-                }
-                Show = "";
-                Show += (char)('0' + w.dShoot); ;
-                Show += p;
-                s = w.Strenght; bs = w.Skills; ap = w.ap;
-            }
-            else
-            {
-                Show += (char)('0' + w.dShoot);
-                Show += p;
-            }
-        }
-        if (Show != "")
-        {
-            MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
-        }
-    }
-
-    public void ShowHtH(List<Wound> Lw)
-    {
-        Lw.Sort(delegate(Wound x, Wound y)
-        {
-            if (x.Skills > y.Skills)
-                return 1;
-            else if (x.Skills == y.Skills)
-                if (x.Strenght > y.Strenght)
-                    return 1;
-                else if (x.Strenght == y.Strenght)
-                    if (x.ap > y.ap)
-                        return 1;
-                    else if (x.ap == y.ap)
-                        return 0;
-                    else
-                        return -1;
-                else
-                    return -1;
-            else
-                return -1;
-        });
-        int s = 0, bs = 0, ap = 0;
-        string Show = "";
-        char p = ' ';
-        foreach (Wound w in Lw)
-        {
-            if (s != w.Strenght || bs != w.Skills || ap != w.ap)
-            {
-                if (Show != "")
-                {
-                    MessageBox.Show(Show, "ws " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
-                }
-                Show = "";
-                Show += (char)('0' + w.dShoot); ;
-                Show += p;
-                s = w.Strenght; bs = w.Skills; ap = w.ap;
-            }
-            else
-            {
-                Show += (char)('0' + w.dShoot);
-                Show += p;
-            }
-        }
-        if (Show != "")
-        {
-            MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
-        }
-    }
-
-    public void ShowWound(List<Wound> Lw)
-    {
-        Lw.Sort(delegate(Wound x, Wound y)
-        {
-            if (x.Strenght > y.Strenght)
-                return 1;
-            else if (x.Strenght == y.Strenght)
-                if (x.ap > y.ap)
-                    return 1;
-                else if (x.ap == y.ap)
-                    return 0;
-                else
-                    return -1;
-            else
-                return -1;
-        });
-        int s = 0, ap = 0;
-        string Show = "";
-        char p = ' ';
-        foreach (Wound w in Lw)
-        {
-            if (s != w.Strenght || ap != w.ap)
-            {
-                if (Show != "")
-                {
-                    MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
-                }
-                Show = "";
-                Show += (char)('0' + w.dWound);
-                Show += p;
-                s = w.Strenght; ap = w.ap;
-            }
-            else
-            {
-                Show += (char)('0' + w.dWound);
-                Show += p;
-            }
-        }
-        if (Show != "")
-        {
-            MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
-        }
-    }
-    public void ShowSave(List<Wound> Lw)
-    {
-        int save = 0;
-        string Show = "";
-        char p = ' ';
-        foreach (Wound w in Lw)
-        {
-            if (w.Save == 0)
-                break;
-            if (save != w.Save)
-            {
-                if (Show != "")
-                {
-                    MessageBox.Show(Show, "Save " + save.ToString());
-                }
-                Show = "";
-                Show += (char)('0' + w.dSave);
-                Show += p;
-                save = w.Save;
-            }
-            else
-            {
-                Show += (char)('0' + w.dSave);
-                Show += p;
-            }
-        }
-        if (Show != "")
-        {
-            MessageBox.Show(Show, "Save " + save.ToString());
-        }
-    }
-}
-
-public interface PfaseSr
-{
-    void MousClick(int x, int y,Game _g);
-    void ActButtonClick(Game _g);
-    void IndependentCharecterButtonClick(Game _g);
-    void EndPfaseButton(Game _g);
-}
-
-public class PfaseNofing : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g) 
-    {
-
-    }
-    public void ActButtonClick(Game _g)
-    {
-        
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        _g.NextPfase();
-    }
-}
-
-public class PfaseJoin : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g)
-    {
-        //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
-        //_g.cur_model = _g.IsMap.FindModel(x, y);
-        _g.cur_unit = _g.IsMap.FindUnit(x, y);
-
-    }
-    public void ActButtonClick(Game _g)
-    {
-        if (_g.cur_unit == null)
-        {
-            _g.IsShow.ShowMessage("Выберите отряд.");
-        }
-        else if (_g.cur_unit.w_Player != _g.PlayerNow())
-        {
-            _g.IsShow.ShowMessage("Этот отряд не принадлежит вам.");
-        }
-        else
-        {
-            _g.cur_unit.JoinIndepChar(_g.cur_model.w_Unit, _g);
-            _g.NowPfaseStr = _g.ChosePf;
-        }
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        _g.IsShow.ShowMessage("Закончите присоединение независимого персонажа");
-    }
-}
-
-public class PfaseShoot : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g)
-    {
-        BasicModel un=_g.IsMap.FindModel(x, y);
-
-        if(un !=null)
-        {
-            if (un.w_Unit.w_Player == _g.PlayerNow())
-            { 
-                _g.cur_model = un;
-                _g.cur_unit = un.w_Unit;
-            }
-            else
-            {
-                _g.Target = un.w_Unit;
-            }
-        }
-    }
-    public void ActButtonClick(Game _g)
-    {
-        _g.Shooting();
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        _g.NextPfase();
-    }
-}
-
-public class PfaseChose : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g)
-    {
-        //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
-        _g.cur_model = _g.IsMap.FindModel(x, y);
-        if (_g.cur_model == null)
-            _g.cur_unit = null;
-        else
-            _g.cur_unit = _g.cur_model.w_Unit;
-
-    }
-    public void ActButtonClick(Game _g)
-    {
-        if (_g.cur_unit==null)
-        {
-            _g.IsShow.ShowMessage("Выберите отряд.");
-        }        
-        else if(_g.cur_unit.w_Player!=_g.PlayerNow())
-        {
-            _g.IsShow.ShowMessage("Этот отряд не принадлежит вам.");
-        }
-        else if (_g.cur_unit.Moved != 0)
-        {
-            _g.IsShow.ShowMessage("Вы уже перемещали этот отряд.");
-        }        
-        else
-            _g.NowPfaseStr = _g.MovePf;
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-        if(_g.cur_unit==null)
-        {
-            return;
-        }
-        /*
-        BasicModel Indep;
-        List<BasicModel> Indeps=_g.cur_unit.SearchIndeps(_g);
-        if(Indeps.Count==0)
-        {
-            return;
-        }
-        Indep = Indeps[0];
-        _g.cur_unit.LeaveIndepChar(Indep, _g);*/
-        int r = 0;
-        foreach(EffectsModel EffMod in _g.cur_model.Effects)
-        {
-            r += EffMod.IsIndependetCharecter(_g);
-        }
-        if(r==0)
-        {
-            return;
-        }
-        if (_g.cur_unit.Models.Count > 1)
-        {
-            _g.cur_unit.LeaveIndepChar(_g.cur_model, _g);
-        }
-        else
-        {
-            _g.NowPfaseStr = _g.JoinPf;
-        }
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        _g.NextPfase();
-    }
-}
-
-public class PfaseMove : PfaseSr
-{
-    public double area(BasicModel a, BasicModel b, BasicModel c)
-    {
-        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-    }
-
-    public bool intersect(double a, double b, double c, double d)
-    {
-        double n;
-        if (a > b)
-        {
-            n = a;
-            a = b;
-            b = n;
-        }
-        if (c > d)
-        {
-            n = c;
-            c = d;
-            d = n;
-        }
-        return Math.Max(a, c) <= Math.Min(b, d);
-    }
-
-    public bool check_sections(BasicModel a, BasicModel b, BasicModel c, BasicModel d)
-    {
-        return intersect(a.x, b.x, c.x, d.x)
-        && intersect(a.y, b.y, c.y, d.y)
-        && area(a, b, c) * area(a, b, d) <= 0
-        && area(c, d, a) * area(c, d, b) <= 0;
-    }
-
-    public void MousClick(int x, int y, Game _g)
-    {
-        BasicModel model=_g.IsMap.FindModel(x, y);
-        BasicModel model1 = _g.IsMap.ModelDistance(x, y);
-        if (model != null || (model1 != null && model1 != _g.cur_model))
-        {
-            if (model != null)
-            {
-                if (model.w_Unit != _g.cur_unit)
-                {
-                    _g.IsShow.ShowMessage("Вы не можете перемещать данную модель.");
-                }
-                else
-                {
-                    _g.cur_model = model;
-                }
-            }
-            else
-            {
-                _g.IsShow.ShowMessage("Модели не могут пересекаться.");
-            }
-        }
-        else
-        {
-
-            int en = 0;
-            foreach (Unit unit in _g.Players[1-_g.NowPlayer].GetUnits())
-            {
-                foreach (BasicModel t_model in unit.Models)
-                {
-                    if (t_model.IsAlive() != 1 && _g.IsMap.squares(x, y, t_model.x, t_model.y, _g.enemy_distance) == true)
+                    if (Show != "")
                     {
-                        _g.IsShow.ShowMessage("Слишком малая дистанция с врагом.");
-                        en = 1;
-                        break;
+                        MessageBox.Show(Show, "s " + s.ToString() + " ap " + ap.ToString());
                     }
-                    foreach (BasicModel c_model in unit.Models)
-                    {
-                        if (c_model!=t_model)
-                        {
-                            if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
-                            {
-                                Point a = new Point(_g.cur_model.x, _g.cur_model.y);
-                                Point b = new Point(x, y);
-                                Point c = new Point(c_model.x, c_model.y);
-                                Point d = new Point(t_model.x, t_model.y);
-                                if (a.check_sections(a, b, c, d))
-                                {
-                                    en = 1;
-                                    _g.IsShow.ShowMessage("Вы не можете пройти через вражеские модели.");
-                                    break;
-                                }
-                            }
-                        }
-                        if (en == 1)
-                            break;
-                    }
-                    if (en == 1)
-                        break;
+                    Show = "";
+                    Show += (char)('0' + w.dWound);
+                    Show += p;
+                    s = w.Strenght; ap = w.ap;
                 }
-                if (en == 1)
+                else
+                {
+                    Show += (char)('0' + w.dWound);
+                    Show += p;
+                }
+            }
+            if (Show != "")
+            {
+                MessageBox.Show(Show, "s " + s.ToString() + " ap " + ap.ToString());
+            }
+        }
+        public void ShowSave(List<Wound> Lw)
+        {
+            int save = 0;
+            string Show = "";
+            char p = ' ';
+            foreach (Wound w in Lw)
+            {
+                if (w.Save == 0)
                     break;
-            }
-            if (en == 0)
-            {
-                if (_g.IsMap.squares(x, y, _g.cur_model.start_x, _g.cur_model.start_y, _g.length) == true)
+                if (save != w.Save)
                 {
-                    _g.cur_model.x = x;
-                    _g.cur_model.y = y;
-                    _g.cur_model.Moved = 1;
+                    if (Show != "")
+                    {
+                        MessageBox.Show(Show, "Save " + save.ToString());
+                    }
+                    Show = "";
+                    Show += (char)('0' + w.dSave);
+                    Show += p;
+                    save = w.Save;
                 }
                 else
                 {
-                    _g.IsShow.ShowMessage("Расстояние перемещения слишком велико.");
+                    Show += (char)('0' + w.dSave);
+                    Show += p;
                 }
             }
-        }
-
-    }
-    public void ActButtonClick(Game _g)
-    {
-        if (_g.cur_unit.coherency(_g)==false)
-        {
-            _g.IsShow.ShowMessage("Дистанция между моделями некорректна.");
-        }
-        else
-        {
-            foreach (BasicModel model in _g.cur_unit.Models)
+            if (Show != "")
             {
-                model.start_x = model.x;
-                model.start_y = model.y;
+                MessageBox.Show(Show, "Save " + save.ToString());
             }
-            _g.cur_model.w_Unit.Moved = 1;
-            _g.NowPfaseStr = _g.ChosePf;
-            _g.cur_unit = null;
-            _g.cur_model = null;
         }
     }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
 
+    public interface PfaseSr
+    {
+        void MousClick(int x, int y, Game _g);
+        void ActButtonClick(Game _g);
+        void IndependentCharecterButtonClick(Game _g);
+        void EndPfaseButton(Game _g);
     }
 
-    public void EndPfaseButton(Game _g)
+    public class PfaseNofing : PfaseSr
     {
-        _g.IsShow.ShowMessage("Закончите передвижения отряда");
-    }
-}
-
-public class PfaseChoseUnit : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g)
-    {
-        Unit found = _g.IsMap.FindUnit(x, y);
-        if(found!=null)
+        public void MousClick(int x, int y, Game _g)
         {
-            if(found.w_Player == _g.PlayerNow())
+
+        }
+        public void ActButtonClick(Game _g)
+        {
+
+        }
+        public void IndependentCharecterButtonClick(Game _g)
+        {
+
+        }
+        public void EndPfaseButton(Game _g)
+        {
+            _g.NextPfase();
+        }
+    }
+
+    public class PfaseJoin : PfaseSr
+    {
+        public void MousClick(int x, int y, Game _g)
+        {
+            //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
+            //_g.cur_model = _g.IsMap.FindModel(x, y);
+            _g.cur_unit = _g.IsMap.FindUnit(x, y);
+
+        }
+        public void ActButtonClick(Game _g)
+        {
+            if (_g.cur_unit == null)
             {
-                _g.cur_unit = found;
+                _g.IsShow.ShowMessage("Выберите отряд.");
+            }
+            else if (_g.cur_unit.w_Player != _g.PlayerNow())
+            {
+                _g.IsShow.ShowMessage("Этот отряд не принадлежит вам.");
             }
             else
             {
-                _g.Target = found;
+                _g.cur_unit.JoinIndepChar(_g.cur_model.w_Unit, _g);
+                _g.NowPfaseStr = _g.ChosePf;
             }
+        }
+        public void IndependentCharecterButtonClick(Game _g)
+        {
+
+        }
+        public void EndPfaseButton(Game _g)
+        {
+            _g.IsShow.ShowMessage("Закончите присоединение независимого персонажа");
         }
     }
-    public void ActButtonClick(Game _g)
+
+    public class PfaseShoot : PfaseSr
     {
-        if (_g.cur_unit == null)
+        public void MousClick(int x, int y, Game _g)
         {
-            _g.IsShow.ShowMessage("Выберите атакующий отряд.");
-        }
-        if (_g.Target == null)
-        {
-            _g.IsShow.ShowMessage("Выберите вражеский отряд.");
-        }
-        else if (_g.cur_unit.w_Player != _g.PlayerNow())
-        {
-            _g.IsShow.ShowMessage("Выбранный атакующий отряд не принадлежит вам.");
-        }
-        else if (_g.Target.w_Player == _g.PlayerNow())
-        {
-            _g.IsShow.ShowMessage("Выбранный вражеский отряд принадлежит вам.");
-        }
-        else if (_g.cur_unit.Moved != 0)
-        {
-            _g.IsShow.ShowMessage("Вы уже совершали бросок данным отрядом.");
-        }
-        else
-        {
-            double min = 10000000;
-            BasicModel model = null, en_model = null;
-            foreach (BasicModel m in _g.cur_unit.Models)
+            BasicModel un = _g.IsMap.FindModel(x, y);
+
+            if (un != null)
             {
-                if (m.IsAlive() == 0)
+                if (un.w_Unit.w_Player == _g.PlayerNow())
                 {
-                    BasicModel em = _g.cur_unit.First(m, _g.Target, _g);
-                    double d = _g.IsMap.distance(em.x, em.y, m.x, m.y);
-                    if (d < min)
-                    {
-                        min = d;
-                        model = m;
-                        en_model = em;
-                    }
+                    _g.cur_model = un;
+                    _g.cur_unit = un.w_Unit;
+                }
+                else
+                {
+                    _g.Target = un.w_Unit;
                 }
             }
-            int en = 0;
-            foreach (Unit unit in _g.Players[1 - _g.NowPlayer].GetUnits())
+        }
+        public void ActButtonClick(Game _g)
+        {
+            _g.Shooting();
+        }
+        public void IndependentCharecterButtonClick(Game _g)
+        {
+
+        }
+        public void EndPfaseButton(Game _g)
+        {
+            _g.NextPfase();
+        }
+    }
+
+    public class PfaseChose : PfaseSr
+    {
+        public void MousClick(int x, int y, Game _g)
+        {
+            //Unit unit = _g.IsMap.FindUnit(x, y); //IsMap - current map
+            _g.cur_model = _g.IsMap.FindModel(x, y);
+            if (_g.cur_model == null)
+                _g.cur_unit = null;
+            else
+                _g.cur_unit = _g.cur_model.w_Unit;
+
+        }
+        public void ActButtonClick(Game _g)
+        {
+            if (_g.cur_unit == null)
             {
-                if (unit != _g.Target)
+                _g.IsShow.ShowMessage("Выберите отряд.");
+            }
+            else if (_g.cur_unit.w_Player != _g.PlayerNow())
+            {
+                _g.IsShow.ShowMessage("Этот отряд не принадлежит вам.");
+            }
+            else if (_g.cur_unit.Moved != 0)
+            {
+                _g.IsShow.ShowMessage("Вы уже перемещали этот отряд.");
+            }
+            else
+                _g.NowPfaseStr = _g.MovePf;
+        }
+        public void IndependentCharecterButtonClick(Game _g)
+        {
+            if (_g.cur_unit == null)
+            {
+                return;
+            }
+            /*
+            BasicModel Indep;
+            List<BasicModel> Indeps=_g.cur_unit.SearchIndeps(_g);
+            if(Indeps.Count==0)
+            {
+                return;
+            }
+            Indep = Indeps[0];
+            _g.cur_unit.LeaveIndepChar(Indep, _g);*/
+            int r = 0;
+            foreach (EffectsModel EffMod in _g.cur_model.Effects)
+            {
+                r += EffMod.IsIndependetCharecter(_g);
+            }
+            if (r == 0)
+            {
+                return;
+            }
+            if (_g.cur_unit.Models.Count > 1)
+            {
+                _g.cur_unit.LeaveIndepChar(_g.cur_model, _g);
+            }
+            else
+            {
+                _g.NowPfaseStr = _g.JoinPf;
+            }
+        }
+        public void EndPfaseButton(Game _g)
+        {
+            _g.NextPfase();
+        }
+    }
+
+    public class PfaseMove : PfaseSr
+    {
+        public double area(BasicModel a, BasicModel b, BasicModel c)
+        {
+            return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+        }
+
+        public bool intersect(double a, double b, double c, double d)
+        {
+            double n;
+            if (a > b)
+            {
+                n = a;
+                a = b;
+                b = n;
+            }
+            if (c > d)
+            {
+                n = c;
+                c = d;
+                d = n;
+            }
+            return Math.Max(a, c) <= Math.Min(b, d);
+        }
+
+        public bool check_sections(BasicModel a, BasicModel b, BasicModel c, BasicModel d)
+        {
+            return intersect(a.x, b.x, c.x, d.x)
+            && intersect(a.y, b.y, c.y, d.y)
+            && area(a, b, c) * area(a, b, d) <= 0
+            && area(c, d, a) * area(c, d, b) <= 0;
+        }
+
+        public void MousClick(int x, int y, Game _g)
+        {
+            BasicModel model = _g.IsMap.FindModel(x, y);
+            BasicModel model1 = _g.IsMap.ModelDistance(x, y);
+            if (model != null || (model1 != null && model1 != _g.cur_model))
+            {
+                if (model != null)
+                {
+                    if (model.w_Unit != _g.cur_unit)
+                    {
+                        _g.IsShow.ShowMessage("Вы не можете перемещать данную модель.");
+                    }
+                    else
+                    {
+                        _g.cur_model = model;
+                    }
+                }
+                else
+                {
+                    _g.IsShow.ShowMessage("Модели не могут пересекаться.");
+                }
+            }
+            else
+            {
+
+                int en = 0;
+                foreach (Unit unit in _g.Players[1 - _g.NowPlayer].GetUnits())
                 {
                     foreach (BasicModel t_model in unit.Models)
                     {
-                        if (t_model.IsAlive() == 0)
+                        if (t_model.IsAlive() != 1 && _g.IsMap.squares(x, y, t_model.x, t_model.y, _g.enemy_distance) == true)
                         {
-                            foreach (BasicModel c_model in unit.Models)
+                            _g.IsShow.ShowMessage("Слишком малая дистанция с врагом.");
+                            en = 1;
+                            break;
+                        }
+                        foreach (BasicModel c_model in unit.Models)
+                        {
+                            if (c_model != t_model)
                             {
-                                if (c_model.IsAlive() == 0 && c_model != t_model)
+                                if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
                                 {
-                                    if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
+                                    Point a = new Point(_g.cur_model.x, _g.cur_model.y);
+                                    Point b = new Point(x, y);
+                                    Point c = new Point(c_model.x, c_model.y);
+                                    Point d = new Point(t_model.x, t_model.y);
+                                    if (a.check_sections(a, b, c, d))
                                     {
-                                        Point a = new Point(model.x, model.y);
-                                        Point b = new Point(en_model.x, en_model.y);
-                                        Point c = new Point(c_model.x, c_model.y);
-                                        Point d = new Point(t_model.x, t_model.y);
-                                        if (a.check_sections(a, b, c, d))
-                                        {
-                                            en = 1;
-                                            break;
-                                        }
+                                        en = 1;
+                                        _g.IsShow.ShowMessage("Вы не можете пройти через вражеские модели.");
+                                        break;
                                     }
                                 }
-                                if (en == 1)
-                                    break;
                             }
+                            if (en == 1)
+                                break;
                         }
                         if (en == 1)
                             break;
@@ -605,368 +468,508 @@ public class PfaseChoseUnit : PfaseSr
                     if (en == 1)
                         break;
                 }
+                if (en == 0)
+                {
+                    if (_g.IsMap.squares(x, y, _g.cur_model.start_x, _g.cur_model.start_y, _g.length) == true)
+                    {
+                        _g.cur_model.x = x;
+                        _g.cur_model.y = y;
+                        _g.cur_model.Moved = 1;
+                    }
+                    else
+                    {
+                        _g.IsShow.ShowMessage("Расстояние перемещения слишком велико.");
+                    }
+                }
             }
-            if (en == 1)
+
+        }
+        public void ActButtonClick(Game _g)
+        {
+            if (_g.cur_unit.coherency(_g) == false)
             {
-                _g.IsShow.ShowMessage("Выбранный вражеский отряд не является ближайшим.");
+                _g.IsShow.ShowMessage("Дистанция между моделями некорректна.");
             }
             else
             {
-                double length = (double)_g.cur_unit.ChargeRange(_g);
-                length *= 50;
-                length = 500;
-                //ПАША РАССТОЯНИЯ ПИЗДЕЦ КАКОЙ-ТО ВТФ
-                //_g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
-                if (min > length)
+                foreach (BasicModel model in _g.cur_unit.Models)
                 {
-                    _g.IsShow.ShowMessage("Вражеский отряд слишком далеко.");
+                    model.start_x = model.x;
+                    model.start_y = model.y;
+                }
+                _g.cur_model.w_Unit.Moved = 1;
+                _g.NowPfaseStr = _g.ChosePf;
+                _g.cur_unit = null;
+                _g.cur_model = null;
+            }
+        }
+        public void IndependentCharecterButtonClick(Game _g)
+        {
+
+        }
+
+        public void EndPfaseButton(Game _g)
+        {
+            _g.IsShow.ShowMessage("Закончите передвижения отряда");
+        }
+    }
+
+    public class PfaseChoseUnit : PfaseSr
+    {
+        public void MousClick(int x, int y, Game _g)
+        {
+            Unit found = _g.IsMap.FindUnit(x, y);
+            if (found != null)
+            {
+                if (found.w_Player == _g.PlayerNow())
+                {
+                    _g.cur_unit = found;
                 }
                 else
                 {
-                    Charge charge = new Charge(_g.cur_unit, _g.Target, length, model, en_model, _g);
-                    _g.AllCharge.Add(charge);
-                    _g.cur_unit.Moved = 1;
-                    foreach (BasicModel t_model in _g.cur_unit.Models)
-                    {
-                        t_model.start_x = t_model.x;
-                        t_model.start_y = t_model.y;
-                    }
+                    _g.Target = found;
                 }
-                _g.cur_unit = null;
-                _g.Target = null;
-            }
-
-
-        }
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        foreach(Charge ch in _g.AllCharge)
-        {
-            ch.FightSubPh(_g);
-        }
-        _g.NowPfaseStr = _g.ChargePf;
-    }
-}
-
-public class PfaseCharge : PfaseSr
-{
-    public void MousClick(int x, int y, Game _g)
-    {
-
-    }
-    public void ActButtonClick(Game _g)
-    {
-
-    }
-    public void IndependentCharecterButtonClick(Game _g)
-    {
-
-    }
-    public void EndPfaseButton(Game _g)
-    {
-        _g.NextPfase();
-    }
-}
-
-public enum Pfase
-{
-    Move,
-    Shoot,
-    Charge,
-    End
-}
-
-public class Game 
-{
-    public Show IsShow { get; private set; }
-    public PfaseSr NowPfaseStr { get; set; }
-    public PfaseSr MovePf = new PfaseMove();
-    public PfaseSr ChosePf = new PfaseChose();
-    public PfaseSr NofingPf = new PfaseNofing();
-    public PfaseSr ShootPf = new PfaseShoot();
-    public PfaseSr JoinPf = new PfaseJoin();
-    public PfaseSr ChargePf = new PfaseCharge();
-    public PfaseSr ChoseUnitPf = new PfaseChoseUnit();
-    public int NowPlayer { get; private set; }
-    public Pfase NowPhase { get; private set; }
-    public Player[] Players { get; private set; }
-    public Map IsMap { get; private set; }
-    public MapInterfeise IsMapInter = new MapInterfeise();
-    public MiniMap IsMiniMap = new MiniMap();
-    //public List<Combat> AllCombat = new List<Combat> { };
-	private int Turn;
-    public Unit Target {get;set;}
-    //public Unit Sourse {get;set;}
-    public intMission NowMission { get; set; }
-    public BasicModel cur_model { get; set; }
-    public Unit cur_unit { get; set; }
-    public BasicModel cur_en_model { get; set; }
-    public int length = 600;
-    public int distance = 200;
-    public int enemy_distance = 100;
-    public int friend_distance = 100;
-    public DiceInt DiceGen { get; private set; }
-    public List<Charge> AllCharge = new List<Charge> { };
-
-    public  bool IsNowPfase(Pfase p)
-    {
-        if (p == NowPhase)
-            return true;
-        return false;
-    }
-
-    private void EndPfase()
-    {
-        foreach (Player p in Players)
-        {
-            foreach (Unit U in p.PlayersUnit)
-            {
-                U.EndPfase(this);
             }
         }
-        switch(NowPhase)
+        public void ActButtonClick(Game _g)
         {
-            case Pfase.Move:
-                break;
-            case Pfase.Shoot:
-                Target = null;
-                cur_unit = null;
-                cur_model = null;
-                cur_en_model = null;
-                foreach (Unit unit in Players[NowPlayer].GetUnits())
-                {
-                    unit.Moved = 0;
-                }
-                break;
-            case Pfase.Charge:
-                foreach (Unit unit in Players[NowPlayer].GetUnits())
-                {
-                    foreach (BasicModel model in unit.Models)
-                    {
-                        model.Moved = 0;
-                    }
-                    unit.Moved = 0;
-                }
-                cur_unit = null;
-                Target = null;
-                break;
-        }
-    }
-
-    private void BeginPfase()
-    {
-        foreach (Player p in Players)
-        {
-            foreach (Unit U in p.PlayersUnit)
+            if (_g.cur_unit == null)
             {
-                U.EndPfase(this);
+                _g.IsShow.ShowMessage("Выберите атакующий отряд.");
             }
-        }
-        switch (NowPhase)
-        {
-            case Pfase.Move:
-                IsShow.ShowMessage("Фаза движения");
-                NowPfaseStr = ChosePf;
-                break;
-            case Pfase.Shoot:
-                IsShow.ShowMessage("Фаза стрельбы");
-                NowPfaseStr = ShootPf;
-                break;
-            case Pfase.Charge:
-                IsShow.ShowMessage("Фаза атаки");
-                NowPfaseStr = ChoseUnitPf;
-                break;
-        }
-    }
-
-    public void NextPfase()
-    {
-        EndPfase();
-        NowPhase++;
-        if(NowPhase==Pfase.End)
-        {
-            NowPhase = Pfase.Move;
-            NowPlayer++;
-            if(NowPlayer==2)
+            if (_g.Target == null)
             {
-                NowPlayer = 0;
-
-                if(Turn==5)
-                {
-                    if(DiceGen.D6()<=4)
-                    {
-                        IsShow.ShowMessage("Конец игры");
-                    }
-                }
-                if (Turn == 6)
-                {
-                    if (DiceGen.D6() <= 5)
-                    {
-                        IsShow.ShowMessage("Конец игры");
-                    }
-                }
-                if (Turn == 7)
-                {
-                    IsShow.ShowMessage("Конец игры");
-                } 
-                Turn++;
-                IsShow.ShowMessage("Новый ход");
+                _g.IsShow.ShowMessage("Выберите вражеский отряд.");
+            }
+            else if (_g.cur_unit.w_Player != _g.PlayerNow())
+            {
+                _g.IsShow.ShowMessage("Выбранный атакующий отряд не принадлежит вам.");
+            }
+            else if (_g.Target.w_Player == _g.PlayerNow())
+            {
+                _g.IsShow.ShowMessage("Выбранный вражеский отряд принадлежит вам.");
+            }
+            else if (_g.cur_unit.Moved != 0)
+            {
+                _g.IsShow.ShowMessage("Вы уже совершали бросок данным отрядом.");
             }
             else
             {
-                IsShow.ShowMessage("Следующий игрок");
+                double min = 10000000;
+                BasicModel model = null, en_model = null;
+                foreach (BasicModel m in _g.cur_unit.Models)
+                {
+                    if (m.IsAlive() == 0)
+                    {
+                        BasicModel em = _g.cur_unit.First(m, _g.Target, _g);
+                        double d = _g.IsMap.distance(em.x, em.y, m.x, m.y);
+                        if (d < min)
+                        {
+                            min = d;
+                            model = m;
+                            en_model = em;
+                        }
+                    }
+                }
+                int en = 0;
+                foreach (Unit unit in _g.Players[1 - _g.NowPlayer].GetUnits())
+                {
+                    if (unit != _g.Target)
+                    {
+                        foreach (BasicModel t_model in unit.Models)
+                        {
+                            if (t_model.IsAlive() == 0)
+                            {
+                                foreach (BasicModel c_model in unit.Models)
+                                {
+                                    if (c_model.IsAlive() == 0 && c_model != t_model)
+                                    {
+                                        if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
+                                        {
+                                            Point a = new Point(model.x, model.y);
+                                            Point b = new Point(en_model.x, en_model.y);
+                                            Point c = new Point(c_model.x, c_model.y);
+                                            Point d = new Point(t_model.x, t_model.y);
+                                            if (a.check_sections(a, b, c, d))
+                                            {
+                                                en = 1;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (en == 1)
+                                        break;
+                                }
+                            }
+                            if (en == 1)
+                                break;
+                        }
+                        if (en == 1)
+                            break;
+                    }
+                }
+                if (en == 1)
+                {
+                    _g.IsShow.ShowMessage("Выбранный вражеский отряд не является ближайшим.");
+                }
+                else
+                {
+                    double length = (double)_g.cur_unit.ChargeRange(_g);
+                    length *= 50;
+                    length = 500;
+                    //ПАША РАССТОЯНИЯ ПИЗДЕЦ КАКОЙ-ТО ВТФ
+                    //_g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
+                    if (min > length)
+                    {
+                        _g.IsShow.ShowMessage("Вражеский отряд слишком далеко.");
+                    }
+                    else
+                    {
+                        Charge charge = new Charge(_g.cur_unit, _g.Target, length, model, en_model, _g);
+                        _g.AllCharge.Add(charge);
+                        _g.cur_unit.Moved = 1;
+                        foreach (BasicModel t_model in _g.cur_unit.Models)
+                        {
+                            t_model.start_x = t_model.x;
+                            t_model.start_y = t_model.y;
+                        }
+                    }
+                    _g.cur_unit = null;
+                    _g.Target = null;
+                }
+
+
             }
         }
-        else
+        public void IndependentCharecterButtonClick(Game _g)
         {
-            //IsShow.ShowMessage("Новая фаза");
+
         }
-        BeginPfase();
-    }
-
-    public Player PlayerNow()
-    {
-        return Players[NowPlayer];
-    }
-
-    public void MouseClick(int x,int y)
-    {
-        NowPfaseStr.MousClick(x, y,this);
-    }
-
-    public void ClickActionButton()
-    {
-       /* switch(NowPhase)
+        public void EndPfaseButton(Game _g)
         {
-            case Pfase.Move:
-                break;
-            case Pfase.Shoot:
-                Shooting(Target, 0, Sourse);
-                break;
-            case Pfase.Charge:
-                break;
-        }*/
-        NowPfaseStr.ActButtonClick(this);
-    }
-
-    public void IndependentCharecterButtonClick()
-    {
-        NowPfaseStr.IndependentCharecterButtonClick(this);
-    }
-
-    public Game(Player P1, Player P2, DiceInt DiceG,Show ShowStr)
-    {
-        Players = new Player[2];
-        Players[0] = P1;
-        P1.PlayerN = 0;
-        Players[1] = P2;
-        P2.PlayerN = 1;
-        DiceGen = DiceG;
-        IsShow = ShowStr;
-        NowMission = new EturnalWar1();
-        NowPhase = Pfase.Move;
-        Turn = 1;
-        NowPlayer = 0;
-        NowPfaseStr = ChosePf;
-        List<Unit> LUnit = new List<Unit> { };
-        foreach (Player p in Players)
-        {
-            LUnit.AddRange(p.GetUnits());
+            foreach (Charge ch in _g.AllCharge)
+            {
+                ch.FightSubPh(_g);
+            }
+            _g.NowPfaseStr = _g.ChargePf;
         }
-        IsMap = new Map(LUnit);
     }
 
-    public Game(DiceInt DiceG, Show ShowStr)
+    public class PfaseCharge : PfaseSr
     {
-        NowPfaseStr = ShootPf;
-        IsShow = ShowStr;
-        List<Unit> LUnit = new List<Unit> {};
-        NowMission = new EturnalWar1();
-        DiceGen = DiceG;
-        Players = new Player[2];
-        Players[0] = new Player();
-        Players[1] = new Player();
-        NowPlayer = 0;
-        NowPhase = Pfase.Shoot;
-        Turn = 1;
-        cur_unit = Players[0].PlayersUnit[0];
-        cur_unit.Models[0].x += 300;
-        cur_unit.Models[1].x += 300;
-        cur_unit.Models[2].x += 300;
-        Target = Players[1].PlayersUnit[0];
-        foreach(Player p in Players)
+        public void MousClick(int x, int y, Game _g)
         {
-            LUnit.AddRange(p.GetUnits());
+
         }
-        IsMap = new Map(LUnit);
-	}
-
-	~Game()
-    {
-
-	}
-
-    public int Shooting()
-    {
-        if(cur_unit==null||Target==null)
+        public void ActButtonClick(Game _g)
         {
-            IsShow.ShowMessage("Не выбранны цель или стрелок");
-            return 1;
+
         }
-        int Cover = 7;
-        List<Wound> L = new List<Wound> { };
-        int Range = (int)IsMap.Range(cur_unit, Target)*50;
-        L = cur_unit.Shoot(Range,0, this);
-        if (L == null || L.Count==0)
+        public void IndependentCharecterButtonClick(Game _g)
+        {
+
+        }
+        public void EndPfaseButton(Game _g)
+        {
+            _g.NextPfase();
+        }
+    }
+
+    public enum Pfase
+    {
+        Move,
+        Shoot,
+        Charge,
+        End
+    }
+
+    public class Game
+    {
+        public Show IsShow { get; private set; }
+        public PfaseSr NowPfaseStr { get; set; }
+        public PfaseSr MovePf = new PfaseMove();
+        public PfaseSr ChosePf = new PfaseChose();
+        public PfaseSr NofingPf = new PfaseNofing();
+        public PfaseSr ShootPf = new PfaseShoot();
+        public PfaseSr JoinPf = new PfaseJoin();
+        public PfaseSr ChargePf = new PfaseCharge();
+        public PfaseSr ChoseUnitPf = new PfaseChoseUnit();
+        public int NowPlayer { get; private set; }
+        public Pfase NowPhase { get; private set; }
+        public Player[] Players { get; private set; }
+        public Map IsMap { get; private set; }
+        public MapInterfeise IsMapInter = new MapInterfeise();
+        public MiniMap IsMiniMap = new MiniMap();
+        //public List<Combat> AllCombat = new List<Combat> { };
+        private int Turn;
+        public Unit Target { get; set; }
+        //public Unit Sourse {get;set;}
+        public intMission NowMission { get; set; }
+        public BasicModel cur_model { get; set; }
+        public Unit cur_unit { get; set; }
+        public BasicModel cur_en_model { get; set; }
+        public int length = 600;
+        public int distance = 200;
+        public int enemy_distance = 100;
+        public int friend_distance = 100;
+        public DiceInt DiceGen { get; private set; }
+        public List<Charge> AllCharge = new List<Charge> { };
+
+        public bool IsNowPfase(Pfase p)
+        {
+            if (p == NowPhase)
+                return true;
+            return false;
+        }
+
+        private void EndPfase()
+        {
+            foreach (Player p in Players)
+            {
+                foreach (Unit U in p.PlayersUnit)
+                {
+                    U.EndPfase(this);
+                }
+            }
+            switch (NowPhase)
+            {
+                case Pfase.Move:
+                    break;
+                case Pfase.Shoot:
+                    Target = null;
+                    cur_unit = null;
+                    cur_model = null;
+                    cur_en_model = null;
+                    foreach (Unit unit in Players[NowPlayer].GetUnits())
+                    {
+                        unit.Moved = 0;
+                    }
+                    break;
+                case Pfase.Charge:
+                    foreach (Unit unit in Players[NowPlayer].GetUnits())
+                    {
+                        foreach (BasicModel model in unit.Models)
+                        {
+                            model.Moved = 0;
+                        }
+                        unit.Moved = 0;
+                    }
+                    cur_unit = null;
+                    Target = null;
+                    break;
+            }
+        }
+
+        private void BeginPfase()
+        {
+            foreach (Player p in Players)
+            {
+                foreach (Unit U in p.PlayersUnit)
+                {
+                    U.EndPfase(this);
+                }
+            }
+            switch (NowPhase)
+            {
+                case Pfase.Move:
+                    IsShow.ShowMessage("Фаза движения");
+                    NowPfaseStr = ChosePf;
+                    break;
+                case Pfase.Shoot:
+                    IsShow.ShowMessage("Фаза стрельбы");
+                    NowPfaseStr = ShootPf;
+                    break;
+                case Pfase.Charge:
+                    IsShow.ShowMessage("Фаза атаки");
+                    NowPfaseStr = ChoseUnitPf;
+                    break;
+            }
+        }
+
+        public void NextPfase()
+        {
+            EndPfase();
+            NowPhase++;
+            if (NowPhase == Pfase.End)
+            {
+                NowPhase = Pfase.Move;
+                NowPlayer++;
+                if (NowPlayer == 2)
+                {
+                    NowPlayer = 0;
+
+                    if (Turn == 5)
+                    {
+                        if (DiceGen.D6() <= 4)
+                        {
+                            IsShow.ShowMessage("Конец игры");
+                        }
+                    }
+                    if (Turn == 6)
+                    {
+                        if (DiceGen.D6() <= 5)
+                        {
+                            IsShow.ShowMessage("Конец игры");
+                        }
+                    }
+                    if (Turn == 7)
+                    {
+                        IsShow.ShowMessage("Конец игры");
+                    }
+                    Turn++;
+                    IsShow.ShowMessage("Новый ход");
+                }
+                else
+                {
+                    IsShow.ShowMessage("Следующий игрок");
+                }
+            }
+            else
+            {
+                //IsShow.ShowMessage("Новая фаза");
+            }
+            BeginPfase();
+        }
+
+        public Player PlayerNow()
+        {
+            return Players[NowPlayer];
+        }
+
+        public void MouseClick(int x, int y)
+        {
+            NowPfaseStr.MousClick(x, y, this);
+        }
+
+        public void ClickActionButton()
+        {
+            /* switch(NowPhase)
+             {
+                 case Pfase.Move:
+                     break;
+                 case Pfase.Shoot:
+                     Shooting(Target, 0, Sourse);
+                     break;
+                 case Pfase.Charge:
+                     break;
+             }*/
+            NowPfaseStr.ActButtonClick(this);
+        }
+
+        public void IndependentCharecterButtonClick()
+        {
+            NowPfaseStr.IndependentCharecterButtonClick(this);
+        }
+
+        public Game(Player P1, Player P2, DiceInt DiceG, Show ShowStr)
+        {
+            Players = new Player[2];
+            Players[0] = P1;
+            P1.PlayerN = 0;
+            Players[1] = P2;
+            P2.PlayerN = 1;
+            DiceGen = DiceG;
+            IsShow = ShowStr;
+            NowMission = new EturnalWar1();
+            NowPhase = Pfase.Move;
+            Turn = 1;
+            NowPlayer = 0;
+            NowPfaseStr = ChosePf;
+            List<Unit> LUnit = new List<Unit> { };
+            foreach (Player p in Players)
+            {
+                LUnit.AddRange(p.GetUnits());
+            }
+            IsMap = new Map(LUnit);
+        }
+
+        public Game(DiceInt DiceG, Show ShowStr)
+        {
+            NowPfaseStr = ShootPf;
+            IsShow = ShowStr;
+            List<Unit> LUnit = new List<Unit> { };
+            NowMission = new EturnalWar1();
+            DiceGen = DiceG;
+            Players = new Player[2];
+            Players[0] = new Player();
+            Players[1] = new Player();
+            NowPlayer = 0;
+            NowPhase = Pfase.Shoot;
+            Turn = 1;
+            cur_unit = Players[0].PlayersUnit[0];
+            cur_unit.Models[0].x += 300;
+            cur_unit.Models[1].x += 300;
+            cur_unit.Models[2].x += 300;
+            Target = Players[1].PlayersUnit[0];
+            foreach (Player p in Players)
+            {
+                LUnit.AddRange(p.GetUnits());
+            }
+            IsMap = new Map(LUnit);
+        }
+
+        ~Game()
+        {
+
+        }
+
+        public int Shooting()
+        {
+            if (cur_unit == null || Target == null)
+            {
+                IsShow.ShowMessage("Не выбранны цель или стрелок");
+                return 1;
+            }
+            int Cover = 7;
+            List<Wound> L = new List<Wound> { };
+            int Range = (int)IsMap.Range(cur_unit, Target) * 50;
+            L = cur_unit.Shoot(Range, 0, this);
+            if (L == null || L.Count == 0)
+                return 0;
+            L = Target.Wonding(cur_unit, L, this);
+            if (L == null || L.Count == 0)
+                return 0;
+            Target.Save(Cover, L, this);
             return 0;
-        L = Target.Wonding(cur_unit, L, this);
-        if (L == null || L.Count == 0)
-            return 0;
-        Target.Save(Cover, L, this);
-        return 0;
-    }
-
-    public void Overwatch()
-    {
-
-        int Cover = 7;
-        List<Wound> L = new List<Wound> { };
-        int Range = (int)IsMap.Range(cur_unit, Target);
-        Target.Overwatch(Range, 0, this);
-        if (L == null || L.Count == 0)
-            return;
-        L = Target.Wonding(cur_unit, L, this);
-        if (L == null || L.Count == 0)
-            return;
-        Target.Save(Cover, L, this);
-    }
-
-	public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)
-    {
-
-	}
-
-    public void HeadToHead()
-    {
-
-    }
-
-    public void NewCombat()
-    {
-        //Overwatch();
-        int ChargeRange = cur_unit.ChargeRange(this);
-        double Range=IsMap.Range(Target,cur_unit);
-        if(true)//Range>ChargeRange)
-        {
-            Combat NCombat = new Combat(cur_unit, Target, this);
-            //AllCombat.Add(NCombat);
-            NCombat.FightSubPh(this);
         }
-    }
 
-}//end Game
+        public void Overwatch()
+        {
+
+            int Cover = 7;
+            List<Wound> L = new List<Wound> { };
+            int Range = (int)IsMap.Range(cur_unit, Target);
+            Target.Overwatch(Range, 0, this);
+            if (L == null || L.Count == 0)
+                return;
+            L = Target.Wonding(cur_unit, L, this);
+            if (L == null || L.Count == 0)
+                return;
+            Target.Save(Cover, L, this);
+        }
+
+        public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)
+        {
+
+        }
+
+        public void HeadToHead()
+        {
+
+        }
+
+        public void NewCombat()
+        {
+            //Overwatch();
+            int ChargeRange = cur_unit.ChargeRange(this);
+            double Range = IsMap.Range(Target, cur_unit);
+            if (true)//Range>ChargeRange)
+            {
+                Combat NCombat = new Combat(cur_unit, Target, this);
+                //AllCombat.Add(NCombat);
+                NCombat.FightSubPh(this);
+            }
+        }
+
+    }//end Game
+}

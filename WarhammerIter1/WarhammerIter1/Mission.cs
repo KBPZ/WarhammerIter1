@@ -4,63 +4,66 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
-public abstract class intMission
+using Warhammer;
+namespace Warhammer
 {
-    private int[] Score = new int[2];
-    public intMission()
+
+    public abstract class intMission
+    {
+        private int[] Score = new int[2];
+        public intMission()
+        {
+        }
+        public virtual void Begin(Map m) { }
+        public virtual void EndTurn(int p, Player pl) { }
+        public virtual void End() { }
+        public virtual void ShowScore() { }
+        public virtual void ShowName(Game _g) { }
+        public virtual void Death() { }
+    }
+
+    class Mission
     {
     }
-    public virtual void Begin(Map m) { }
-    public virtual void EndTurn(int p, Player pl) { }
-    public virtual void End() { }
-    public virtual void ShowScore() { }
-    public virtual void ShowName(Game _g) { }
-    public virtual void Death() { }
-}
 
-class Mission
-{
-}
-
-public class EturnalWar1 : intMission
-{
-    public EturnalWar1() { }
-    public override void Begin(Map m) { }
-    public override void EndTurn(int p, Player pl) { }
-    public override void End() { }
-    public override void ShowScore() { }
-    public override void ShowName(Game _g)
+    public class EturnalWar1 : intMission
     {
-        _g.IsShow.ShowMessage("EtWar 1");
+        public EturnalWar1() { }
+        public override void Begin(Map m) { }
+        public override void EndTurn(int p, Player pl) { }
+        public override void End() { }
+        public override void ShowScore() { }
+        public override void ShowName(Game _g)
+        {
+            _g.IsShow.ShowMessage("EtWar 1");
+        }
+        public override void Death()
+        { }
     }
-    public override void Death()
-    { }
-}
-public class EturnalWar2 : intMission
-{
-    public override void Begin(Map m) { }
-    public override void EndTurn(int p, Player pl) { }
-    public override void End() { }
-    public override void ShowScore() { }
-    public override void ShowName(Game _g)
+    public class EturnalWar2 : intMission
     {
-        _g.IsShow.ShowMessage("EtWar 2");
+        public override void Begin(Map m) { }
+        public override void EndTurn(int p, Player pl) { }
+        public override void End() { }
+        public override void ShowScore() { }
+        public override void ShowName(Game _g)
+        {
+            _g.IsShow.ShowMessage("EtWar 2");
+        }
+        public override void Death()
+        { }
     }
-    public override void Death()
-    { }
-}
-public class EturnalWar3 : intMission
-{
-    public override void Begin(Map m) { }
-    public override void EndTurn(int p, Player pl) { }
-    public override void End() { }
-    public override void ShowScore() { }
-    public override void ShowName(Game _g)
+    public class EturnalWar3 : intMission
     {
-        _g.IsShow.ShowMessage("EtWar 2");
+        public override void Begin(Map m) { }
+        public override void EndTurn(int p, Player pl) { }
+        public override void End() { }
+        public override void ShowScore() { }
+        public override void ShowName(Game _g)
+        {
+            _g.IsShow.ShowMessage("EtWar 2");
+        }
+        public override void Death()
+        { }
     }
-    public override void Death()
-    { }
 }

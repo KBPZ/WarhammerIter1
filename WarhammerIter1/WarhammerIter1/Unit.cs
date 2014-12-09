@@ -9,730 +9,733 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
-
-public class Unit 
+using Warhammer;
+namespace Warhammer
 {
-	public int Alive = 0;
-	private List<EffectsUnit> Effects;
-	public List<BasicModel> Models;
-    private int IsShoot=0;
-    public int FallBack=0;
-	public BasicModel m_BasicModel;
-	public Effect m_Effect;
-    public Player w_Player;
-    public int Moved=0;
-    public int HeadToHead = 0;
-
-    public void Destroy(Game  _g)
+    public class Unit
     {
-        foreach(BasicModel M in Models)
-        {
-            M.Destroy(_g);
-        }
-    }
+        public int Alive = 0;
+        private List<EffectsUnit> Effects;
+        public List<BasicModel> Models;
+        private int IsShoot = 0;
+        public int FallBack = 0;
+        public BasicModel m_BasicModel;
+        public Effect m_Effect;
+        public Player w_Player;
+        public int Moved = 0;
+        public int HeadToHead = 0;
 
-    public int isFallBack()
-    {
-        return FallBack;
-    }
-
-    public void BeginPfase(Game _g)
-    {
-        if (Alive < 1)
-            Alive = 1;
-        foreach (BasicModel b in Models)
+        public void Destroy(Game _g)
         {
-            b.BeginPfase(_g);
-        }
-        switch (_g.NowPhase)
-        {
-            case Pfase.Move:
-                break;
-            case Pfase.Shoot:
-                break;
-            case Pfase.Charge:
-                break;
-        }
-    }
-
-    public int Waste()
-    {
-        int W=0;
-        foreach (BasicModel b in Models)
-        {
-            if (b.IsAlive() == 2)
+            foreach (BasicModel M in Models)
             {
-                W++;
+                M.Destroy(_g);
             }
         }
-        return W;
-    }
 
-    public void EndPfase(Game _g)
-    {
-
-        switch (_g.NowPhase)
+        public int isFallBack()
         {
-            case Pfase.Move:
-                break;
-            case Pfase.Shoot:
-                double a=0,d=0;
-                foreach (BasicModel b in Models)
+            return FallBack;
+        }
+
+        public void BeginPfase(Game _g)
+        {
+            if (Alive < 1)
+                Alive = 1;
+            foreach (BasicModel b in Models)
+            {
+                b.BeginPfase(_g);
+            }
+            switch (_g.NowPhase)
+            {
+                case Pfase.Move:
+                    break;
+                case Pfase.Shoot:
+                    break;
+                case Pfase.Charge:
+                    break;
+            }
+        }
+
+        public int Waste()
+        {
+            int W = 0;
+            foreach (BasicModel b in Models)
+            {
+                if (b.IsAlive() == 2)
                 {
-                    if (b.IsAlive() == 2)
-                    {
-                        d++;
-                        DelEffectsModelInUnit(b);
-                    }
-                    if (b.IsAlive() == 0)
-                        a++;
+                    W++;
                 }
-                if(0.25<d/(a+d))
-                {
-                    if(!LeadershipTest(_g,0))
+            }
+            return W;
+        }
+
+        public void EndPfase(Game _g)
+        {
+
+            switch (_g.NowPhase)
+            {
+                case Pfase.Move:
+                    break;
+                case Pfase.Shoot:
+                    double a = 0, d = 0;
+                    foreach (BasicModel b in Models)
                     {
-                        FallBack = 1;
-                        _g.IsShow.ShowMessage("FallBack!");
+                        if (b.IsAlive() == 2)
+                        {
+                            d++;
+                            DelEffectsModelInUnit(b);
+                        }
+                        if (b.IsAlive() == 0)
+                            a++;
                     }
-                }
-                break;
-            case Pfase.Charge:
-                IsShoot = 0;
-                foreach (BasicModel b in Models)
-                {
+                    if (0.25 < d / (a + d))
+                    {
+                        if (!LeadershipTest(_g, 0))
+                        {
+                            FallBack = 1;
+                            _g.IsShow.ShowMessage("FallBack!");
+                        }
+                    }
+                    break;
+                case Pfase.Charge:
+                    IsShoot = 0;
+                    foreach (BasicModel b in Models)
+                    {
+                        b.EndPfase(_g);
+                    }
+                    break;
+            }
+            foreach (BasicModel b in Models)
+            {
+                if (b.IsAlive() != 1)
                     b.EndPfase(_g);
-                }
-                break;
-        }
-        foreach (BasicModel b in Models)
-        {
-            if(b.IsAlive()!=1)
-                b.EndPfase(_g);
+            }
+
         }
 
-    }
-
-    public Unit(List<BasicModel> ML,List<EffectsUnit> ef)
-    {
-        Models = ML;
-        Effects = ef;
-        foreach (BasicModel bm in ML)
+        public Unit(List<BasicModel> ML, List<EffectsUnit> ef)
         {
-            bm.w_Unit = this;
-        }
-        SpreadEffects();
-    }
-
-    private void SpreadEffects()
-    {
-        String EffUfromModel = null;
-        foreach (BasicModel bm in Models)
-        {
-            foreach (EffectsModel EfM in bm.Effects)
+            Models = ML;
+            Effects = ef;
+            foreach (BasicModel bm in ML)
             {
-                EffUfromModel = EfM.NameSpreadToUnit();
-                if (EffUfromModel != "")
+                bm.w_Unit = this;
+            }
+            SpreadEffects();
+        }
+
+        private void SpreadEffects()
+        {
+            String EffUfromModel = null;
+            foreach (BasicModel bm in Models)
+            {
+                foreach (EffectsModel EfM in bm.Effects)
                 {
-                    int i = 0;
-                    for (i = 0; i < Effects.Count; i++)
+                    EffUfromModel = EfM.NameSpreadToUnit();
+                    if (EffUfromModel != "")
                     {
-                        if (Effects[i].Name() == EffUfromModel)
-                            break;
+                        int i = 0;
+                        for (i = 0; i < Effects.Count; i++)
+                        {
+                            if (Effects[i].Name() == EffUfromModel)
+                                break;
+                        }
+                        if (i >= Effects.Count)
+                            Effects.Add(EfM.SpreadToUnit());
                     }
-                    if (i >=Effects.Count)
-                        Effects.Add(EfM.SpreadToUnit());
                 }
             }
         }
-    }
 
-    public Unit()
-    {
-        Models = new List<BasicModel> { };
-        Effects = new List<EffectsUnit> { };
-        Models.Add(new Infantry());
-        Models.Add(new Infantry());
-        Models.Add(new Infantry());
-        Models[0].x = 200;
-        Models[0].y = 200;
-        Models[1].x = 100;
-        Models[1].y = 100;
-        Models[1].x = 300;
-        Models[1].y = 300;
-        m_BasicModel = Models[1];
-        foreach(BasicModel w in Models)
+        public Unit()
         {
-            w.w_Unit=this;
-        }
-	}
-
-    public void Paint(PaintEventArgs e,Game _g)
-    {
-        foreach(BasicModel B in Models)
-        {
-            B.Paint(e,_g);
-        }
-    }
-
-    public int MajorityWeaponSkill()
-    {
-        return 4;
-    }
-
-    public int MajorityToughnes()
-    {
-        int t = 0, Majority = 0;
-        foreach (BasicModel m in Models)
-        {
-            t++;
-            Majority += m.GetToughnes();
-        }
-        Majority = Majority / t;
-        return Majority;
-    }
-
-    public List<Wound> Shoot(int range,int type, Game _g)
-    {
-        List<Wound> L=new List<Wound>{},Lp;
-        if (IsShoot == 0)
-        {
-            IsShoot = 1;
-            foreach (BasicModel ShootModel in Models)
+            Models = new List<BasicModel> { };
+            Effects = new List<EffectsUnit> { };
+            Models.Add(new Infantry());
+            Models.Add(new Infantry());
+            Models.Add(new Infantry());
+            Models[0].x = 200;
+            Models[0].y = 200;
+            Models[1].x = 100;
+            Models[1].y = 100;
+            Models[1].x = 300;
+            Models[1].y = 300;
+            m_BasicModel = Models[1];
+            foreach (BasicModel w in Models)
             {
-                Lp = ShootModel.Shoot(range,type, _g);
-                if(Lp!=null)
-                    L.AddRange(Lp);
+                w.w_Unit = this;
             }
-            int n = L.Count;
-            List<int> dice = _g.DiceGen.manyD6(n);
-            char a = ' ';
-            string dices = new string(a, 1);
-            foreach (int di in dice)
+        }
+
+        public void Paint(PaintEventArgs e, Game _g)
+        {
+            foreach (BasicModel B in Models)
             {
-                char c = (char)('0' + di);
-                dices += c;
-                dices += " ";
+                B.Paint(e, _g);
             }
-            //TextBox Box = new TextBox();
-            //_g.IsShow.ShowMessage(dices);
-            for (int i = 0; i < n; i++)
-            {  
-                L[i].dShoot = dice[i];
-                if (dice[i] < 7 - L[i].Skills)
+        }
+
+        public int MajorityWeaponSkill()
+        {
+            return 4;
+        }
+
+        public int MajorityToughnes()
+        {
+            int t = 0, Majority = 0;
+            foreach (BasicModel m in Models)
+            {
+                t++;
+                Majority += m.GetToughnes();
+            }
+            Majority = Majority / t;
+            return Majority;
+        }
+
+        public List<Wound> Shoot(int range, int type, Game _g)
+        {
+            List<Wound> L = new List<Wound> { }, Lp;
+            if (IsShoot == 0)
+            {
+                IsShoot = 1;
+                foreach (BasicModel ShootModel in Models)
                 {
+                    Lp = ShootModel.Shoot(range, type, _g);
+                    if (Lp != null)
+                        L.AddRange(Lp);
+                }
+                int n = L.Count;
+                List<int> dice = _g.DiceGen.manyD6(n);
+                char a = ' ';
+                string dices = new string(a, 1);
+                foreach (int di in dice)
+                {
+                    char c = (char)('0' + di);
+                    dices += c;
+                    dices += " ";
+                }
+                //TextBox Box = new TextBox();
+                //_g.IsShow.ShowMessage(dices);
+                for (int i = 0; i < n; i++)
+                {
+                    L[i].dShoot = dice[i];
+                    if (dice[i] < 7 - L[i].Skills)
+                    {
 
-                    //L.Remove(L[r.Next() % L.Count]);
-                    L[i].fail();
+                        //L.Remove(L[r.Next() % L.Count]);
+                        L[i].fail();
+                    }
+                }
+                _g.IsShow.ShowSoots(L);
+                if (L.Count != 0)
+                    L[0].deleteFail(L);
+            }
+            else
+            {
+                _g.IsShow.ShowMessage("Уже стрелял");
+                return null;
+            }
+            return L;
+        }
+
+        public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, Game _g)
+        {
+            int n = Wounds.Count;
+            int Majority = MajorityToughnes();
+            List<int> dices = _g.DiceGen.manyD6(n);
+
+            char a = ' ';
+            string TextDices = new string(a, 1);
+            foreach (int d in dices)
+            {
+                char c = (char)('0' + d);
+                TextDices += c;
+                TextDices += " ";
+            }
+            //_g.IsShow.ShowMessage(TextDices);
+            int rer = 0;
+            for (int i = 0; i < n; i++)
+            {
+                Wounds[i].dWound = dices[i];
+                if ((Majority - Wounds[i].Strenght + 4) > dices[i])
+                    Wounds[i].fail();
+                if ((Majority - Wounds[i].Strenght + 4) == 7 && dices[i] == 6)
+                    Wounds[i].win();
+                if (dices[i] == 1)
+                    Wounds[i].fail();
+                foreach (EffectsWeapons ew in Wounds[i].Effects)
+                {
+                    ew.OnWound(Wounds[i], Wounds, ref rer, _g);
                 }
             }
-            _g.IsShow.ShowSoots(L);
-            if (L.Count != 0)
-                L[0].deleteFail(L);
+            _g.IsShow.ShowWound(Wounds);
+            if (Wounds.Count != 0)
+                Wounds[0].deleteFail(Wounds);
+            return Wounds;
         }
-        else
+
+        public bool LeadershipTest(Game _g, int penalty)
         {
-            _g.IsShow.ShowMessage("Уже стрелял");
+            int leader = 0, DiceLeader = _g.DiceGen.D6plD6(), rer = 0;
+            String s = "LeaderTest ";
+            s += DiceLeader.ToString();
+            _g.IsShow.ShowMessage(s);
+            foreach (BasicModel bm in Models)
+            {
+                leader = Math.Max(bm.Leadership(), leader);
+            }
+            foreach (EffectsUnit EfU in Effects)
+            {
+                EfU.Leader(this, ref DiceLeader, ref leader, ref rer, _g);
+            }
+            if (leader == 13 || leader - penalty >= DiceLeader)
+                return true;
+            return false;
+        }
+
+        public BasicModel First(Unit Sourse)
+        {
+            foreach (BasicModel m in Models)
+            {
+                if (m.IsAlive() == 0)
+                    return m;
+            }
             return null;
         }
-        return L;
-    }
 
-    public List<Wound> Wonding(Unit Sourse, List<Wound> Wounds, Game _g)
-    {
-        int n = Wounds.Count;
-        int Majority=MajorityToughnes();
-        List<int> dices = _g.DiceGen.manyD6(n);
-
-        char a = ' ';
-        string TextDices = new string(a, 1);
-        foreach (int d in dices)
+        public BasicModel First(Unit A, Unit B, Game _g)
         {
-            char c = (char)('0' + d);
-            TextDices += c;
-            TextDices += " ";
-        }
-        //_g.IsShow.ShowMessage(TextDices);
-        int rer = 0;
-        for (int i = 0; i < n;i++)
-        {
-            Wounds[i].dWound = dices[i];
-            if(( Majority-Wounds[i].Strenght + 4)>dices[i])
-                Wounds[i].fail();
-            if((Majority- Wounds[i].Strenght +4 ) == 7 && dices[i]==6)
-                Wounds[i].win();
-            if (dices[i] == 1)
-                Wounds[i].fail();
-            foreach(EffectsWeapons ew in Wounds[i].Effects)
+            double min = 100000000, d;
+            BasicModel rez = null;
+            foreach (BasicModel model in A.Models)
             {
-                ew.OnWound(Wounds[i], Wounds, ref rer,_g);
-            }
-        }
-        _g.IsShow.ShowWound(Wounds);
-        if (Wounds.Count != 0)
-            Wounds[0].deleteFail(Wounds);
-        return Wounds;
-    }
-
-    public bool LeadershipTest(Game _g,int penalty)
-    {
-        int leader = 0,DiceLeader=_g.DiceGen.D6plD6(),rer=0;
-        String s = "LeaderTest ";
-        s += DiceLeader.ToString();
-        _g.IsShow.ShowMessage(s);
-        foreach(BasicModel bm in Models)
-        {
-            leader=Math.Max(bm.Leadership(),leader);
-        }
-        foreach (EffectsUnit EfU in Effects)
-        {
-            EfU.Leader(this,ref DiceLeader,ref leader,ref rer,_g);
-        }
-        if (leader == 13 || leader - penalty >= DiceLeader)
-            return true;
-        return false;
-    }
-
-    public BasicModel First(Unit Sourse)
-    {
-        foreach (BasicModel m in Models)
-        {
-            if (m.IsAlive() == 0)
-                return m;
-        }
-        return null;
-    }
-
-    public BasicModel First(Unit A, Unit B, Game _g)
-    {
-        double min = 100000000, d;
-        BasicModel rez = null;
-        foreach (BasicModel model in A.Models)
-        {
-            if (model.IsAlive() == 0)
-            {
-                foreach (BasicModel en_model in B.Models)
+                if (model.IsAlive() == 0)
                 {
-                    if (en_model.IsAlive() == 0)
+                    foreach (BasicModel en_model in B.Models)
                     {
-                        d = _g.IsMap.distance(model.x, model.y, en_model.x, en_model.y);
-                        if(d<min)
+                        if (en_model.IsAlive() == 0)
+                        {
+                            d = _g.IsMap.distance(model.x, model.y, en_model.x, en_model.y);
+                            if (d < min)
+                            {
+                                min = d;
+                                rez = en_model;
+                            }
+                        }
+                    }
+                }
+            }
+            return rez;
+        }
+
+        public BasicModel First(BasicModel model, Unit B, Game _g)
+        {
+            double min = 1000000;
+            BasicModel rez = null;
+            foreach (BasicModel en_model in B.Models)
+            {
+                if (en_model.IsAlive() == 0)
+                {
+                    double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                    if (d < min)
+                    {
+                        min = d;
+                        rez = en_model;
+                    }
+                }
+            }
+            return rez;
+        }
+
+        public BasicModel First(BasicModel model, Unit B, List<ModelCharge> warriors, Game _g)
+        {
+            double min = 1000000;
+            double min1 = 1000000;
+            BasicModel rez = null;
+            BasicModel rez1 = null;
+            foreach (BasicModel en_model in B.Models)
+            {
+                if (en_model.IsAlive() == 0)
+                {
+                    bool found = false;
+                    foreach (ModelCharge mch in warriors)
+                    {
+                        foreach (BasicModel c_model in mch.Enemies)
+                        {
+                            if (c_model == en_model)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                    if (d < min)
+                    {
+                        if (found == false)
                         {
                             min = d;
                             rez = en_model;
                         }
+                        min1 = d;
+                        rez1 = en_model;
                     }
                 }
             }
+            if (rez != null)
+                return rez;
+            else
+                return rez1;
         }
-        return rez;
-    }
 
-    public BasicModel First(BasicModel model, Unit B, Game _g)
-    {
-        double min = 1000000;
-        BasicModel rez = null;
-        foreach (BasicModel en_model in B.Models)
+        public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, List<ModelCharge> warriors, Game _g)
         {
-            if (en_model.IsAlive() == 0)
+            double min = 1000000;
+            double min1 = 1000000;
+            BasicModel rez = null;
+            BasicModel rez1 = null;
+            foreach (BasicModel en_model in B.Models)
             {
-                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min)
+                if (en_model.IsAlive() == 0 && bad_enemies.Contains(en_model) == false)
                 {
-                    min = d;
-                    rez = en_model;
-                }
-            }
-        }
-        return rez;
-    }
-
-    public BasicModel First(BasicModel model, Unit B, List<ModelCharge> warriors, Game _g)
-    {
-        double min = 1000000;
-        double min1 = 1000000;
-        BasicModel rez = null;
-        BasicModel rez1 = null;
-        foreach (BasicModel en_model in B.Models)
-        {
-            if (en_model.IsAlive() == 0)
-            {
-                bool found=false;
-                foreach (ModelCharge mch in warriors)
-                {
-                    foreach (BasicModel c_model in mch.Enemies)
+                    bool found = false;
+                    foreach (ModelCharge mch in warriors)
                     {
-                        if(c_model == en_model)
+                        foreach (BasicModel c_model in mch.Enemies)
                         {
-                            found = true;
-                            break;
+                            if (c_model == en_model)
+                            {
+                                found = true;
+                                break;
+                            }
                         }
                     }
+                    double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                    if (d < min)
+                    {
+                        if (found == false)
+                        {
+                            min = d;
+                            rez = en_model;
+                        }
+                        min1 = d;
+                        rez1 = en_model;
+                    }
                 }
-                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min)
+            }
+            if (rez != null)
+                return rez;
+            else
+                return rez1;
+        }
+
+        public BasicModel First(BasicModel model, List<BasicModel> base_contact, Game _g, double length)
+        {
+            double min = 1000000;
+            double min1 = 1000000;
+            BasicModel rez = null;
+            BasicModel rez1 = null;
+            foreach (BasicModel en_model in base_contact)
+            {
+                if (en_model.IsAlive() == 0)
                 {
-                    if (found == false)
+                    double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                    if (d < min && d <= length)
+                    {
+                        if (en_model.Moved == 1)
+                        {
+                            min = d;
+                            rez = en_model;
+                        }
+                        min1 = d;
+                        rez1 = en_model;
+                    }
+                }
+            }
+            if (rez != null)
+                return rez;
+            else
+                return rez1;
+        }
+
+        public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, Game _g)
+        {
+            double min = 1000000;
+            BasicModel rez = null;
+            foreach (BasicModel en_model in B.Models)
+            {
+                if (en_model.IsAlive() == 0 && bad_enemies.Contains(en_model) == false)
+                {
+                    double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
+                    if (d < min)
                     {
                         min = d;
                         rez = en_model;
                     }
-                    min1 = d;
-                    rez1 = en_model;
                 }
             }
-        }
-        if (rez != null)
             return rez;
-        else
-            return rez1;
-    }
+        }
 
-    public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, List<ModelCharge> warriors, Game _g)
-    {
-        double min = 1000000;
-        double min1 = 1000000;
-        BasicModel rez = null;
-        BasicModel rez1 = null;
-        foreach (BasicModel en_model in B.Models)
+        public void Save(int Cover, List<Wound> Wounds, Game _g)
         {
-            if (en_model.IsAlive() == 0 && bad_enemies.Contains(en_model) == false)
+            int n = Wounds.Count;
+            List<int> dices = _g.DiceGen.manyD6(n);
+            char a = ' ';
+            string TextDices = new string(a, 1);
+            foreach (int d in dices)
             {
-                bool found = false;
-                foreach (ModelCharge mch in warriors)
+                char c = (char)('0' + d);
+                TextDices += c;
+                TextDices += " ";
+            }
+            //_g.IsShow.ShowMessage(TextDices);
+            Wounds.Sort(delegate(Wound x, Wound y)
+            {
+                if (x.Strenght > y.Strenght)
+                    return 1;
+                else if (x.Strenght == y.Strenght)
+                    if (x.ap > y.ap)
+                        return 1;
+                    else if (x.ap == y.ap)
+                        return 0;
+                    else
+                        return -1;
+                else
+                    return -1;
+            });
+            for (int i = 0; i < n; i++)
+            {
+                BasicModel m = First(_g.cur_unit);
+                if (m == null)
                 {
-                    foreach (BasicModel c_model in mch.Enemies)
+                    _g.IsShow.ShowMessage("All dead");
+                    break;
+                }
+                m.Save(Wounds[i], dices[i], Cover);
+            }
+            _g.IsShow.ShowSave(Wounds);
+        }
+
+        public void HtHSave(List<Wound> Wounds, Game _g)
+        {
+            int n = Wounds.Count;
+            List<int> dices = _g.DiceGen.manyD6(n);
+            char a = ' ';
+            string TextDices = new string(a, 1);
+            foreach (int d in dices)
+            {
+                char c = (char)('0' + d);
+                TextDices += c;
+                TextDices += " ";
+            }
+            //_g.IsShow.ShowMessage(TextDices);
+            Wounds.Sort(delegate(Wound x, Wound y)
+            {
+                if (x.Strenght > y.Strenght)
+                    return 1;
+                else if (x.Strenght == y.Strenght)
+                    if (x.ap > y.ap)
+                        return 1;
+                    else if (x.ap == y.ap)
+                        return 0;
+                    else
+                        return -1;
+                else
+                    return -1;
+            });
+            for (int i = 0; i < n; i++)
+            {
+                BasicModel m = First(_g.cur_unit);
+                if (m == null)
+                {
+                    _g.IsShow.ShowMessage("All dead");
+                    break;
+                }
+                m.HtHSave(Wounds[i], dices[i]);
+            }
+            _g.IsShow.ShowSave(Wounds);
+        }
+
+        private void DelEffectsModelInUnit(BasicModel DelModel)
+        {
+            List<EffectsUnit> ToDel = new List<EffectsUnit> { };
+            foreach (EffectsModel EfInd in DelModel.Effects)
+            {
+                foreach (EffectsUnit EfUni in Effects)
+                {
+                    if (EfInd.NameSpreadToUnit() == EfUni.Name())
                     {
-                        if (c_model == en_model)
+                        ToDel.Add(EfUni);
+                    }
+                }
+            }
+            foreach (EffectsUnit EfToDel in ToDel)
+            {
+                Effects.Remove(EfToDel);
+            }
+        }
+
+        public void LeaveIndepChar(BasicModel IndepChar, Game _g)
+        {
+            int k = 0;
+            if (this != IndepChar.w_Unit)
+            {
+                return;
+            }
+            foreach (EffectsModel EfUn in IndepChar.Effects)
+            {
+                k += EfUn.IsIndependetCharecter(_g);
+            }
+            if (k == 0)
+            {
+                return;
+            }
+            Models.Remove(IndepChar);
+            DelEffectsModelInUnit(IndepChar);
+            Unit Indep = new Unit(new List<BasicModel> { IndepChar }, new List<EffectsUnit> { });
+            Indep.w_Player = w_Player;
+            IndepChar.w_Unit = Indep;
+            IndepChar.w_Unit.w_Player.PlayersUnit.Add(Indep);
+            _g.IsMap.AllUnits.Add(Indep);
+        }
+
+        public void JoinIndepChar(Unit IndepUnit, Game _g)
+        {
+            if (IndepUnit.Models.Count != 1)
+                return;
+            int k = 0;
+            foreach (EffectsModel EfInd in IndepUnit.Models[0].Effects)
+            {
+                k += EfInd.IsIndependetCharecter(_g);
+            }
+            if (k == 0)
+                return;
+            w_Player.PlayersUnit.Remove(IndepUnit);
+            _g.IsMap.AllUnits.Remove(IndepUnit);
+
+            Models.Add(IndepUnit.Models[0]);
+            IndepUnit.Models[0].w_Unit = this;
+            SpreadEffects();
+        }
+
+        public List<BasicModel> SearchIndeps(Game _g)
+        {
+            List<BasicModel> Indeps = new List<BasicModel> { };
+            foreach (BasicModel BasMod in Models)
+            {
+                foreach (EffectsModel EffMod in BasMod.Effects)
+                {
+                    if (1 == EffMod.IsIndependetCharecter(_g))
+                    {
+                        Indeps.Add(BasMod);
+                        break;
+                    }
+                }
+            }
+            return Indeps;
+        }
+
+        public bool coherency(Game _g)
+        {
+            int i, j, k;
+            int[,] m = new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
+            for (i = 0; i < _g.cur_unit.Models.Count; i++)
+            {
+                for (j = 0; j < _g.cur_unit.Models.Count; j++)
+                {
+                    m[i, j] = 0;
+                }
+            }
+            for (i = 0; i < _g.cur_unit.Models.Count; i++)
+            {
+                m[i, i] = 1;
+            }
+            i = 0;
+            foreach (BasicModel model in _g.cur_unit.Models)
+            {
+                j = 0;
+                foreach (BasicModel temp_m in _g.cur_unit.Models)
+                {
+                    if (temp_m != model)
+                    {
+                        if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
                         {
-                            found = true;
-                            break;
+                            m[i, j] = 1;
+                            m[j, i] = 1;
+                            for (k = 0; k < _g.cur_unit.Models.Count; k++)
+                            {
+                                if (m[j, k] == 1)
+                                    m[i, k] = 1;
+                                if (m[i, k] == 1)
+                                    m[j, k] = 1;
+                            }
                         }
                     }
+                    j++;
                 }
-                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min)
+                i++;
+            }
+            int t;
+            bool cor = false;
+            for (i = 0; i < _g.cur_unit.Models.Count; i++)
+            {
+                t = 1;
+                for (j = 0; j < _g.cur_unit.Models.Count; j++)
                 {
-                    if (found == false)
+                    if (m[i, j] == 0)
                     {
-                        min = d;
-                        rez = en_model;
+                        t = 0;
                     }
-                    min1 = d;
-                    rez1 = en_model;
                 }
-            }
-        }
-        if (rez != null)
-            return rez;
-        else
-            return rez1;
-    }
-
-    public BasicModel First(BasicModel model, List<BasicModel> base_contact, Game _g, double length)
-    {
-        double min = 1000000;
-        double min1 = 1000000;
-        BasicModel rez = null;
-        BasicModel rez1 = null;
-        foreach (BasicModel en_model in base_contact)
-        {
-            if (en_model.IsAlive() == 0)
-            {
-                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min && d <= length)
+                if (t == 1)
                 {
-                    if (en_model.Moved == 1)
-                    {
-                        min = d;
-                        rez = en_model;
-                    }
-                    min1 = d;
-                    rez1 = en_model;
-                }
-            }
-        }
-        if (rez != null)
-            return rez;
-        else
-            return rez1;
-    }
-
-    public BasicModel First(BasicModel model, Unit B, List<BasicModel> bad_enemies, Game _g)
-    {
-        double min = 1000000;
-        BasicModel rez = null;
-        foreach (BasicModel en_model in B.Models)
-        {
-            if (en_model.IsAlive() == 0 && bad_enemies.Contains(en_model) == false)
-            {
-                double d = _g.IsMap.distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min)
-                {
-                    min = d;
-                    rez = en_model;
-                }
-            }
-        }
-        return rez;
-    }
-
-    public void Save(int Cover,List<Wound> Wounds,Game _g)
-    {
-        int n = Wounds.Count;
-        List<int> dices = _g.DiceGen.manyD6(n);
-        char a = ' ';
-        string TextDices = new string(a, 1);
-        foreach (int d in dices)
-        {
-            char c = (char)('0' + d);
-            TextDices += c;
-            TextDices += " ";
-        }
-        //_g.IsShow.ShowMessage(TextDices);
-        Wounds.Sort(delegate(Wound x, Wound y)
-        {
-            if (x.Strenght > y.Strenght)
-                return 1;
-            else if (x.Strenght == y.Strenght)
-                if (x.ap > y.ap)
-                    return 1;
-                else if (x.ap == y.ap)
-                    return 0;
-                else
-                    return -1;
-            else
-                return -1;
-        });
-        for (int i = 0; i < n; i++)
-        {
-            BasicModel m = First(_g.cur_unit);
-            if (m == null)
-            {
-                _g.IsShow.ShowMessage("All dead");
-                break;
-            }
-            m.Save(Wounds[i], dices[i], Cover);
-        }
-        _g.IsShow.ShowSave(Wounds);
-    }
-
-    public void HtHSave(List<Wound> Wounds, Game _g)
-    {
-        int n = Wounds.Count;
-        List<int> dices = _g.DiceGen.manyD6(n);
-        char a = ' ';
-        string TextDices = new string(a, 1);
-        foreach (int d in dices)
-        {
-            char c = (char)('0' + d);
-            TextDices += c;
-            TextDices += " ";
-        }
-        //_g.IsShow.ShowMessage(TextDices);
-        Wounds.Sort(delegate(Wound x, Wound y)
-        {
-            if (x.Strenght > y.Strenght)
-                return 1;
-            else if (x.Strenght == y.Strenght)
-                if (x.ap > y.ap)
-                    return 1;
-                else if (x.ap == y.ap)
-                    return 0;
-                else
-                    return -1;
-            else
-                return -1;
-        });
-        for (int i = 0; i < n; i++)
-        {
-            BasicModel m = First(_g.cur_unit);
-            if (m == null)
-            {
-                _g.IsShow.ShowMessage("All dead");
-                break;
-            }
-            m.HtHSave(Wounds[i], dices[i]);
-        }
-        _g.IsShow.ShowSave(Wounds);
-    }
-
-    private void DelEffectsModelInUnit(BasicModel DelModel)
-    {
-        List<EffectsUnit> ToDel = new List<EffectsUnit> { };
-        foreach (EffectsModel EfInd in DelModel.Effects)
-        {
-            foreach (EffectsUnit EfUni in Effects)
-            {
-                if (EfInd.NameSpreadToUnit() == EfUni.Name())
-                {
-                    ToDel.Add(EfUni);
-                }
-            }
-        }
-        foreach (EffectsUnit EfToDel in ToDel)
-        {
-            Effects.Remove(EfToDel);
-        }
-    }
-
-    public void LeaveIndepChar(BasicModel IndepChar,Game _g)
-    {
-        int k=0;
-        if(this!=IndepChar.w_Unit)
-        {
-            return;
-        }
-        foreach(EffectsModel EfUn in IndepChar.Effects)
-        {
-            k += EfUn.IsIndependetCharecter(_g);
-        }
-        if(k==0)
-        {
-            return;
-        }
-        Models.Remove(IndepChar);
-        DelEffectsModelInUnit(IndepChar);
-        Unit Indep = new Unit(new List<BasicModel> { IndepChar }, new List<EffectsUnit> { });
-        Indep.w_Player = w_Player;
-        IndepChar.w_Unit = Indep;
-        IndepChar.w_Unit.w_Player.PlayersUnit.Add(Indep);
-        _g.IsMap.AllUnits.Add(Indep);
-    }
-
-    public void JoinIndepChar(Unit IndepUnit,Game _g)
-    {
-        if(IndepUnit.Models.Count!=1)
-            return;
-        int k = 0;
-        foreach(EffectsModel EfInd in IndepUnit.Models[0].Effects)
-        {
-            k += EfInd.IsIndependetCharecter(_g);
-        }
-        if (k == 0)
-            return;
-        w_Player.PlayersUnit.Remove(IndepUnit);
-        _g.IsMap.AllUnits.Remove(IndepUnit);
-
-        Models.Add(IndepUnit.Models[0]);
-        IndepUnit.Models[0].w_Unit = this;
-        SpreadEffects();
-    }
-
-    public List<BasicModel> SearchIndeps(Game _g)
-    {
-        List<BasicModel> Indeps = new List<BasicModel> { };
-        foreach(BasicModel BasMod in Models)
-        {
-            foreach(EffectsModel EffMod in BasMod.Effects)
-            {
-                if(1==EffMod.IsIndependetCharecter(_g))
-                {
-                    Indeps.Add(BasMod);
+                    cor = true;
                     break;
                 }
             }
+            return cor;
         }
-        return Indeps;
-    }
 
-    public bool coherency(Game _g)
-    {
-        int i, j, k;
-        int [,]m= new int[_g.cur_unit.Models.Count, _g.cur_unit.Models.Count];
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+        public int ChargeRange(Game _g)
         {
-            for (j = 0; j < _g.cur_unit.Models.Count; j++)
-            {
-                m[i, j] = 0;
-            }
+            int Dis = _g.DiceGen.D6plD6();
+            return Dis;
         }
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
+
+        public List<Wound> Overwatch(int range, int type, Game _g)
         {
-            m[i, i] = 1;            
-        }
-        i=0;
-        foreach (BasicModel model in _g.cur_unit.Models)
-        {
-            j=0;
-            foreach (BasicModel temp_m in _g.cur_unit.Models)
+            List<Wound> L = new List<Wound> { }, Lp;
+            if (IsShoot == 0)
             {
-                if (temp_m != model)
+                IsShoot = 1;
+                foreach (BasicModel ShootModel in Models)
                 {
-                    if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                    Lp = ShootModel.Overwatch(range, type, _g);
+                    if (Lp != null)
+                        L.AddRange(Lp);
+                }
+                int n = L.Count;
+                List<int> dice = _g.DiceGen.manyD6(n);
+                for (int i = 0; i < n; i++)
+                {
+                    L[i].dShoot = dice[i];
+                    if (dice[i] < 7 - L[i].Skills)
                     {
-                        m[i, j] = 1;
-                        m[j, i] = 1;
-                        for(k=0; k<_g.cur_unit.Models.Count; k++)
-                        {
-                            if (m[j, k] == 1)
-                                m[i, k] = 1;
-                            if (m[i, k] == 1)
-                                m[j, k] = 1;
-                        }
+                        L[i].fail();
                     }
-                }                
-                j++;
-            }
-            i++;
-        }
-        int t;
-        bool cor = false;
-        for (i = 0; i < _g.cur_unit.Models.Count; i++)
-        {
-            t = 1;
-            for (j = 0; j < _g.cur_unit.Models.Count; j++)
-            {
-                if(m[i, j]==0)
-                {
-                    t = 0;
                 }
+                _g.IsShow.ShowSoots(L);
+                if (L.Count != 0)
+                    L[0].deleteFail(L);
             }
-            if(t==1)
+            else
             {
-                cor = true;
-                break;
+                _g.IsShow.ShowMessage("Уже стрелял");
+                return null;
             }
+            return L;
         }
-        return cor;
-    }
-
-    public int ChargeRange(Game _g)
-    {
-        int Dis = _g.DiceGen.D6plD6();
-        return Dis;
-    }
-
-    public List<Wound> Overwatch(int range, int type, Game _g)
-    {
-        List<Wound> L = new List<Wound> { }, Lp;
-        if (IsShoot == 0)
-        {
-            IsShoot = 1;
-            foreach (BasicModel ShootModel in Models)
-            {
-                Lp = ShootModel.Overwatch(range, type, _g);
-                if (Lp != null)
-                    L.AddRange(Lp);
-            }
-            int n = L.Count;
-            List<int> dice = _g.DiceGen.manyD6(n);
-            for (int i = 0; i < n; i++)
-            {
-                L[i].dShoot = dice[i];
-                if (dice[i] < 7 - L[i].Skills)
-                {
-                    L[i].fail();
-                }
-            }
-            _g.IsShow.ShowSoots(L);
-            if (L.Count != 0)
-                L[0].deleteFail(L);
-        }
-        else
-        {
-            _g.IsShow.ShowMessage("Уже стрелял");
-            return null;
-        }
-        return L;
-    }
-}//end Unit
+    }//end Unit
+}
