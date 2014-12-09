@@ -750,6 +750,7 @@ public class Game
                 }
                 cur_unit = null;
                 Target = null;
+                AllCharge.Clear();
                 break;
         }
     }
