@@ -26,7 +26,7 @@ public class Map
             foreach (BasicModel en_model in B.Models)
             {
                 double d=distance(en_model.x, en_model.y, model.x, model.y);
-                if (d < min)
+                if (en_model.IsAlive() == 0 && d < min)
                 {
                     min = d;
                 }
@@ -41,7 +41,7 @@ public class Map
         {
             foreach(BasicModel model in unit.Models)
             {
-                if((x-model.x)*(x-model.x)+(y-model.y)*(y-model.y)<=625)
+                if(model.IsAlive() == 0 && (x-model.x)*(x-model.x)+(y-model.y)*(y-model.y)<=625)
                 {
                     return unit;
                 }
@@ -76,7 +76,7 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if (squares(x, y, model.x, model.y, 25) == true)
+                if (model.IsAlive() == 0 && squares(x, y, model.x, model.y, 25) == true)
                 {
                     return model;
                 }
@@ -91,7 +91,7 @@ public class Map
         {
             foreach (BasicModel model in unit.Models)
             {
-                if (squares(x, y, model.x, model.y, 50) == true)
+                if (model.IsAlive() == 0 && squares(x, y, model.x, model.y, 50) == true)
                 {
                     return model;
                 }
