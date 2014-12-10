@@ -52,6 +52,23 @@ namespace Warhammer
             {
                 weap.w_BasicModel = this;
             }
+            foreach (Weapon weap in Weapons)
+            {
+                if (weap.IsHtHWeapon() == 0)
+                {
+                    ActiveRangeWeapon = weap;
+                    break;
+                }
+            }
+
+            foreach (Weapon weap in Weapons)
+            {
+                if (weap.IsSpecialHtHWeapon() != 0)
+                {
+                    ActiveMeleWeapon = weap;
+                    break;
+                }
+            }
         }
 
         public Infantry()
