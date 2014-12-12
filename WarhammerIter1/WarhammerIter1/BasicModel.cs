@@ -36,6 +36,8 @@ namespace Warhammer
         public Weapon ActiveMeleWeapon;
 
 
+        public abstract String Character();
+
         public int MoveRange()
         {
             return 6;
@@ -51,7 +53,7 @@ namespace Warhammer
             Alive = 1;
         }
 
-        public virtual List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
+        public virtual List<Wound> CombatAtack(int EnemyWs, int EnemyMajT,int bonus)
         {
             return new List<Wound> { };
         }

@@ -19,6 +19,15 @@ namespace Warhammer
         private int _Leadership;
         private int Toughnes;
 
+        public override string Character()
+        {
+            String r = "WS BS S T W I A LD SV INSV\n";
+            r = r + WeaponSkill.ToString() + "    " + BalisticSkill.ToString() + "    " + Strength.ToString() + " " + Toughnes.ToString() + "  " + Wound.ToString() 
+                + " " + Initiative.ToString() + " "
+                + Atack.ToString() + " " + _Leadership.ToString() + "   " + ArmorSave.ToString() + "     " + InvulnerableSave.ToString() + "\n";
+           return r;
+        }
+
         public override int GetToughnes()
         {
             return Toughnes;
@@ -29,7 +38,7 @@ namespace Warhammer
             return _Leadership;
         }
 
-        public Infantry(int xin, int yin, int bs, int ws, int s, int t, int a, int I, int w, int L, int ArSv, int InvSv, List<Weapon> wea, List<EffectsModel> Ef)
+        public Infantry(int xin, int yin, int bs, int ws, int s, int t, int w, int I, int a, int L, int ArSv, int InvSv, List<Weapon> wea, List<EffectsModel> Ef)
         {
             x = xin;
             y = yin;
@@ -90,7 +99,7 @@ namespace Warhammer
             }
         }
 
-        public override List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
+        public override List<Wound> CombatAtack(int EnemyWs, int EnemyMajT,int bonus)
         {
             if (Alive == 0)
             {
@@ -106,7 +115,6 @@ namespace Warhammer
                     if (W.IsSpecialHtHWeapon() == 1)
                         SCCW.Add(W);
                 }
-                int bonus = 0;
                 if (CCW.Count > 1)
                     bonus++;
                 if (SCCW.Count > 0)

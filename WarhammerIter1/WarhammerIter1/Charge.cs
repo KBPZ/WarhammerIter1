@@ -43,7 +43,7 @@ namespace Warhammer
                     if (ModChar.model.GetInitiative(_g) == Initiative)
                     {
                         InitiativeWound[ModChar.model.w_Unit.w_Player.PlayerN].AddRange(ModChar.model.CombatAtack(MajT[1 - ModChar.model.w_Unit.w_Player.PlayerN]
-                            , MajWS[1 - ModChar.model.w_Unit.w_Player.PlayerN]));
+                            , MajWS[1 - ModChar.model.w_Unit.w_Player.PlayerN],0));
                     }
                 }
                 for (int i = 0; i < 2; i++)
@@ -185,6 +185,7 @@ namespace Warhammer
         public void FightSubPh(Game _g)
         {
             int Initiative;
+            int bonus=0;
             List<Wound>[] InitiativeWound = new List<Wound>[2] { new List<Wound> { }, new List<Wound> { } };
             for (Initiative = 10; Initiative > 0; Initiative--)
             {
@@ -201,8 +202,12 @@ namespace Warhammer
                 {
                     if (ModChar.model.GetInitiative(_g) == Initiative)
                     {
+                        if (_g.PlayerNow() == ModChar.model.w_Unit.w_Player && round == 1)
+                            bonus = 1;
+                        else
+                            bonus = 0;
                         InitiativeWound[ModChar.model.w_Unit.w_Player.PlayerN].AddRange(ModChar.model.CombatAtack(MajT[1 - ModChar.model.w_Unit.w_Player.PlayerN]
-                            , MajWS[1 - ModChar.model.w_Unit.w_Player.PlayerN]));
+                            , MajWS[1 - ModChar.model.w_Unit.w_Player.PlayerN], bonus));
                     }
                 }
                 for (int i = 0; i < 2; i++)

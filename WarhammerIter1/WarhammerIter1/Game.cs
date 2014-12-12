@@ -374,6 +374,7 @@ namespace Warhammer
         }
         public void IndependentCharecterButtonClick(Game _g)
         {
+            //_g.IsShow.ShowMessage(_g.cur_model.Character());
             if (_g.cur_unit == null)
             {
                 return;
@@ -686,6 +687,7 @@ namespace Warhammer
                     double length = (double)_g.cur_unit.ChargeRange(_g);
                     length *= 50;
                     length = 500;
+                    _g.Overwatch();
                     //ÏÀØÀ ÐÀÑÑÒÎßÍÈß ÏÈÇÄÅÖ ÊÀÊÎÉ-ÒÎ ÂÒÔ
                     //_g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
                     if (min > length)
@@ -1035,7 +1037,7 @@ namespace Warhammer
 
         public void Overwatch()
         {
-
+            IsShow.ShowMessage("Overwatch");
             int Cover = 7;
             List<Wound> L = new List<Wound> { };
             int Range = (int)IsMap.Range(cur_unit, Target);
