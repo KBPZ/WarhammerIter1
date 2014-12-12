@@ -8,130 +8,133 @@
 
 
 using System.Collections.Generic;
-
-public class Wound 
+using Warhammer;
+namespace Warhammer
 {
-    public int dShoot { get;set; }
-    public int dWound { get; set; }
-    public int dSave { get; set; }
-    public int Save { get; set; }
-    public int enMajT { get; set; }
-    public int enSkills { get; set; }
-    public int Range;
-	public int ap 
+    public class Wound
     {
-        get;
-        set;
-    }
-	public Effect[] Effects
-    {
-        get;
-        private set;
-    }
-    public Effect m_Effect
-    {
-        get;
-        private set;
-    }
-	public int Strenght
-    {
-        get;
-        private set;
-    }
-    private int faled=0;
-
-    public BasicModel Sourse
-    {
-        get;
-        private set;
-    }
-
-    public int Skills
-    {
-        get;
-        private set;
-    }
-
-    public void deleteFail(List<Wound> L)
-    {
-        List<Wound> Fail = new List<Wound> { };
-        foreach(Wound l in L)
+        public int dShoot { get; set; }
+        public int dWound { get; set; }
+        public int dSave { get; set; }
+        public int Save { get; set; }
+        public int enMajT { get; set; }
+        public int enSkills { get; set; }
+        public int Range;
+        public int ap
         {
-            if(l.IsFaled()==1)
+            get;
+            set;
+        }
+        public Effect[] Effects
+        {
+            get;
+            private set;
+        }
+        public Effect m_Effect
+        {
+            get;
+            private set;
+        }
+        public int Strenght
+        {
+            get;
+            private set;
+        }
+        private int faled = 0;
+
+        public BasicModel Sourse
+        {
+            get;
+            private set;
+        }
+
+        public int Skills
+        {
+            get;
+            private set;
+        }
+
+        public void deleteFail(List<Wound> L)
+        {
+            List<Wound> Fail = new List<Wound> { };
+            foreach (Wound l in L)
             {
-                Fail.Add(l);
+                if (l.IsFaled() == 1)
+                {
+                    Fail.Add(l);
+                }
+            }
+            foreach (Wound f in Fail)
+            {
+                L.Remove(f);
             }
         }
-        foreach(Wound f in Fail)
+
+        public int IsFaled()
         {
-            L.Remove(f);
+            return faled;
         }
-    }
 
-    public int IsFaled()
-    {
-        return faled;
-    }
+        public void fail()
+        {
+            faled = 1;
+        }
 
-    public void fail()
-    {
-        faled = 1;
-    }
+        public void win()
+        {
+            faled = 0;
+        }
 
-    public void win()
-    {
-        faled = 0;
-    }
+        /*
+        public int GetStrenght()
+        {
+            return Strenght;
+        }
 
-    /*
-    public int GetStrenght()
-    {
-        return Strenght;
-    }
+        public int GetAP()
+        {
+            return ap;
+        }
 
-    public int GetAP()
-    {
-        return ap;
-    }
+        /*public int GetBallisticSkills()
+        {
+            return BalisticSkills;
+        }
 
-    /*public int GetBallisticSkills()
-    {
-        return BalisticSkills;
-    }
+        public Effect[] GetEffects()
+        {
+            return Effects;
+        }
 
-    public Effect[] GetEffects()
-    {
-        return Effects;
-    }
+        public Effect Getm_Effect()
+        {
+            return m_Effect;
+        }*/
 
-    public Effect Getm_Effect()
-    {
-        return m_Effect;
-    }*/
+        public Wound(int range, int S, int AP, Effect[] Ef, int bs, BasicModel Sor)
+        {
+            Range = range;
+            ap = AP;
+            Strenght = S;
+            Effects = Ef;
+            Skills = bs;
+            Sourse = Sor;
+        }
 
-	public Wound(int range,int S,int AP,Effect[] Ef,int bs,BasicModel Sor)
-    {
-        Range = range;
-        ap = AP;
-        Strenght=S;
-        Effects=Ef;
-        Skills=bs;
-        Sourse=Sor;
-	}
+        public Wound(int ws, int Enws, int Ent, int S, int AP, Effect[] Ef, BasicModel Sor)
+        {
+            enMajT = Ent;
+            enSkills = Enws;
+            ap = AP;
+            Strenght = S;
+            Effects = Ef;
+            Skills = ws;
+            Sourse = Sor;
+        }
 
-    public Wound(int ws,int Enws,int Ent,int S, int AP, Effect[] Ef, BasicModel Sor)
-    {
-        enMajT = Ent;
-        enSkills = Enws;
-        ap = AP;
-        Strenght = S;
-        Effects = Ef;
-        Skills = ws;
-        Sourse = Sor;
-    }
+        ~Wound()
+        {
 
-	~Wound()
-    {
-
-	}
-}//end Wound
+        }
+    }//end Wound
+}

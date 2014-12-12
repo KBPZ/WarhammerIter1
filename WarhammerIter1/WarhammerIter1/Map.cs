@@ -9,7 +9,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
-
+using Warhammer;
+namespace Warhammer
+{
 public class Map 
 {
 
@@ -37,9 +39,9 @@ public class Map
 
     public Unit FindUnit(int x, int y)
     {
-        foreach(Unit unit in AllUnits)
+            foreach (Unit unit in AllUnits)
         {
-            foreach(BasicModel model in unit.Models)
+                foreach (BasicModel model in unit.Models)
             {
                 if(model.IsAlive() == 0 && (x-model.x)*(x-model.x)+(y-model.y)*(y-model.y)<=625)
                 {
@@ -105,27 +107,31 @@ public class Map
         AllUnits = Units;
 	}
 
-	~Map(){
+        ~Map()
+        {
 
 	}
 
-	public virtual void Dispose(){
+        public virtual void Dispose()
+        {
 
 	}
 
 	/// 
 	/// <param name="Click"></param>
-	public BasicModel MouseClick(Point Click){
+        public BasicModel MouseClick(Point Click)
+        {
 
 		return null;
 	}
 
-	public void Paint(PaintEventArgs e,Game _g)
+        public void Paint(PaintEventArgs e, Game _g)
     {
-        foreach(Unit U in AllUnits)
+            foreach (Unit U in AllUnits)
         {
-            U.Paint(e,_g);
+                U.Paint(e, _g);
         }
 	}
 
 }//end Map
+}

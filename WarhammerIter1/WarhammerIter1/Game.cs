@@ -9,7 +9,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
-
+using Warhammer;
+namespace Warhammer
+{
 public interface Show
 {
     void ShowMessage(string s);
@@ -20,9 +22,9 @@ public interface Show
 
 public class ShowNofing : Show
 {
-    public void ShowMessage(string s){}
-    public void ShowSoots(List<Wound> Lw){}
-    public void ShowWound(List<Wound> Lw){}
+        public void ShowMessage(string s) { }
+        public void ShowSoots(List<Wound> Lw) { }
+        public void ShowWound(List<Wound> Lw) { }
     public void ShowSave(List<Wound> Lw) { }
 }
 
@@ -53,16 +55,16 @@ public class ShowMessageBox : Show
             else
                 return -1;
         });
-        int s=0, bs=0, ap=0;
+            int s = 0, bs = 0, ap = 0;
         string Show = "";
         char p = ' ';
-        foreach(Wound w in Lw)
+            foreach (Wound w in Lw)
         {
-            if(s!=w.Strenght||bs!=w.Skills||ap!=w.ap)
+                if (s != w.Strenght || bs != w.Skills || ap != w.ap)
             {
-                if(Show!="")
+                    if (Show != "")
                 {
-                    MessageBox.Show(Show,"bs "+ bs.ToString()+" s " + s.ToString() + " ap " + ap.ToString());
+                        MessageBox.Show(Show, "bs " + bs.ToString() + " s " + s.ToString() + " ap " + ap.ToString());
                 }
                 Show = "";
                 Show += (char)('0' + w.dShoot); ;
@@ -155,7 +157,7 @@ public class ShowMessageBox : Show
             {
                 if (Show != "")
                 {
-                    MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+                        MessageBox.Show(Show, "s " + s.ToString() + " ap " + ap.ToString());
                 }
                 Show = "";
                 Show += (char)('0' + w.dWound);
@@ -170,7 +172,7 @@ public class ShowMessageBox : Show
         }
         if (Show != "")
         {
-            MessageBox.Show(Show,"s " + s.ToString() + " ap " + ap.ToString());
+                MessageBox.Show(Show, "s " + s.ToString() + " ap " + ap.ToString());
         }
     }
     public void ShowSave(List<Wound> Lw)
@@ -208,7 +210,7 @@ public class ShowMessageBox : Show
 
 public interface PfaseSr
 {
-    void MousClick(int x, int y,Game _g);
+        void MousClick(int x, int y, Game _g);
     void ActButtonClick(Game _g);
     void IndependentCharecterButtonClick(Game _g);
     void EndPfaseButton(Game _g);
@@ -273,9 +275,9 @@ public class PfaseShoot : PfaseSr
 {
     public void MousClick(int x, int y, Game _g)
     {
-        BasicModel un=_g.IsMap.FindModel(x, y);
+            BasicModel un = _g.IsMap.FindModel(x, y);
 
-        if(un !=null)
+            if (un != null)
         {
             if (un.w_Unit.w_Player == _g.PlayerNow())
             { 
@@ -316,11 +318,11 @@ public class PfaseChose : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-        if (_g.cur_unit==null)
+            if (_g.cur_unit == null)
         {
             _g.IsShow.ShowMessage("Выберите отряд.");
         }        
-        else if(_g.cur_unit.w_Player!=_g.PlayerNow())
+            else if (_g.cur_unit.w_Player != _g.PlayerNow())
         {
             _g.IsShow.ShowMessage("Этот отряд не принадлежит вам.");
         }
@@ -333,7 +335,7 @@ public class PfaseChose : PfaseSr
     }
     public void IndependentCharecterButtonClick(Game _g)
     {
-        if(_g.cur_unit==null)
+            if (_g.cur_unit == null)
         {
             return;
         }
@@ -347,11 +349,11 @@ public class PfaseChose : PfaseSr
         Indep = Indeps[0];
         _g.cur_unit.LeaveIndepChar(Indep, _g);*/
         int r = 0;
-        foreach(EffectsModel EffMod in _g.cur_model.Effects)
+            foreach (EffectsModel EffMod in _g.cur_model.Effects)
         {
             r += EffMod.IsIndependetCharecter(_g);
         }
-        if(r==0)
+            if (r == 0)
         {
             return;
         }
@@ -405,7 +407,7 @@ public class PfaseMove : PfaseSr
 
     public void MousClick(int x, int y, Game _g)
     {
-        BasicModel model=_g.IsMap.FindModel(x, y);
+            BasicModel model = _g.IsMap.FindModel(x, y);
         BasicModel model1 = _g.IsMap.ModelDistance(x, y);
         if (model != null || (model1 != null && model1 != _g.cur_model))
         {
@@ -429,7 +431,7 @@ public class PfaseMove : PfaseSr
         {
 
             int en = 0;
-            foreach (Unit unit in _g.Players[1-_g.NowPlayer].GetUnits())
+                foreach (Unit unit in _g.Players[1 - _g.NowPlayer].GetUnits())
             {
                 foreach (BasicModel t_model in unit.Models)
                 {
@@ -484,7 +486,7 @@ public class PfaseMove : PfaseSr
     }
     public void ActButtonClick(Game _g)
     {
-        if (_g.cur_unit.coherency(_g)==false)
+            if (_g.cur_unit.coherency(_g) == false)
         {
             _g.IsShow.ShowMessage("Дистанция между моделями некорректна.");
         }
@@ -517,9 +519,9 @@ public class PfaseChoseUnit : PfaseSr
     public void MousClick(int x, int y, Game _g)
     {
         Unit found = _g.IsMap.FindUnit(x, y);
-        if(found!=null)
+            if (found != null)
         {
-            if(found.w_Player == _g.PlayerNow())
+                if (found.w_Player == _g.PlayerNow())
             {
                 _g.cur_unit = found;
             }
@@ -645,7 +647,7 @@ public class PfaseChoseUnit : PfaseSr
     }
     public void EndPfaseButton(Game _g)
     {
-        foreach(Charge ch in _g.AllCharge)
+            foreach (Charge ch in _g.AllCharge)
         {
             ch.FightSubPh(_g);
         }
@@ -700,7 +702,7 @@ public class Game
     public MiniMap IsMiniMap = new MiniMap();
     //public List<Combat> AllCombat = new List<Combat> { };
 	private int Turn;
-    public Unit Target {get;set;}
+        public Unit Target { get; set; }
     //public Unit Sourse {get;set;}
     public intMission NowMission { get; set; }
     public BasicModel cur_model { get; set; }
@@ -710,10 +712,11 @@ public class Game
     public int distance = 200;
     public int enemy_distance = 100;
     public int friend_distance = 100;
+    public int base_size = 50;
     public DiceInt DiceGen { get; private set; }
     public List<Charge> AllCharge = new List<Charge> { };
 
-    public  bool IsNowPfase(Pfase p)
+        public bool IsNowPfase(Pfase p)
     {
         if (p == NowPhase)
             return true;
@@ -729,7 +732,7 @@ public class Game
                 U.EndPfase(this);
             }
         }
-        switch(NowPhase)
+            switch (NowPhase)
         {
             case Pfase.Move:
                 break;
@@ -789,17 +792,17 @@ public class Game
     {
         EndPfase();
         NowPhase++;
-        if(NowPhase==Pfase.End)
+            if (NowPhase == Pfase.End)
         {
             NowPhase = Pfase.Move;
             NowPlayer++;
-            if(NowPlayer==2)
+                if (NowPlayer == 2)
             {
                 NowPlayer = 0;
 
-                if(Turn==5)
+                    if (Turn == 5)
                 {
-                    if(DiceGen.D6()<=4)
+                        if (DiceGen.D6() <= 4)
                     {
                         IsShow.ShowMessage("Конец игры");
                     }
@@ -835,9 +838,9 @@ public class Game
         return Players[NowPlayer];
     }
 
-    public void MouseClick(int x,int y)
+        public void MouseClick(int x, int y)
     {
-        NowPfaseStr.MousClick(x, y,this);
+            NowPfaseStr.MousClick(x, y, this);
     }
 
     public void ClickActionButton()
@@ -860,7 +863,7 @@ public class Game
         NowPfaseStr.IndependentCharecterButtonClick(this);
     }
 
-    public Game(Player P1, Player P2, DiceInt DiceG,Show ShowStr)
+        public Game(Player P1, Player P2, DiceInt DiceG, Show ShowStr)
     {
         Players = new Player[2];
         Players[0] = P1;
@@ -886,7 +889,7 @@ public class Game
     {
         NowPfaseStr = ShootPf;
         IsShow = ShowStr;
-        List<Unit> LUnit = new List<Unit> {};
+            List<Unit> LUnit = new List<Unit> { };
         NowMission = new EturnalWar1();
         DiceGen = DiceG;
         Players = new Player[2];
@@ -900,7 +903,7 @@ public class Game
         cur_unit.Models[1].x += 300;
         cur_unit.Models[2].x += 300;
         Target = Players[1].PlayersUnit[0];
-        foreach(Player p in Players)
+            foreach (Player p in Players)
         {
             LUnit.AddRange(p.GetUnits());
         }
@@ -914,16 +917,16 @@ public class Game
 
     public int Shooting()
     {
-        if(cur_unit==null||Target==null)
+            if (cur_unit == null || Target == null)
         {
             IsShow.ShowMessage("Не выбранны цель или стрелок");
             return 1;
         }
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
-        int Range = (int)IsMap.Range(cur_unit, Target)*50;
-        L = cur_unit.Shoot(Range,0, this);
-        if (L == null || L.Count==0)
+            int Range = (int)IsMap.Range(cur_unit, Target) * 50;
+            L = cur_unit.Shoot(Range, 0, this);
+            if (L == null || L.Count == 0)
             return 0;
         L = Target.Wonding(cur_unit, L, this);
         if (L == null || L.Count == 0)
@@ -961,8 +964,8 @@ public class Game
     {
         //Overwatch();
         int ChargeRange = cur_unit.ChargeRange(this);
-        double Range=IsMap.Range(Target,cur_unit);
-        if(true)//Range>ChargeRange)
+            double Range = IsMap.Range(Target, cur_unit);
+            if (true)//Range>ChargeRange)
         {
             Combat NCombat = new Combat(cur_unit, Target, this);
             //AllCombat.Add(NCombat);
@@ -971,3 +974,4 @@ public class Game
     }
 
 }//end Game
+}
