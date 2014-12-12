@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
 using Warhammer;
+using WarhammerIter1;
 namespace Warhammer
 {
     public interface Show
@@ -781,6 +782,7 @@ namespace Warhammer
 
     public class Game
     {
+        public Form1 IsForm;
         public Show IsShow { get; private set; }
         public PfaseSr NowPfaseStr { get; set; }
         public PfaseSr MovePf = new PfaseMove();
@@ -814,6 +816,13 @@ namespace Warhammer
         public int Distance()
         {
             return (int)(IsMap.Range(cur_unit, Target)+0.999999);
+        }
+
+        public int EndGame()
+        {
+            IsShow.ShowMessage("Конец игры");
+            IsForm.EndGame();
+            return 0;
         }
 
         public bool IsNowPfase(Pfase p)
@@ -892,6 +901,21 @@ namespace Warhammer
         {
             EndPfase();
             NowPhase++;
+            int leave;
+            foreach(Player p in Players)
+            {
+                leave = 0;
+                foreach(Unit U in p.PlayersUnit)
+                {
+                    if (U.Alive == 0)
+                        leave++;
+                }
+                if(leave == 0)
+                {
+                    EndGame();
+                    return;
+                }
+            }
             if (NowPhase == Pfase.End)
             {
                 NowPhase = Pfase.Move;
@@ -904,19 +928,22 @@ namespace Warhammer
                     {
                         if (DiceGen.D6() <= 4)
                         {
-                            IsShow.ShowMessage("Конец игры");
+                            //IsShow.ShowMessage("Конец игры");
+                            EndGame();
                         }
                     }
                     if (Turn == 6)
                     {
                         if (DiceGen.D6() <= 5)
                         {
-                            IsShow.ShowMessage("Конец игры");
+                            //IsShow.ShowMessage("Конец игры");
+                            EndGame();
                         }
                     }
                     if (Turn == 7)
                     {
-                        IsShow.ShowMessage("Конец игры");
+                        //IsShow.ShowMessage("Конец игры");
+                        EndGame();
                     }
                     Turn++;
                     IsShow.ShowMessage("Новый ход");
