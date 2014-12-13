@@ -111,7 +111,16 @@ namespace Warhammer
                 if (b.IsAlive() != 1)
                     b.EndPfase(_g);
             }
-
+            int W = 0;
+            foreach (BasicModel b in Models)
+            {
+                if (b.IsAlive() == 1)
+                {
+                    W++;
+                }
+            }
+            if (W == Models.Count)
+                Alive = 1;
         }
 
         public Unit(List<BasicModel> ML, List<EffectsUnit> ef)
