@@ -1066,15 +1066,15 @@ namespace Warhammer
         {
             IsShow.ShowMessage("Overwatch");
             int Cover = 7;
-            List<Wound> L = new List<Wound> { };
+            List<Wound> L ;//= new List<Wound> { };
             int Range = (int)IsMap.Range(cur_unit, Target);
-            Target.Overwatch(Range, 0, this);
+            L=Target.Overwatch(Range, 0, this);
             if (L == null || L.Count == 0)
                 return;
-            L = Target.Wonding(cur_unit, L, this);
+            L = cur_unit.Wonding(cur_unit, L, this);
             if (L == null || L.Count == 0)
                 return;
-            Target.Save(Cover, L, this);
+            cur_unit.Save(Cover, L, this);
         }
 
         public void Wounding(Unit Target, Wound[] Shots, int HowManyShot)

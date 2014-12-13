@@ -161,6 +161,8 @@ namespace Warhammer
             if (ASave > dice)
             {
                 Wound--;
+                if (x.Strenght >= Toughnes * 2)
+                    Wound = 0;
             }
             if (Wound <= 0)
             {

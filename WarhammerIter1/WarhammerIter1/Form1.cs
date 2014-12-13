@@ -16,7 +16,7 @@ namespace WarhammerIter1
         private void Form1_Shown(object sender, EventArgs e)
         {
             BasicModel Autarh = new Infantry(40, 160, 5, 5, 3, 3,3, 5,3, 10, 2, 4,
-                new List<Weapon>{new Heavy(24,6,5,3,new List<EffectsWeapons>{new baldestorm()}),new Pistol(12,4,5,new List<EffectsWeapons> { new baldestorm() })
+                new List<Weapon>{new Pistol(12,4,5,new List<EffectsWeapons> { new baldestorm() }),new  CloseCombatWeapon()
                     },
                 new List<EffectsModel>() { new IndependetCharecter() });
             Weapon ShurikenCatapult = new Assault(12, 4, 5, 2, new List<EffectsWeapons> { new baldestorm() });
