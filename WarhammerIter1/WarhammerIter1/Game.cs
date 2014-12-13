@@ -214,6 +214,9 @@ public interface PfaseSr
     void ActButtonClick(Game _g);
     void IndependentCharecterButtonClick(Game _g);
     void EndPfaseButton(Game _g);
+        void RunButtonCLick(Game _g);
+        int ActButtonName(Game _g);
+        String IndependentCharecterState(Game _g);
 }
 
 public class PfaseNofing : PfaseSr
@@ -234,6 +237,18 @@ public class PfaseNofing : PfaseSr
     {
         _g.NextPfase();
     }
+        public void RunButtonCLick(Game _g)
+        {
+
+        }
+        public int ActButtonName(Game _g)
+        {
+            return 0;
+        }
+        public String IndependentCharecterState(Game _g)
+        {
+            return "Nofing";
+        }
 }
 
 public class PfaseJoin : PfaseSr
@@ -269,6 +284,18 @@ public class PfaseJoin : PfaseSr
     {
         _g.IsShow.ShowMessage("Закончите присоединение независимого персонажа");
     }
+        public void RunButtonCLick(Game _g)
+        {
+
+        }
+        public int ActButtonName(Game _g)
+        {
+            return 1;
+        }
+        public String IndependentCharecterState(Game _g)
+        {
+            return "Присоединение";
+        }
 }
 
 public class PfaseShoot : PfaseSr
@@ -302,7 +329,19 @@ public class PfaseShoot : PfaseSr
     {
         _g.NextPfase();
     }
+        public void RunButtonCLick(Game _g)
+        {
+
 }
+        public int ActButtonName(Game _g)
+        {
+            return 2;
+        }
+        public String IndependentCharecterState(Game _g)
+        {
+            return "";
+        }
+    }
 
 public class PfaseChose : PfaseSr
 {
@@ -335,6 +374,7 @@ public class PfaseChose : PfaseSr
     }
     public void IndependentCharecterButtonClick(Game _g)
     {
+            //_g.IsShow.ShowMessage(_g.cur_model.Character());
             if (_g.cur_unit == null)
         {
             return;
@@ -370,7 +410,25 @@ public class PfaseChose : PfaseSr
     {
         _g.NextPfase();
     }
+        public void RunButtonCLick(Game _g)
+        {
+
+        }
+        public int ActButtonName(Game _g)
+        {
+            return 0;
 }
+        public String IndependentCharecterState(Game _g)
+        {
+            if (!_g.cur_model.IsIndepChar(_g))
+                return "";
+            else
+                if (_g.cur_unit.Models.Count > 1)
+                    return "Присоеденить";
+                else
+                    return "Отсоединить";
+        }
+    }
 
 public class PfaseMove : PfaseSr
 {
@@ -512,7 +570,19 @@ public class PfaseMove : PfaseSr
     {
         _g.IsShow.ShowMessage("Закончите передвижения отряда");
     }
+        public void RunButtonCLick(Game _g)
+        {
+
+        }
+        public int ActButtonName(Game _g)
+        {
+            return 4;
+        }
+        public String IndependentCharecterState(Game _g)
+        {
+            return "";
 }
+    }
 
 public class PfaseChoseUnit : PfaseSr
 {
@@ -617,6 +687,7 @@ public class PfaseChoseUnit : PfaseSr
                 double length = (double)_g.cur_unit.ChargeRange(_g);
                 length *= 50;
                 length = 500;
+                    _g.Overwatch();
                 //ПАША РАССТОЯНИЯ ПИЗДЕЦ КАКОЙ-ТО ВТФ
                 //_g.IsShow.ShowMessage(length.ToString() + " " + min.ToString());
                 if (min > length)
@@ -653,7 +724,20 @@ public class PfaseChoseUnit : PfaseSr
         }
         _g.NowPfaseStr = _g.ChargePf;
     }
+
+        public void RunButtonCLick(Game _g)
+        {
+
 }
+        public int ActButtonName(Game _g)
+        {
+            return 5;
+        }
+        public String IndependentCharecterState(Game _g)
+        {
+            return "";
+        }
+    }
 
 public class PfaseCharge : PfaseSr
 {
@@ -673,7 +757,19 @@ public class PfaseCharge : PfaseSr
     {
         _g.NextPfase();
     }
+        public void RunButtonCLick(Game _g)
+        {
+
+        }
+        public int ActButtonName(Game _g)
+        {
+            return 0;
 }
+        public String IndependentCharecterState(Game _g)
+        {
+            return "";
+        }
+    }
 
 public enum Pfase
 {
@@ -715,6 +811,11 @@ public class Game
     public int base_size = 50;
     public DiceInt DiceGen { get; private set; }
     public List<Charge> AllCharge = new List<Charge> { };
+
+        public int Distance()
+        {
+            return (int)(IsMap.Range(cur_unit, Target)+0.999999);
+        }
 
         public bool IsNowPfase(Pfase p)
     {
@@ -937,7 +1038,7 @@ public class Game
 
     public void Overwatch()
     {
-
+            IsShow.ShowMessage("Overwatch");
         int Cover = 7;
         List<Wound> L = new List<Wound> { };
         int Range = (int)IsMap.Range(cur_unit, Target);

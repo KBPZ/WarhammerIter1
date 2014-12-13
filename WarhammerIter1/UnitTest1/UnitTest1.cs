@@ -2,7 +2,7 @@
 using WarhammerIter1;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Warhammer
+using Warhammer;
 namespace UnitTest1
 {
     [TestClass]

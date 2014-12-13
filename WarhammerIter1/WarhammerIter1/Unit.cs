@@ -655,27 +655,30 @@ namespace Warhammer
             i = 0;
             foreach (BasicModel model in _g.cur_unit.Models)
             {
-                j = 0;
-                foreach (BasicModel temp_m in _g.cur_unit.Models)
+                if (model.IsAlive() != 0)
                 {
-                    if (temp_m != model)
+                    j = 0;
+                    foreach (BasicModel temp_m in _g.cur_unit.Models)
                     {
-                        if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
+                        if (temp_m != model)
                         {
-                            m[i, j] = 1;
-                            m[j, i] = 1;
-                            for (k = 0; k < _g.cur_unit.Models.Count; k++)
+                            if (temp_m.IsAlive() != 0 || (model.x - temp_m.x) * (model.x - temp_m.x) + (model.y - temp_m.y) * (model.y - temp_m.y) <= _g.distance * _g.distance)
                             {
-                                if (m[j, k] == 1)
-                                    m[i, k] = 1;
-                                if (m[i, k] == 1)
-                                    m[j, k] = 1;
+                                m[i, j] = 1;
+                                m[j, i] = 1;
+                                for (k = 0; k < _g.cur_unit.Models.Count; k++)
+                                {
+                                    if (m[j, k] == 1)
+                                        m[i, k] = 1;
+                                    if (m[i, k] == 1)
+                                        m[j, k] = 1;
+                                }
                             }
                         }
+                        j++;
                     }
-                    j++;
+                    i++;
                 }
-                i++;
             }
             int t;
             bool cor = false;

@@ -32,13 +32,28 @@ namespace Warhammer
         public int WeaponSkill { get; protected set; }
         public int Wound { get; protected set; }
         public double x, y;
+        public Weapon ActiveRangeWeapon;
+        public Weapon ActiveMeleWeapon;
+
+
+        public abstract String Character();
+
+        public int MoveRange()
+        {
+            return 6;
+        }
+
+        public double RadiusBase()
+        {
+            return 0.5;
+        }
 
         public void Destroy(Game _g)
         {
             Alive = 1;
         }
 
-        public virtual List<Wound> CombatAtack(int EnemyWs, int EnemyMajT)
+        public virtual List<Wound> CombatAtack(int EnemyWs, int EnemyMajT,int bonus)
         {
             return new List<Wound> { };
         }
@@ -55,14 +70,36 @@ namespace Warhammer
 
         public double start_x, start_y;
 
-        public virtual int MoveRange()
-        {
-            return 6;
-        }
-
         public virtual int DificltMoveRange(DiceInt d)
         {
             return Math.Max(d.D6(), d.D6());
+        }
+
+        public List<String> ListWeapon(Game _g)
+        {
+            List<String> r = new List<string> { };
+            foreach(Weapon W in Weapons)
+            {
+                if(W==ActiveMeleWeapon||W==ActiveRangeWeapon)
+                    r.Add("*" + W.WeaponChar(_g));
+                else
+                    r.Add(W.WeaponChar(_g));
+            }
+            return r;
+        }
+
+        public void ActiveWeapon(String a,Game _g)
+        {
+            foreach (Weapon weap in Weapons)
+            {
+                if (weap.WeaponChar(_g) == a)
+                {
+                    if (weap.IsHtHWeapon() == 0)
+                        ActiveRangeWeapon = weap;
+                    if (weap.IsSpecialHtHWeapon() != 0)
+                        ActiveRangeWeapon = weap;
+                } break;
+            }
         }
 
         public void BeginPfase(Game _g)

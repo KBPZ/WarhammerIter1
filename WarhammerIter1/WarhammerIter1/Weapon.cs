@@ -73,7 +73,7 @@ namespace Warhammer
 
         public virtual List<Wound> SnapShoots(int Dis)
         {
-            return Shoot(1, 0, Dis);
+            return Shoot(1, 1, Dis);
         }
 
         public virtual List<Wound> Shoot(int moved, int bs, int Dis)
@@ -87,6 +87,11 @@ namespace Warhammer
                 }
             }
             return L;
+        }
+
+        public virtual string WeaponChar(Game _g)
+        {
+            return "";
         }
 
         ~Weapon()
@@ -117,6 +122,11 @@ namespace Warhammer
         {
             return base.Shoot(moved, bs, Dis);
         }
+
+        public override string WeaponChar(Game _g)
+        {
+            return Distance.ToString() + "\'\' " + Strenght.ToString() + " " + ArmorPenetretion.ToString() + " Ass" + Shoots.ToString() + "\n";
+        }
     }
 
     public class Heavy : Weapon
@@ -138,6 +148,11 @@ namespace Warhammer
                 return base.Shoot(moved, bs, Dis);
             }
             return base.Shoot(moved, 1, Dis);
+        }
+
+        public override string WeaponChar(Game _g)
+        {
+            return Distance.ToString() + "\'\' " + Strenght.ToString() + " " + ArmorPenetretion.ToString() + " Hea" + Shoots.ToString() + "\n";
         }
     }
 
@@ -162,6 +177,11 @@ namespace Warhammer
         {
             return 1;
         }
+
+        public override string WeaponChar(Game _g)
+        {
+            return Distance.ToString() + "\'\' " + Strenght.ToString() + " " + ArmorPenetretion.ToString() + " Pis" + Shoots.ToString() + "\n";
+        }
     }
 
     public class CloseCombatWeapon : Weapon
@@ -174,6 +194,11 @@ namespace Warhammer
         public override int IsHtHWeapon()
         {
             return 1;
+        }
+
+        public override string WeaponChar(Game _g)
+        {
+            return Distance.ToString() + "\'\' +" + Strenght.ToString() + " " + ArmorPenetretion.ToString() + " Ass" + Shoots.ToString() + "\n";
         }
     }
 
@@ -206,6 +231,11 @@ namespace Warhammer
         public override int IsSpecialHtHWeapon()
         {
             return 1;
+        }
+
+        public override string WeaponChar(Game _g)
+        {
+            return Distance.ToString() + "\'\' *" + Strenght.ToString() + " " + ArmorPenetretion.ToString() + " Ass" + Shoots.ToString() + "\n";
         }
     }
 }

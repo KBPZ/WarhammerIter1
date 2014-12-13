@@ -19,6 +19,11 @@ namespace Warhammer
         private int FrontArmor;
         private int SideArmor;
 
+        public override string Character()
+        {
+            return "We have no Vehicle";
+        }
+
         public Vehicle()
         {
 

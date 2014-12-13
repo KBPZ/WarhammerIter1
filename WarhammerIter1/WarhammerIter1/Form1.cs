@@ -19,7 +19,7 @@ namespace WarhammerIter1
                 new List<Weapon>{new Heavy(24,6,5,3,new List<EffectsWeapons>{new baldestorm()}),new Pistol(12,4,5,new List<EffectsWeapons> { new baldestorm() })
                     },
                 new List<EffectsModel>() { new IndependetCharecter() });
-            Weapon ShurikenCatapult = new Assault(12, 4, 5, 2, new List<EffectsWeapons> { new baldestorm() });
+            Weapon ShurikenCatapult = new Assault(12, 4, 5, 2, new List<EffectsWeapons> { /*new baldestorm()*/ });
             Weapon StormBolter = new Assault(24,4, 5, 2, new List<EffectsWeapons> { });
             List<Unit> DireAvengersUnits = new List<Unit>{
                 new Unit(
@@ -39,11 +39,11 @@ namespace WarhammerIter1
             Player F = new Player(DireAvengersUnits);
             List<Unit> TerminatorsUnits = new List<Unit>{
                 new Unit(
-                    new List<BasicModel>{new Infantry(300, 100, 4, 4, 4, 4, 3,4,1,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{})}, new List<EffectsModel> { }),
-                    new Infantry(360, 100, 4, 4, 4, 4, 3,4,1,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })
-                    ,new Infantry(300, 160, 4, 4, 4, 4,3, 4,1,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })
-                    ,new Infantry(360, 160, 4, 4, 4, 4,3, 4,1,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })
-                    ,new Infantry(420, 160, 4, 4, 4, 4,3, 4,1,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })},
+                    new List<BasicModel>{new Infantry(300, 100, 4, 4, 4, 4, 1,4,2,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{})}, new List<EffectsModel> { }),
+                    new Infantry(360, 100, 4, 4, 4, 4, 1,4,2,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })
+                    ,new Infantry(300, 160, 4, 4, 4, 4,1, 4,2,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })
+                    ,new Infantry(360, 160, 4, 4, 4, 4,1, 4,2,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })
+                    ,new Infantry(420, 160, 4, 4, 4, 4,1, 4,2,9, 2,5, new List<Weapon> { StormBolter,new MuteCCW(2,2,new List<EffectsWeapons>{}) }, new List<EffectsModel> { })},
                     new List<EffectsUnit>{})};
             Player S = new Player(TerminatorsUnits);
             IsGame = new Game(F, S, new DiceGenerator(),new ShowMessageBox());
