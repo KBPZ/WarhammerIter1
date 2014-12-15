@@ -510,6 +510,7 @@ namespace Warhammer
             round = 1;
             UnitInCombat = new List<Unit> { A, B };
             length = l;
+            A.HeadToHead = B.HeadToHead = 1;
             int i;
             bool found;
             List<BasicModel> base_contact = new List<BasicModel> { };
