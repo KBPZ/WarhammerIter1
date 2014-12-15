@@ -907,7 +907,7 @@ namespace Warhammer
                 leave = 0;
                 foreach(Unit U in p.PlayersUnit)
                 {
-                    if (U.Alive == 0)
+                    if (U.Alive == 0&&U.isFallBack()==0)
                         leave++;
                 }
                 if(leave == 0)
