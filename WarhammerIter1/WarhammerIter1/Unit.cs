@@ -303,14 +303,15 @@ namespace Warhammer
             return false;
         }
 
-        public BasicModel First(Unit Sourse)
-        {
+        public BasicModel First(Unit Sourse,Game _g)
+        {/*
             foreach (BasicModel m in Models)
             {
                 if (m.IsAlive() == 0)
                     return m;
             }
-            return null;
+            return null;*/
+            return First(Sourse,this, _g);
         }
 
         public BasicModel First(Unit A, Unit B, Game _g)
@@ -516,7 +517,7 @@ namespace Warhammer
             });
             for (int i = 0; i < n; i++)
             {
-                BasicModel m = First(_g.cur_unit);
+                BasicModel m = First(_g.cur_unit,_g);
                 if (m == null)
                 {
                     _g.IsShow.ShowMessage("All dead");
@@ -556,7 +557,7 @@ namespace Warhammer
             });
             for (int i = 0; i < n; i++)
             {
-                BasicModel m = First(_g.cur_unit);
+                BasicModel m = First(this,_g);
                 if (m == null)
                 {
                     _g.IsShow.ShowMessage("All dead");
