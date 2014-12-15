@@ -810,7 +810,7 @@ namespace Warhammer
         public int distance = 200;
         public int enemy_distance = 100;
         public int friend_distance = 100;
-    public int base_size = 50;
+        public int base_size = 50;
         public DiceInt DiceGen { get; private set; }
         public List<Charge> AllCharge = new List<Charge> { };
 

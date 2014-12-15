@@ -16,7 +16,7 @@ namespace UnitTest1
             Game isGame = new Game(di, new ShowNofing());
             isGame.Shooting();
             isGame.NextPfase();
-            Assert.AreEqual(1, isGame.Target.isFallBack());
+            Assert.AreEqual(1, isGame.Players[1].PlayersUnit[0].isFallBack());
         }
         [TestMethod]
         public void TestMethod2()
@@ -42,12 +42,12 @@ namespace UnitTest1
             Game IsGame = new Game(F, S, di, new ShowNofing());
             IsGame.cur_unit = IsGame.Players[0].PlayersUnit[0];
             IsGame.Target = IsGame.Players[1].PlayersUnit[0];
-            BasicModel TargetFurst = IsGame.Target.First(IsGame.cur_unit);
+            BasicModel TargetFurst = IsGame.Target.First(IsGame.cur_unit,IsGame);
             IsGame.NextPfase();
             IsGame.Shooting();
             IsGame.NextPfase();
             Assert.AreEqual(1, TargetFurst.IsAlive());
-            Assert.AreEqual(0, IsGame.Target.isFallBack());
+            Assert.AreEqual(0, IsGame.Players[1].PlayersUnit[0].isFallBack());
         }
         [TestMethod]
         public void IndependetCharJoinTest()
@@ -88,7 +88,7 @@ namespace UnitTest1
             IsGame.NextPfase();
             IsGame.Shooting();
             IsGame.NextPfase();
-            Assert.AreEqual(0, IsGame.Target.isFallBack());
+            Assert.AreEqual(0, IsGame.Players[1].PlayersUnit[0].isFallBack());
         }
         [TestMethod]
         public void IndependetCharLeaveTest()
@@ -131,7 +131,7 @@ namespace UnitTest1
             IsGame.Target = SecondPlayerUnits[0];
             IsGame.Shooting();
             IsGame.NextPfase();
-            Assert.AreEqual(1, IsGame.Target.isFallBack());
+            Assert.AreEqual(1, IsGame.Players[1].PlayersUnit[0].isFallBack());
         }
         [TestMethod]
         public void CogerTest()
@@ -157,8 +157,8 @@ namespace UnitTest1
             {
                 new Infantry(25,25,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
                 new Infantry(25,60,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(1000,450,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
-                new Infantry(1000,300,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(100,450,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
+                new Infantry(100,300,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
                 new Infantry(25,150,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
                 new Infantry(25,350,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
                 new Infantry(25,500,1,1,1,1,1,1,1,1,1,1,new List<Weapon>{},new List<EffectsModel>{}),
