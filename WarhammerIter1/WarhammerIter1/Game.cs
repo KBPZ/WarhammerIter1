@@ -502,7 +502,7 @@ namespace Warhammer
                         }
                         foreach (BasicModel c_model in unit.Models)
                         {
-                            if (c_model != t_model)
+                        if (c_model.IsAlive() == 0 && c_model != t_model)
                             {
                                 if (_g.IsMap.squares(c_model.x, c_model.y, t_model.x, t_model.y, _g.enemy_distance) == true)
                                 {
@@ -810,6 +810,7 @@ namespace Warhammer
         public int distance = 200;
         public int enemy_distance = 100;
         public int friend_distance = 100;
+    public int base_size = 50;
         public DiceInt DiceGen { get; private set; }
         public List<Charge> AllCharge = new List<Charge> { };
 
